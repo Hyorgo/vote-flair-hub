@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { NomineeCard } from "@/components/NomineeCard";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { ChevronLeft, ChevronRight, Timer } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Progress } from "@/components/ui/progress";
 
 // Données de test
 const categories = [
@@ -31,20 +32,55 @@ const categories = [
   // Autres catégories...
 ];
 
+// Date de fin des votes (24h à partir de maintenant pour cet exemple)
+const END_TIME = new Date(Date.now() + 24 * 60 * 60 * 1000).getTime();
+
 const Index = () => {
   const [currentCategory, setCurrentCategory] = useState(0);
   const [selections, setSelections] = useState<Record<string, string>>({});
+  const [timeLeft, setTimeLeft] = useState<string>("");
   const { toast } = useToast();
 
+  // Gestion du compte à rebours
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = END_TIME - now;
+
+      const hours = Math.floor(distance / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
+
+      if (distance < 0) {
+        clearInterval(timer);
+        setTimeLeft("VOTES TERMINÉS");
+        toast({
+          title: "Les votes sont terminés !",
+          description: "Merci de votre participation.",
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [toast]);
+
   const handleVote = (nomineeId: string) => {
+    const categoryId = categories[currentCategory].id;
+    const isModifying = selections[categoryId] === nomineeId;
+
     setSelections(prev => ({
       ...prev,
-      [categories[currentCategory].id]: nomineeId
+      [categoryId]: isModifying ? "" : nomineeId
     }));
     
     toast({
-      title: "Vote enregistré !",
-      description: "Votre choix a été sauvegardé avec succès.",
+      title: isModifying ? "Vote annulé !" : "Vote enregistré !",
+      description: isModifying 
+        ? "Vous pouvez maintenant choisir un autre nominé" 
+        : "Cliquez à nouveau sur le même nominé pour modifier votre vote",
+      className: "animate-bounce",
     });
   };
 
@@ -52,15 +88,27 @@ const Index = () => {
     setCurrentCategory(prev => 
       direction === "next" 
         ? Math.min(prev + 1, categories.length - 1)
-        : Math.max(prev - 1, 0)
+        : Math.max(prev - 0, 0)
     );
   };
 
   const category = categories[currentCategory];
+  const progress = ((currentCategory + 1) / categories.length) * 100;
 
   return (
     <Layout>
       <div className="max-w-5xl mx-auto">
+        <div className="mb-6 p-4 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-lg font-semibold text-primary">Temps restant</h2>
+            <div className="flex items-center gap-2">
+              <Timer className="h-5 w-5 text-primary animate-pulse" />
+              <span className="font-mono text-lg">{timeLeft}</span>
+            </div>
+          </div>
+          <Progress value={progress} className="h-2" />
+        </div>
+
         <div className="flex justify-between items-center mb-8">
           <Button
             variant="outline"
