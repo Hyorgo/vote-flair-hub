@@ -1,29 +1,61 @@
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabase';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const data = [
-  { name: 'Le Gourmet', votes: 24 },
-  { name: 'Sushi Master', votes: 18 },
-  { name: 'La Trattoria', votes: 12 },
-];
-
 export const Statistics = () => {
+  const { data: stats } = useQuery({
+    queryKey: ['vote-statistics'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('vote_statistics')
+        .select('*');
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const { data: totalVotes } = useQuery({
+    queryKey: ['total-votes'],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from('votes')
+        .select('*', { count: 'exact', head: true });
+      
+      if (error) throw error;
+      return count || 0;
+    }
+  });
+
+  const { data: categoriesCount } = useQuery({
+    queryKey: ['categories-count'],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from('categories')
+        .select('*', { count: 'exact', head: true });
+      
+      if (error) throw error;
+      return count || 0;
+    }
+  });
+
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <StatCard title="Total des votes" value="54" />
-        <StatCard title="Catégories" value="3" />
+        <StatCard title="Total des votes" value={totalVotes?.toString() || "0"} />
+        <StatCard title="Catégories" value={categoriesCount?.toString() || "0"} />
         <StatCard title="Temps restant" value="12h 30m" />
       </div>
 
       <div className="h-[400px]">
         <h3 className="text-lg font-semibold mb-4">Répartition des votes</h3>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data}>
+          <BarChart data={stats}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="nominee_name" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="votes" fill="#3b82f6" />
+            <Bar dataKey="vote_count" fill="#3b82f6" />
           </BarChart>
         </ResponsiveContainer>
       </div>
