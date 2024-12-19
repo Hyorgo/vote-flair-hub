@@ -5,8 +5,16 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Timer } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
-// Données de test
 const categories = [
   {
     id: "1",
@@ -41,7 +49,6 @@ const Index = () => {
   const [timeLeft, setTimeLeft] = useState<string>("");
   const { toast } = useToast();
 
-  // Gestion du compte à rebours
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -92,6 +99,10 @@ const Index = () => {
     );
   };
 
+  const handleTabChange = (value: string) => {
+    setCurrentCategory(Number(value));
+  };
+
   const category = categories[currentCategory];
   const progress = ((currentCategory + 1) / categories.length) * 100;
 
@@ -108,6 +119,23 @@ const Index = () => {
           </div>
           <Progress value={progress} className="h-2" />
         </div>
+
+        {/* Menu rapide entre catégories */}
+        <Tabs value={currentCategory.toString()} onValueChange={handleTabChange} className="mb-6">
+          <TabsList className="w-full flex-wrap h-auto gap-2 bg-white/80 backdrop-blur-sm p-2">
+            {categories.map((cat, index) => (
+              <TabsTrigger
+                key={cat.id}
+                value={index.toString()}
+                className={`${
+                  selections[cat.id] ? "text-primary border-primary" : ""
+                } animate-scale-in`}
+              >
+                {cat.name}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
 
         <div className="flex justify-between items-center mb-8">
           <Button
@@ -141,6 +169,34 @@ const Index = () => {
             />
           ))}
         </div>
+
+        {/* Pagination */}
+        <Pagination className="mt-8">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => handleNavigation("prev")}
+                className={currentCategory === 0 ? "opacity-50 cursor-not-allowed" : ""}
+              />
+            </PaginationItem>
+            {categories.map((_, index) => (
+              <PaginationItem key={index}>
+                <PaginationLink
+                  onClick={() => setCurrentCategory(index)}
+                  isActive={currentCategory === index}
+                >
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            <PaginationItem>
+              <PaginationNext
+                onClick={() => handleNavigation("next")}
+                className={currentCategory === categories.length - 1 ? "opacity-50 cursor-not-allowed" : ""}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </Layout>
   );
