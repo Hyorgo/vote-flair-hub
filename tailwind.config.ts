@@ -25,22 +25,25 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#2D1B69",
-          light: "#9B87F5",
-          dark: "#1A0F40",
+          DEFAULT: "#D946EF",
+          light: "#F0ABFC",
+          dark: "#86198F",
         },
         secondary: {
-          DEFAULT: "#F8F7FF",
+          DEFAULT: "#FEC6A1",
           foreground: "#1F2937",
         },
         accent: {
-          DEFAULT: "#7C3AED",
+          DEFAULT: "#F97316",
           foreground: "#FFFFFF",
         },
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
         heading: ["Montserrat", "sans-serif"],
+      },
+      backgroundImage: {
+        'festive-gradient': 'linear-gradient(to right, #ee9ca7, #ffdde1)',
       },
       keyframes: {
         "slide-in": {
@@ -55,11 +58,16 @@ export default {
           "0%": { transform: "scale(0.95)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" },
         },
+        "party": {
+          "0%, 100%": { transform: "rotate(-3deg)" },
+          "50%": { transform: "rotate(3deg)" },
+        }
       },
       animation: {
         "slide-in": "slide-in 0.3s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
         "scale-in": "scale-in 0.2s ease-out",
+        "party": "party 1s ease-in-out infinite",
       },
     },
   },
