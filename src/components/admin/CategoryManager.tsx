@@ -1,22 +1,15 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Pencil, Trash2, UserPlus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
+import { CategoriesList } from "./CategoriesList";
 
 interface Nominee {
   id: string;
   name: string;
   description: string;
+  imageUrl?: string;
 }
 
 interface Category {
@@ -91,6 +84,7 @@ export const CategoryManager = () => {
           id: (category.nomineesList?.length || 0 + 1).toString(),
           name: newNomineeName.trim(),
           description: newNomineeDescription.trim(),
+          imageUrl: "https://images.unsplash.com/photo-1527576539890-dfa815648363"
         };
         
         return {
@@ -133,75 +127,17 @@ export const CategoryManager = () => {
         </Button>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nom</TableHead>
-            <TableHead>Nominés</TableHead>
-            <TableHead className="w-[100px]">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {categories.map((category) => (
-            <TableRow key={category.id}>
-              <TableCell>{category.name}</TableCell>
-              <TableCell>{category.nominees}</TableCell>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => setSelectedCategory(category)}
-                      >
-                        <UserPlus className="h-4 w-4" />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Ajouter un nominé à {category.name}</DialogTitle>
-                      </DialogHeader>
-                      <div className="space-y-4 mt-4">
-                        <div>
-                          <Input
-                            placeholder="Nom du nominé"
-                            value={newNomineeName}
-                            onChange={(e) => setNewNomineeName(e.target.value)}
-                          />
-                        </div>
-                        <div>
-                          <Textarea
-                            placeholder="Description du nominé"
-                            value={newNomineeDescription}
-                            onChange={(e) => setNewNomineeDescription(e.target.value)}
-                          />
-                        </div>
-                        <Button 
-                          className="w-full" 
-                          onClick={() => handleAddNominee(category.id)}
-                        >
-                          Ajouter le nominé
-                        </Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                  <Button variant="ghost" size="icon">
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    onClick={() => handleDeleteCategory(category.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <CategoriesList
+        categories={categories}
+        handleDeleteCategory={handleDeleteCategory}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        newNomineeName={newNomineeName}
+        setNewNomineeName={setNewNomineeName}
+        newNomineeDescription={newNomineeDescription}
+        setNewNomineeDescription={setNewNomineeDescription}
+        handleAddNominee={handleAddNominee}
+      />
     </div>
   );
 };

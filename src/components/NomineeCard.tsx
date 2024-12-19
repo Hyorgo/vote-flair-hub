@@ -18,7 +18,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
   return (
     <div 
       className={cn(
-        "nominee-card relative animate-scale-in backdrop-blur-sm bg-white/90",
+        "nominee-card relative animate-scale-in backdrop-blur-sm bg-white/90 p-4 rounded-lg",
         isSelected && "ring-2 ring-primary-light before:absolute before:inset-0 before:bg-primary/5"
       )}
     >
