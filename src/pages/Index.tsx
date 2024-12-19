@@ -14,7 +14,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useCategories } from "@/hooks/useCategories";
+import { useAirtableData } from "@/hooks/useAirtableData";
 
 const END_TIME = new Date(Date.now() + 24 * 60 * 60 * 1000).getTime();
 
@@ -23,7 +23,7 @@ const Index = () => {
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [timeLeft, setTimeLeft] = useState<string>("");
   const { toast } = useToast();
-  const { data: categories = [], isLoading, error } = useCategories();
+  const { categories, nominees, voteMutation } = useAirtableData();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -49,31 +49,43 @@ const Index = () => {
     return () => clearInterval(timer);
   }, [toast]);
 
-  const handleVote = (nomineeId: string) => {
-    const categoryId = categories[currentCategory]?.id;
+  const handleVote = async (nomineeId: string) => {
+    const categoryId = categories.data?.[currentCategory]?.id;
     if (!categoryId) return;
 
     const isModifying = selections[categoryId] === nomineeId;
 
-    setSelections(prev => ({
-      ...prev,
-      [categoryId]: isModifying ? "" : nomineeId
-    }));
-    
-    toast({
-      title: isModifying ? "Vote annulé !" : "Vote enregistré !",
-      description: isModifying 
-        ? "Vous pouvez maintenant choisir un autre nominé" 
-        : "Cliquez à nouveau sur le même nominé pour modifier votre vote",
-      className: "animate-bounce",
-    });
+    try {
+      if (!isModifying) {
+        await voteMutation.mutateAsync(nomineeId);
+      }
+
+      setSelections(prev => ({
+        ...prev,
+        [categoryId]: isModifying ? "" : nomineeId
+      }));
+      
+      toast({
+        title: isModifying ? "Vote annulé !" : "Vote enregistré !",
+        description: isModifying 
+          ? "Vous pouvez maintenant choisir un autre nominé" 
+          : "Cliquez à nouveau sur le même nominé pour modifier votre vote",
+        className: "animate-bounce",
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'enregistrement du vote",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleNavigation = (direction: "prev" | "next") => {
     setCurrentCategory(prev => 
       direction === "next" 
-        ? Math.min(prev + 1, categories.length - 1)
-        : Math.max(prev - 0, 0)
+        ? Math.min(prev + 1, categories.data.length - 1)
+        : Math.max(prev - 1, 0)
     );
   };
 
@@ -81,7 +93,7 @@ const Index = () => {
     setCurrentCategory(Number(value));
   };
 
-  if (isLoading) {
+  if (categories.isLoading || nominees.isLoading) {
     return (
       <Layout>
         <div className="flex justify-center items-center min-h-[60vh]">
@@ -91,18 +103,18 @@ const Index = () => {
     );
   }
 
-  if (error) {
+  if (categories.error || nominees.error) {
     return (
       <Layout>
         <div className="text-center py-10">
           <h2 className="text-2xl font-bold text-red-600">Une erreur est survenue</h2>
-          <p className="text-gray-600 mt-2">Impossible de charger les catégories</p>
+          <p className="text-gray-600 mt-2">Impossible de charger les données</p>
         </div>
       </Layout>
     );
   }
 
-  if (categories.length === 0) {
+  if (categories.data.length === 0) {
     return (
       <Layout>
         <div className="text-center py-10">
@@ -113,8 +125,8 @@ const Index = () => {
     );
   }
 
-  const category = categories[currentCategory];
-  const progress = ((currentCategory + 1) / categories.length) * 100;
+  const category = categories.data[currentCategory];
+  const progress = ((currentCategory + 1) / categories.data.length) * 100;
 
   return (
     <Layout>
@@ -132,7 +144,7 @@ const Index = () => {
 
         <Tabs value={currentCategory.toString()} onValueChange={handleTabChange} className="mb-6">
           <TabsList className="w-full flex-wrap h-auto gap-2 bg-white/80 backdrop-blur-sm p-2">
-            {categories.map((cat, index) => (
+            {categories.data.map((cat, index) => (
               <TabsTrigger
                 key={cat.id}
                 value={index.toString()}
@@ -161,7 +173,7 @@ const Index = () => {
           <Button
             variant="outline"
             onClick={() => handleNavigation("next")}
-            disabled={currentCategory === categories.length - 1}
+            disabled={currentCategory === categories.data.length - 1}
           >
             Suivant
             <ChevronRight className="ml-2 h-4 w-4" />
@@ -187,7 +199,7 @@ const Index = () => {
                 className={currentCategory === 0 ? "opacity-50 cursor-not-allowed" : ""}
               />
             </PaginationItem>
-            {categories.map((_, index) => (
+            {categories.data.map((_, index) => (
               <PaginationItem key={index}>
                 <PaginationLink
                   onClick={() => setCurrentCategory(index)}
@@ -200,7 +212,7 @@ const Index = () => {
             <PaginationItem>
               <PaginationNext
                 onClick={() => handleNavigation("next")}
-                className={currentCategory === categories.length - 1 ? "opacity-50 cursor-not-allowed" : ""}
+                className={currentCategory === categories.data.length - 1 ? "opacity-50 cursor-not-allowed" : ""}
               />
             </PaginationItem>
           </PaginationContent>
