@@ -1,14 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
-if (!import.meta.env.VITE_SUPABASE_URL) {
-  throw new Error('VITE_SUPABASE_URL is not defined. Please add it to your project secrets.');
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Missing Supabase environment variables:', {
+    url: !!supabaseUrl,
+    key: !!supabaseAnonKey
+  });
+  throw new Error('Les informations de connexion Supabase sont manquantes. Veuillez vérifier les secrets du projet.');
 }
 
-if (!import.meta.env.VITE_SUPABASE_ANON_KEY) {
-  throw new Error('VITE_SUPABASE_ANON_KEY is not defined. Please add it to your project secrets.');
-}
-
-export const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
