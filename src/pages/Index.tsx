@@ -14,33 +14,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useCategories } from "@/hooks/useCategories";
 
-const categories = [
-  {
-    id: "1",
-    name: "Meilleur Restaurant",
-    nominees: [
-      {
-        id: "1",
-        name: "Le Gourmet",
-        description: "Cuisine française raffinée dans un cadre élégant",
-      },
-      {
-        id: "2",
-        name: "Sushi Master",
-        description: "Les meilleurs sushis de la ville",
-      },
-      {
-        id: "3",
-        name: "La Trattoria",
-        description: "Authentique cuisine italienne",
-      },
-    ],
-  },
-  // Autres catégories...
-];
-
-// Date de fin des votes (24h à partir de maintenant pour cet exemple)
 const END_TIME = new Date(Date.now() + 24 * 60 * 60 * 1000).getTime();
 
 const Index = () => {
@@ -48,6 +23,7 @@ const Index = () => {
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [timeLeft, setTimeLeft] = useState<string>("");
   const { toast } = useToast();
+  const { data: categories = [], isLoading, error } = useCategories();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -74,7 +50,9 @@ const Index = () => {
   }, [toast]);
 
   const handleVote = (nomineeId: string) => {
-    const categoryId = categories[currentCategory].id;
+    const categoryId = categories[currentCategory]?.id;
+    if (!categoryId) return;
+
     const isModifying = selections[categoryId] === nomineeId;
 
     setSelections(prev => ({
@@ -103,6 +81,38 @@ const Index = () => {
     setCurrentCategory(Number(value));
   };
 
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center min-h-[60vh]">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="text-center py-10">
+          <h2 className="text-2xl font-bold text-red-600">Une erreur est survenue</h2>
+          <p className="text-gray-600 mt-2">Impossible de charger les catégories</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (categories.length === 0) {
+    return (
+      <Layout>
+        <div className="text-center py-10">
+          <h2 className="text-2xl font-bold text-gray-800">Aucune catégorie disponible</h2>
+          <p className="text-gray-600 mt-2">Les catégories seront bientôt ajoutées</p>
+        </div>
+      </Layout>
+    );
+  }
+
   const category = categories[currentCategory];
   const progress = ((currentCategory + 1) / categories.length) * 100;
 
@@ -120,7 +130,6 @@ const Index = () => {
           <Progress value={progress} className="h-2" />
         </div>
 
-        {/* Menu rapide entre catégories */}
         <Tabs value={currentCategory.toString()} onValueChange={handleTabChange} className="mb-6">
           <TabsList className="w-full flex-wrap h-auto gap-2 bg-white/80 backdrop-blur-sm p-2">
             {categories.map((cat, index) => (
@@ -170,7 +179,6 @@ const Index = () => {
           ))}
         </div>
 
-        {/* Pagination */}
         <Pagination className="mt-8">
           <PaginationContent>
             <PaginationItem>
