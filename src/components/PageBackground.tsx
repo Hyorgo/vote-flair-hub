@@ -8,7 +8,7 @@ interface PageBackgroundProps {
 }
 
 export const PageBackground = ({ pageName, children }: PageBackgroundProps) => {
-  const { background, isLoading, error, getBackgroundStyle } = usePageBackground(pageName);
+  const { background, isLoading, error } = usePageBackground(pageName);
   const [videoKey, setVideoKey] = useState(Date.now());
 
   useEffect(() => {
