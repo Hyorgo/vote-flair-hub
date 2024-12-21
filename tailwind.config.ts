@@ -96,11 +96,8 @@ export default {
           "50%": { transform: "translateY(-5px)" },
         },
         "heart-beat": {
-          "0%": { transform: "translateY(0) scale(1)", opacity: "1" },
-          "25%": { transform: "translateY(-5px) scale(1.1)", opacity: "0.9" },
-          "50%": { transform: "translateY(-10px) scale(1.2)", opacity: "0.8" },
-          "75%": { transform: "translateY(-5px) scale(1.1)", opacity: "0.9" },
-          "100%": { transform: "translateY(0) scale(1)", opacity: "1" },
+          "0%, 100%": { transform: "translateY(0) scale(1)" },
+          "50%": { transform: "translateY(-10px) scale(1.2)" },
         },
       },
       animation: {
@@ -111,7 +108,7 @@ export default {
         "shimmer": "shimmer 2s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
         "bounce-light": "bounce-light 2s ease-in-out infinite",
-        "heart-beat": "heart-beat 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite",
+        "heart-beat": "heart-beat 2s ease-in-out infinite",
       },
     },
   },
