@@ -15,6 +15,9 @@ export const usePageBackground = (pageName: string) => {
       if (error && error.code !== 'PGRST116') throw error;
       return data;
     },
+    // Ajout des options de refetch pour mettre à jour le fond en temps réel
+    refetchOnWindowFocus: true,
+    refetchInterval: 1000, // Vérifie toutes les secondes
   });
 
   const getBackgroundStyle = () => {

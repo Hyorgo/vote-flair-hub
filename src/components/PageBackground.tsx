@@ -13,6 +13,7 @@ export const PageBackground = ({ pageName, children }: PageBackgroundProps) => {
     return (
       <div className="min-h-screen relative">
         <video
+          key={background.background_value} // Ajout d'une clé pour forcer le rechargement
           autoPlay
           loop
           muted
