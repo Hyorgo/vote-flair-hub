@@ -35,13 +35,12 @@ export const VotingSection = ({
           variant="outline"
           onClick={() => onNavigation("prev")}
           disabled={isFirstCategory}
-          className="group relative"
+          className="group"
         >
-          <ChevronLeft className="mr-2 h-4 w-4 group-hover:text-white transition-colors" />
-          <span className="relative z-10 group-hover:text-white transition-colors">
+          <ChevronLeft className="mr-2 h-4 w-4" />
+          <span className="bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#FFD700] group-hover:via-[#DAA520] group-hover:to-[#B8860B] group-hover:text-transparent transition-all">
             Précédent
           </span>
-          <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-0 group-hover:opacity-100 transition-opacity rounded-md"></span>
         </Button>
         <h1 className="text-3xl font-bold text-center text-primary">
           {category?.name || ""}
@@ -50,13 +49,12 @@ export const VotingSection = ({
           variant="outline"
           onClick={() => onNavigation("next")}
           disabled={isLastCategory}
-          className="group relative"
+          className="group"
         >
-          <span className="relative z-10 group-hover:text-white transition-colors">
+          <span className="bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#FFD700] group-hover:via-[#DAA520] group-hover:to-[#B8860B] group-hover:text-transparent transition-all">
             Suivant
           </span>
-          <ChevronRight className="ml-2 h-4 w-4 group-hover:text-white transition-colors" />
-          <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-0 group-hover:opacity-100 transition-opacity rounded-md"></span>
+          <ChevronRight className="ml-2 h-4 w-4" />
         </Button>
       </div>
 
