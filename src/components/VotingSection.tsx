@@ -21,8 +21,8 @@ export const VotingSection = ({
   isFirstCategory,
   isLastCategory,
 }: VotingSectionProps) => {
-  // S'assurer que nominees est toujours un tableau, même si category est undefined
-  const nominees = category?.nominees ?? [];
+  // Ensure nominees is always an array by providing an empty array as fallback
+  const nominees = category?.nominees || [];
 
   return (
     <>
@@ -36,7 +36,7 @@ export const VotingSection = ({
           Précédent
         </Button>
         <h1 className="text-3xl font-bold text-center text-primary">
-          {category?.name ?? ""}
+          {category?.name || ""}
         </h1>
         <Button
           variant="outline"
@@ -53,7 +53,7 @@ export const VotingSection = ({
           <NomineeCard
             key={nominee.id}
             nominee={nominee}
-            isSelected={selections[category?.id ?? ""] === nominee.id}
+            isSelected={selections[category?.id || ""] === nominee.id}
             onSelect={onVote}
           />
         ))}
