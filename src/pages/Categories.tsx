@@ -121,10 +121,12 @@ const Categories = () => {
           <Button
             onClick={handleComplete}
             size="lg"
-            className="text-lg gap-2 py-6 px-8 shadow-lg hover:shadow-xl transition-all duration-300"
+            className="text-lg gap-2 py-6 px-8 shadow-lg hover:shadow-xl transition-all duration-300 bg-white relative group"
           >
-            <CheckCircle className="h-6 w-6" />
-            J'ai terminé mon vote !
+            <CheckCircle className="h-6 w-6 text-[#FFD700]" />
+            <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent font-bold">
+              J'ai terminé mon vote !
+            </span>
           </Button>
         </div>
       </div>
