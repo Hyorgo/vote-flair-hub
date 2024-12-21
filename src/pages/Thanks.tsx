@@ -24,7 +24,7 @@ const Thanks = () => {
 
         <Button
           onClick={() => navigate("/")}
-          className="group relative px-6 py-2 rounded-lg shadow-sm transition-all duration-300 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white hover:bg-none hover:bg-white hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:border hover:border-[#DAA520]"
+          className="group relative px-6 py-2 rounded-lg shadow-sm transition-all duration-300 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white hover:bg-white hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:border hover:border-[#DAA520]"
         >
           Retour à l'accueil
         </Button>
