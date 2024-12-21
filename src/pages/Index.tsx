@@ -43,9 +43,17 @@ const Index = () => {
             </motion.div>
           </div>
           
-          <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#FDB931] to-[#E8B923]">
-            Les Lyon d'Or
-          </h1>
+          <motion.h1 
+            className="text-5xl sm:text-6xl md:text-8xl font-bold relative"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <span className="absolute -inset-0.5 blur-sm bg-gradient-to-r from-[#FFD700] via-[#FDB931] to-[#E8B923] opacity-75"></span>
+            <span className="relative bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#FDB931] to-[#E8B923] drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)] hover:drop-shadow-[0_4px_4px_rgba(0,0,0,0.4)]">
+              Les Lyon d'Or
+            </span>
+          </motion.h1>
+
           <p className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Célébrez l'excellence et participez à la reconnaissance des talents exceptionnels
           </p>
