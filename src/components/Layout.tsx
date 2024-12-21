@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Settings, Keyboard } from "lucide-react";
 import { Footer } from "./Footer";
 import { PageBackground } from "./PageBackground";
-import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
+import { useGlobalKeyboardNavigation } from "@/hooks/useGlobalKeyboardNavigation";
 import { useToast } from "@/hooks/use-toast";
 
 interface LayoutProps {
@@ -17,8 +17,8 @@ export const Layout = ({ children }: LayoutProps) => {
   const pageName = location.pathname === "/" ? "index" : location.pathname.slice(1);
   const { toast } = useToast();
   
-  // Activer les raccourcis clavier
-  useKeyboardNavigation();
+  // Activer les raccourcis clavier globaux
+  useGlobalKeyboardNavigation();
 
   const showKeyboardShortcuts = () => {
     toast({
