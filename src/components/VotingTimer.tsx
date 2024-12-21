@@ -63,7 +63,7 @@ export const VotingTimer = () => {
       <Progress 
         value={progress} 
         className="h-2 bg-gradient-to-r from-[#FFD700]/20 via-[#DAA520]/20 to-[#B8860B]/20 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.1)]"
-        indicatorClassName="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B]"
+        indicatorClassName="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.3)]"
       />
     </div>
   );
