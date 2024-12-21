@@ -33,7 +33,7 @@ export const Footer = () => {
             <h3 className="font-heading font-semibold text-lg text-gray-800">Contactez-nous</h3>
             <div className="space-y-4">
               <motion.a 
-                href="https://lyondigitalservices.fr" 
+                href="https://www.ideai.fr" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-gray-600 hover:text-primary transition-all group"
@@ -43,7 +43,7 @@ export const Footer = () => {
                   <Globe className="h-5 w-5" />
                 </div>
                 <span className="flex items-center gap-2">
-                  Notre site web
+                  www.ideai.fr
                   <ExternalLink className="h-4 w-4 opacity-50" />
                 </span>
               </motion.a>
