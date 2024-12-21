@@ -49,10 +49,10 @@ const Index = () => {
             transition={{ type: "spring", stiffness: 300 }}
           >
             <span className="relative font-heading tracking-tight">
-              <span className="bg-gradient-to-r from-[#B8860B] via-[#DAA520] to-[#FFD700] bg-clip-text text-transparent font-extrabold">
+              <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent font-extrabold">
                 Les Lyon d'Or
               </span>
-              <span className="absolute inset-0 bg-gradient-to-r from-[#B8860B] via-[#DAA520] to-[#FFD700] opacity-10 blur-sm" aria-hidden="true"></span>
+              <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-10 blur-sm" aria-hidden="true"></span>
             </span>
           </motion.h1>
 
