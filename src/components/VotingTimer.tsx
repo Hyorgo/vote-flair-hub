@@ -61,7 +61,7 @@ export const VotingTimer = () => {
       )}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold relative">
-            <span className="text-navy">
+            <span className="bg-gradient-to-r from-accent via-primary to-primary-dark bg-clip-text text-transparent">
               Temps restant
             </span>
           </h2>
