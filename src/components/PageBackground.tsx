@@ -25,8 +25,16 @@ export const PageBackground = ({ pageName, children }: PageBackgroundProps) => {
     );
   }
 
+  const style = getBackgroundStyle();
+  
   return (
-    <div className="min-h-screen" style={getBackgroundStyle()}>
+    <div 
+      className="min-h-screen relative" 
+      style={{
+        ...style,
+        backgroundColor: background?.background_type === "color" ? background.background_value : undefined,
+      }}
+    >
       {children}
     </div>
   );
