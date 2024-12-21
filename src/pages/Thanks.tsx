@@ -11,25 +11,24 @@ const Thanks = () => {
   const shareUrl = encodeURIComponent(window.location.origin);
 
   useEffect(() => {
-    // Configuration des confettis
-    const duration = 3 * 1000;
+    const duration = 3000; // 3 secondes
+    const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-    // Animation de confettis en forme d'explosion
     function randomInRange(min: number, max: number) {
       return Math.random() * (max - min) + min;
     }
 
-    const interval: any = setInterval(function() {
-      const timeLeft = duration;
+    const interval = setInterval(() => {
+      const timeLeft = animationEnd - Date.now();
 
       if (timeLeft <= 0) {
-        return clearInterval(interval);
+        clearInterval(interval);
+        return;
       }
 
       const particleCount = 50;
 
-      // Lancer des confettis depuis différentes positions
       confetti({
         ...defaults,
         particleCount,
