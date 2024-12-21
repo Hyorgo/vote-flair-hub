@@ -69,23 +69,61 @@ export type Database = {
           },
         ]
       }
-      votes: {
+      validated_emails: {
         Row: {
           created_at: string | null
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      votes: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          email: string
           id: string
           nominee_id: string | null
         }
         Insert: {
+          category_id?: string | null
           created_at?: string | null
+          email: string
           id?: string
           nominee_id?: string | null
         }
         Update: {
+          category_id?: string | null
           created_at?: string | null
+          email?: string
           id?: string
           nominee_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "votes_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "votes_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "vote_statistics"
+            referencedColumns: ["category_id"]
+          },
           {
             foreignKeyName: "votes_nominee_id_fkey"
             columns: ["nominee_id"]

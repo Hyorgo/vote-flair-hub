@@ -4,6 +4,8 @@ import { VotingSection } from "@/components/VotingSection";
 import { VotingTimer } from "@/components/VotingTimer";
 import { CategoryNavigation } from "@/components/CategoryNavigation";
 import { useVoting } from "@/hooks/useVoting";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const Categories = () => {
   const {
@@ -15,6 +17,9 @@ const Categories = () => {
     categories,
     isLoading,
     error,
+    email,
+    setEmail,
+    isEmailValidated,
   } = useVoting();
 
   if (isLoading) {
@@ -61,6 +66,20 @@ const Categories = () => {
     <Layout>
       <div className="max-w-5xl mx-auto">
         <VotingTimer />
+
+        <div className="mb-6">
+          <Label htmlFor="email">Email {isEmailValidated && "✓"}</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="Entrez votre email pour voter"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={`${
+              isEmailValidated ? "border-green-500" : ""
+            }`}
+          />
+        </div>
 
         <CategoryNavigation
           categories={categories}
