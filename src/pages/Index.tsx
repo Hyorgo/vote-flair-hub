@@ -32,8 +32,13 @@ const Index = () => {
         >
           <div className="absolute -top-16 left-1/2 -translate-x-1/2">
             <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              animate={{ rotate: [-50, 50] }}
+              transition={{ 
+                duration: 2,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "easeInOut"
+              }}
             >
               <Crown className="w-24 h-24 text-primary opacity-20" />
             </motion.div>
