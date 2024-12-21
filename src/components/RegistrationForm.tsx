@@ -19,7 +19,6 @@ export const RegistrationForm = () => {
     setIsSubmitting(true);
 
     try {
-      // Vérifier si l'email existe déjà
       const { data: existingUser } = await supabase
         .from("user_profiles")
         .select("email")
@@ -35,7 +34,6 @@ export const RegistrationForm = () => {
         return;
       }
 
-      // Insérer le nouvel utilisateur
       const { error } = await supabase.from("user_profiles").insert([
         {
           first_name: firstName,
@@ -46,7 +44,6 @@ export const RegistrationForm = () => {
 
       if (error) throw error;
 
-      // Ajouter l'email aux emails validés
       await supabase.from("validated_emails").insert([{ email }]);
 
       toast({
@@ -54,7 +51,6 @@ export const RegistrationForm = () => {
         description: "Vous allez être redirigé vers les catégories.",
       });
 
-      // Rediriger vers la page des catégories
       setTimeout(() => {
         navigate("/categories");
       }, 1500);
@@ -71,49 +67,51 @@ export const RegistrationForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-md">
-      <div className="space-y-2">
-        <Label htmlFor="firstName">Prénom</Label>
-        <Input
-          id="firstName"
-          type="text"
-          required
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          placeholder="Entrez votre prénom"
-          className="bg-white/50 backdrop-blur-sm"
-        />
+    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">Prénom</Label>
+          <Input
+            id="firstName"
+            type="text"
+            required
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="Jean"
+            className="bg-white/20 backdrop-blur-sm border-white/20 focus:border-primary/50 focus:ring-primary/50 h-9"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">Nom</Label>
+          <Input
+            id="lastName"
+            type="text"
+            required
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            placeholder="Dupont"
+            className="bg-white/20 backdrop-blur-sm border-white/20 focus:border-primary/50 focus:ring-primary/50 h-9"
+          />
+        </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="lastName">Nom</Label>
-        <Input
-          id="lastName"
-          type="text"
-          required
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          placeholder="Entrez votre nom"
-          className="bg-white/50 backdrop-blur-sm"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+      <div>
+        <Label htmlFor="email" className="text-sm font-medium text-gray-700">Email</Label>
         <Input
           id="email"
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Entrez votre email"
-          className="bg-white/50 backdrop-blur-sm"
+          placeholder="jean.dupont@example.com"
+          className="bg-white/20 backdrop-blur-sm border-white/20 focus:border-primary/50 focus:ring-primary/50 h-9"
         />
       </div>
 
       <Button
         type="submit"
-        className="w-full"
+        className="w-full bg-primary/80 hover:bg-primary backdrop-blur-sm text-white shadow-lg h-9"
         disabled={isSubmitting}
       >
         {isSubmitting ? "Inscription en cours..." : "S'inscrire pour voter"}
