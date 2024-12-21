@@ -5,6 +5,7 @@ import { useVotingConfig } from "@/hooks/supabase/useVotingConfig";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import { cn } from "@/lib/utils";
 
 export const VotingTimer = () => {
   const { config, isLoading } = useVotingConfig();
