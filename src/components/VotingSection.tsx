@@ -35,7 +35,7 @@ export const VotingSection = ({
           disabled={isFirstCategory}
           className="group relative px-6 py-2 border border-gray-200 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none overflow-hidden"
         >
-          <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-5 transition-opacity" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-0 group-hover:opacity-10 transition-opacity" />
           <ChevronLeft className="mr-2 h-4 w-4 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent transition-transform group-hover:-translate-x-0.5" />
           <span className="font-medium bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent transition-colors">
             Précédent
@@ -52,7 +52,7 @@ export const VotingSection = ({
           disabled={isLastCategory}
           className="group relative px-6 py-2 border border-gray-200 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none overflow-hidden"
         >
-          <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-5 transition-opacity" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-0 group-hover:opacity-10 transition-opacity" />
           <span className="font-medium bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent transition-colors">
             Suivant
           </span>
