@@ -34,6 +34,8 @@ export const useVoting = () => {
         .eq("email", userEmail)
         .single();
 
+      let success = false;
+
       if (existingVotes) {
         // If we're modifying to remove the vote
         if (isModifying) {
@@ -42,7 +44,7 @@ export const useVoting = () => {
             .delete()
             .eq("id", existingVotes.id);
 
-          if (deleteError) throw deleteError;
+          if (!deleteError) success = true;
         } else {
           // Update existing vote
           const { error: updateError } = await supabase
@@ -50,7 +52,7 @@ export const useVoting = () => {
             .update({ nominee_id: nomineeId })
             .eq("id", existingVotes.id);
 
-          if (updateError) throw updateError;
+          if (!updateError) success = true;
         }
       } else if (!isModifying) {
         // Insert new vote only if we're not trying to modify a non-existent vote
@@ -64,21 +66,22 @@ export const useVoting = () => {
             },
           ]);
 
-        if (insertError) throw insertError;
+        if (!insertError) success = true;
       }
 
-      setSelections((prev) => ({
-        ...prev,
-        [categoryId]: isModifying ? "" : nomineeId,
-      }));
+      if (success) {
+        setSelections((prev) => ({
+          ...prev,
+          [categoryId]: isModifying ? "" : nomineeId,
+        }));
 
-      toast({
-        title: isModifying ? "Vote annulé !" : "Vote enregistré !",
-        description: isModifying
-          ? "Vous pouvez maintenant choisir un autre nominé"
-          : "Cliquez à nouveau sur le même nominé pour modifier votre vote",
-        className: "animate-bounce",
-      });
+        toast({
+          title: isModifying ? "Vote annulé !" : "Vote enregistré !",
+          description: isModifying
+            ? "Vous pouvez maintenant choisir un autre nominé"
+            : "Cliquez à nouveau sur le même nominé pour modifier votre vote",
+        });
+      }
     } catch (error: any) {
       console.error("Error voting:", error);
       toast({
