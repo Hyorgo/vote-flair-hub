@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Settings, Keyboard } from "lucide-react";
+import { Settings, Keyboard, ArrowBigDown } from "lucide-react";
 import { Footer } from "./Footer";
 import { PageBackground } from "./PageBackground";
 import { useGlobalKeyboardNavigation } from "@/hooks/useGlobalKeyboardNavigation";
@@ -24,6 +24,13 @@ export const Layout = ({ children }: LayoutProps) => {
       title: "Raccourcis clavier disponibles",
       description: "Alt + H: Accueil | Alt + C: Catégories | Alt + ←: Retour | ?: Aide",
     });
+  };
+
+  const scrollToFooter = () => {
+    const footer = document.querySelector('footer');
+    if (footer) {
+      footer.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -79,6 +86,17 @@ export const Layout = ({ children }: LayoutProps) => {
           {children}
         </main>
         <Footer />
+
+        {/* Bouton d'ascenseur */}
+        <Button
+          variant="secondary"
+          size="icon"
+          className="fixed bottom-6 right-6 rounded-full p-3 shadow-lg hover:scale-102 transition-transform z-50 bg-white/70 hover:bg-white/90"
+          onClick={scrollToFooter}
+          aria-label="Descendre vers le bas de la page"
+        >
+          <ArrowBigDown className="h-6 w-6" />
+        </Button>
       </div>
     </PageBackground>
   );
