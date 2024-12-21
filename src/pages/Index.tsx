@@ -43,7 +43,7 @@ const Index = () => {
             </motion.div>
           </div>
           
-          <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#FDB931] to-[#E8B923]">
             Les Lyon d'Or
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
