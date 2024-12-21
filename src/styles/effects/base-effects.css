@@ -1,40 +1,39 @@
 @layer base {
   html::before {
     content: '';
-    @apply absolute top-0 left-0 w-[1200px] h-[1200px] bg-purple-500/30 rounded-full blur-[150px] animate-float;
-    animation: float 15s infinite;
+    @apply absolute -top-[20%] -left-[10%] w-[1200px] h-[1200px] bg-purple-500/30 rounded-full blur-[150px] animate-float;
+    animation: float 18s infinite;
   }
 
   html::after {
     content: '';
-    @apply absolute bottom-0 right-0 w-[1000px] h-[1000px] bg-blue-400/30 rounded-full blur-[130px];
-    animation: float 20s infinite reverse;
+    @apply absolute -bottom-[15%] -right-[5%] w-[1000px] h-[1000px] bg-blue-400/30 rounded-full blur-[130px];
+    animation: float 22s infinite reverse;
   }
 
   .golden-halo {
     content: '';
-    @apply absolute w-[800px] h-[800px] bg-amber-200/40 rounded-full blur-[150px] z-0;
-    bottom: 20%;
-    left: 30%;
-    animation: float 18s infinite;
+    @apply absolute w-[900px] h-[900px] bg-amber-200/40 rounded-full blur-[150px] z-0;
+    top: 35%;
+    left: 15%;
+    animation: float 25s infinite ease-in-out;
   }
 
   .fuchsia-halo {
     content: '';
-    @apply absolute w-[600px] h-[600px] rounded-full blur-[130px] z-0;
-    background-color: rgba(244, 114, 182, 0.4); /* Fuchsia avec 40% d'opacité */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation: float 20s infinite;
+    @apply absolute w-[700px] h-[700px] rounded-full blur-[130px] z-0;
+    background-color: rgba(244, 114, 182, 0.4);
+    top: 20%;
+    right: 25%;
+    animation: float 20s infinite ease-in-out;
   }
 
   .blue-halo {
     content: '';
     @apply absolute w-[800px] h-[800px] rounded-full blur-[150px] z-0;
-    background-color: rgba(7, 14, 25, 0.3); /* Bleu marine encore plus foncé avec 30% d'opacité */
-    top: 30%;
-    right: 20%;
-    animation: float 22s infinite;
+    background-color: rgba(7, 14, 25, 0.3);
+    bottom: 10%;
+    right: 30%;
+    animation: float 28s infinite ease-in-out;
   }
 }
