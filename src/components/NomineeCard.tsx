@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Check, Star } from "lucide-react";
+import { Check, Star as StarOutline } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface NomineeCardProps {
@@ -40,7 +40,12 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
         )}
         <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
           {nominee.name}
-          {isSelected && <Star className="h-4 w-4 text-yellow-400 animate-party" />}
+          {isSelected && (
+            <StarOutline 
+              className="h-4 w-4 text-yellow-400 animate-party fill-current" 
+              fill="currentColor"
+            />
+          )}
         </h3>
         <p className="text-gray-600 mb-4 flex-grow">{nominee.description}</p>
         <Button
