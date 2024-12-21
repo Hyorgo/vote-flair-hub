@@ -23,9 +23,6 @@ export const VotingSection = ({
 }: VotingSectionProps) => {
   const nominees = Array.isArray(category?.nominees) ? category.nominees : [];
 
-  console.log("Category:", category);
-  console.log("Nominees array:", nominees);
-
   return (
     <>
       <div className="flex justify-between items-center mb-8">
@@ -33,10 +30,10 @@ export const VotingSection = ({
           variant="outline"
           onClick={() => onNavigation("prev")}
           disabled={isFirstCategory}
-          className="group relative px-6 py-2 border border-gray-200 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:bg-none"
+          className="group relative px-8 py-3 border-2 border-gray-200 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:bg-none disabled:hover:scale-100"
         >
-          <ChevronLeft className="mr-2 h-4 w-4 text-[#DAA520]/80 group-hover:text-white transition-colors" />
-          <span className="font-medium text-gray-700 group-hover:text-white transition-colors">
+          <ChevronLeft className="mr-2 h-5 w-5 text-[#DAA520] group-hover:text-white transition-colors" />
+          <span className="font-semibold text-gray-700 group-hover:text-white transition-colors">
             Précédent
           </span>
         </Button>
@@ -49,12 +46,12 @@ export const VotingSection = ({
           variant="outline"
           onClick={() => onNavigation("next")}
           disabled={isLastCategory}
-          className="group relative px-6 py-2 border border-gray-200 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:bg-none"
+          className="group relative px-8 py-3 border-2 border-gray-200 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:bg-none disabled:hover:scale-100"
         >
-          <span className="font-medium text-gray-700 group-hover:text-white transition-colors">
+          <span className="font-semibold text-gray-700 group-hover:text-white transition-colors">
             Suivant
           </span>
-          <ChevronRight className="ml-2 h-4 w-4 text-[#DAA520]/80 group-hover:text-white transition-colors" />
+          <ChevronRight className="ml-2 h-5 w-5 text-[#DAA520] group-hover:text-white transition-colors" />
         </Button>
       </div>
 
