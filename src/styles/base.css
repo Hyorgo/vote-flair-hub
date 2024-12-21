@@ -33,14 +33,13 @@
   }
 
   html {
-    @apply bg-navy relative;
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
   }
 
   body {
-    @apply bg-transparent text-navy font-sans antialiased;
+    @apply text-navy font-sans antialiased;
     background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
     min-height: 100%;
     margin: 0;
