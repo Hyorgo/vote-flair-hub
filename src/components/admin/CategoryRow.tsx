@@ -55,25 +55,32 @@ export const CategoryRow = ({
     setNominees(data);
   };
 
-  const handleDeleteNominee = async (nomineeId: string) => {
+  const handleAddNomineeWithImage = async (imageUrl?: string) => {
     try {
       const { error } = await supabase
         .from('nominees')
-        .delete()
-        .eq('id', nomineeId);
+        .insert([{
+          category_id: category.id,
+          name: newNomineeName.trim(),
+          description: newNomineeDescription.trim(),
+          image_url: imageUrl
+        }]);
 
       if (error) throw error;
 
       toast({
         title: "Succès",
-        description: "Le nominé a été supprimé",
+        description: "Le nominé a été ajouté",
       });
 
+      setNewNomineeName("");
+      setNewNomineeDescription("");
       loadNominees();
     } catch (error) {
+      console.error("Error adding nominee:", error);
       toast({
         title: "Erreur",
-        description: "Impossible de supprimer le nominé",
+        description: "Impossible d'ajouter le nominé",
         variant: "destructive",
       });
     }
@@ -116,7 +123,7 @@ export const CategoryRow = ({
             setNewNomineeName={setNewNomineeName}
             newNomineeDescription={newNomineeDescription}
             setNewNomineeDescription={setNewNomineeDescription}
-            handleAddNominee={handleAddNominee}
+            handleAddNominee={handleAddNomineeWithImage}
           />
         </TableCell>
       </TableRow>

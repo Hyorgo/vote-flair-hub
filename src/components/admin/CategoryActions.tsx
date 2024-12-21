@@ -19,7 +19,7 @@ interface CategoryActionsProps {
   setNewNomineeName: (name: string) => void;
   newNomineeDescription: string;
   setNewNomineeDescription: (description: string) => void;
-  handleAddNominee: (categoryId: string) => void;
+  handleAddNominee: (imageUrl?: string) => void;
 }
 
 export const CategoryActions = ({
@@ -50,7 +50,7 @@ export const CategoryActions = ({
             setNewNomineeName={setNewNomineeName}
             newNomineeDescription={newNomineeDescription}
             setNewNomineeDescription={setNewNomineeDescription}
-            handleAddNominee={() => handleAddNominee(categoryId)}
+            handleAddNominee={handleAddNominee}
           />
         </DialogContent>
       </Dialog>
