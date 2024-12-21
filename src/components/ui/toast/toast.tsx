@@ -12,7 +12,6 @@ import type {
   ToastRootRef,
   ToastTitleRef,
   ToastViewportRef,
-  ToastActionProps
 } from "./types"
 
 const ToastProvider = ToastPrimitives.Provider
@@ -47,8 +46,8 @@ Toast.displayName = ToastPrimitives.Root.displayName
 
 const ToastAction = React.forwardRef<
   ToastActionRef,
-  Omit<ComponentPropsWithoutRef<typeof ToastPrimitives.Action>, 'altText'> & { altText?: string }
->(({ className, altText = "Action de notification", ...props }, ref) => (
+  ComponentPropsWithoutRef<typeof ToastPrimitives.Action>
+>(({ className, ...props }, ref) => (
   <ToastPrimitives.Action
     ref={ref}
     className={cn(

@@ -14,7 +14,3 @@ export type ToastCloseRef = ElementRef<typeof ToastPrimitives.Close>
 export type ToastTitleRef = ElementRef<typeof ToastPrimitives.Title>
 export type ToastDescriptionRef = ElementRef<typeof ToastPrimitives.Description>
 export type ToastViewportRef = ElementRef<typeof ToastPrimitives.Viewport>
-
-export type ToastActionProps = ComponentPropsWithoutRef<typeof ToastPrimitives.Action> & {
-  altText?: string;
-}
