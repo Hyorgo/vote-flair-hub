@@ -96,7 +96,7 @@ const Categories = () => {
         <VotingTimer />
 
         {userProfile && (
-          <div className="mb-6 text-2xl font-bold text-black">
+          <div className="mb-6 text-2xl font-bold text-white">
             Bienvenue {userProfile.first_name} ! 🎉
           </div>
         )}
