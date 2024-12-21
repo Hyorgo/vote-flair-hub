@@ -18,11 +18,8 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
   return (
     <div 
       className={cn(
-        "nominee-card relative animate-scale-in backdrop-blur-md bg-white/40 shadow-xl p-4 rounded-lg flex flex-col h-full hover:bg-white/50 transition-all duration-300",
-        isSelected ? 
-          "before:absolute before:inset-0 before:bg-primary/5 before:rounded-lg before:pointer-events-none" +
-          " after:absolute after:inset-[-2px] after:rounded-lg after:bg-gradient-to-r after:from-[#FFD700] after:via-[#DAA520] after:to-[#B8860B] after:-z-10"
-          : "border border-white/20"
+        "nominee-card relative animate-scale-in backdrop-blur-md bg-white/40 border border-white/20 shadow-xl p-4 rounded-lg flex flex-col h-full hover:bg-white/50 transition-all duration-300",
+        isSelected && "before:absolute before:inset-[-2px] before:rounded-lg before:bg-gradient-to-r before:from-[#FFD700] before:via-[#DAA520] before:to-[#B8860B] before:-z-10"
       )}
     >
       {nominee.image_url && (
