@@ -7,20 +7,22 @@ interface PageBackgroundProps {
   children: React.ReactNode;
 }
 
-// Utilisation de memo pour éviter les re-renders inutiles
 export const PageBackground = memo(({ pageName, children }: PageBackgroundProps) => {
   const { background, isLoading, error } = usePageBackground(pageName);
   const [videoKey, setVideoKey] = useState(Date.now());
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   useEffect(() => {
     if (background?.background_type === "video") {
       setVideoKey(Date.now());
       setIsVideoLoaded(false);
     }
+    if (background?.background_type === "image") {
+      setIsImageLoaded(false);
+    }
   }, [background?.background_value]);
 
-  // Optimisation du chargement
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-800">
@@ -29,7 +31,6 @@ export const PageBackground = memo(({ pageName, children }: PageBackgroundProps)
     );
   }
 
-  // Fallback avec transition douce
   if (!background || error) {
     const defaultBackground = pageName === "thanks" 
       ? "bg-festive-gradient" 
@@ -69,7 +70,34 @@ export const PageBackground = memo(({ pageName, children }: PageBackgroundProps)
     );
   }
 
-  // Optimisation du rendu des backgrounds statiques
+  if (background.background_type === "image") {
+    return (
+      <div className="min-h-screen relative">
+        {!isImageLoaded && (
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-800 transition-opacity duration-300" />
+        )}
+        <div 
+          className={`fixed inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-300 -z-10 ${
+            isImageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+          style={{ backgroundImage: `url(${background.background_value})` }}
+        >
+          <img
+            src={background.background_value}
+            alt="Background"
+            className="hidden"
+            onLoad={() => setIsImageLoaded(true)}
+            onError={(e) => {
+              console.error("Image loading error:", e);
+              console.log("Image URL:", background.background_value);
+            }}
+          />
+        </div>
+        <div className="relative z-0">{children}</div>
+      </div>
+    );
+  }
+
   const style = {
     ...(background.background_type === "color" && { 
       backgroundColor: background.background_value,
@@ -78,14 +106,6 @@ export const PageBackground = memo(({ pageName, children }: PageBackgroundProps)
     ...(background.background_type === "gradient" && { 
       background: background.background_value,
       transition: 'background 300ms ease-in-out'
-    }),
-    ...(background.background_type === "image" && {
-      backgroundImage: `url(${background.background_value})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundAttachment: 'fixed',
-      transition: 'background-image 300ms ease-in-out'
     })
   };
   
