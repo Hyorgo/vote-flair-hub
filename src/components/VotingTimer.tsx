@@ -61,10 +61,9 @@ export const VotingTimer = () => {
       )}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold relative">
-            <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent">
+            <span className="text-black">
               Temps restant
             </span>
-            <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-10 blur-sm" />
           </h2>
           <Tooltip>
             <TooltipTrigger asChild>
