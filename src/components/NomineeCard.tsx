@@ -26,7 +26,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
         scale: 1.03,
         transition: { duration: 0.2 }
       }}
-      className="relative h-full"
+      className="relative h-full group"
       role="article"
       aria-label={`Nominé : ${nominee.name}`}
     >
@@ -38,9 +38,9 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
           "nominee-card relative bg-white/90 backdrop-blur-sm border-2",
           "shadow-lg p-3 sm:p-6 rounded-lg flex flex-col h-full",
           "transform transition-all duration-500 ease-out",
-          "hover:bg-white hover:shadow-xl hover:border-yellow-400/50",
+          "group-hover:bg-white/95 group-hover:shadow-xl group-hover:-translate-y-1",
+          "group-hover:border-yellow-400/50",
           isSelected ? "border-yellow-400 ring-2 ring-yellow-400" : "border-white/40",
-          "group"
         )}
       >
         <NomineeImage 
@@ -53,7 +53,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
           isSelected={isSelected}
         />
 
-        <p className="text-sm sm:text-base text-navy mb-4 flex-grow leading-relaxed group-hover:text-navy/80 transition-colors duration-300">
+        <p className="text-sm sm:text-base text-navy/90 mb-4 flex-grow leading-relaxed group-hover:text-navy transition-colors duration-300">
           {nominee.description}
         </p>
 
