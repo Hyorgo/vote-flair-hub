@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 
 interface ImageBackgroundProps {
   imageUrl: string;
@@ -10,14 +11,42 @@ interface ImageBackgroundProps {
 export const ImageBackground = ({ imageUrl, children, onError }: ImageBackgroundProps) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [loadAttempts, setLoadAttempts] = useState(0);
+  const [finalImageUrl, setFinalImageUrl] = useState<string>("");
   const maxAttempts = 3;
   const { toast } = useToast();
 
   useEffect(() => {
-    setIsImageLoaded(false);
-    setLoadAttempts(0);
-    console.log("Tentative de chargement de l'image:", imageUrl);
-  }, [imageUrl]);
+    const loadImage = async () => {
+      setIsImageLoaded(false);
+      setLoadAttempts(0);
+      
+      try {
+        // Si l'URL commence par /lovable-uploads/, c'est une image du dossier public
+        if (imageUrl.startsWith('/lovable-uploads/')) {
+          setFinalImageUrl(imageUrl);
+          return;
+        }
+
+        // Sinon, on considère que c'est une image du bucket Supabase
+        const { data: publicUrl } = supabase.storage
+          .from('backgrounds')
+          .getPublicUrl(imageUrl);
+
+        if (publicUrl) {
+          console.log("URL Supabase générée:", publicUrl.publicUrl);
+          setFinalImageUrl(publicUrl.publicUrl);
+        } else {
+          console.error("Impossible de générer l'URL publique pour:", imageUrl);
+          onError();
+        }
+      } catch (error) {
+        console.error("Erreur lors de la génération de l'URL:", error);
+        onError();
+      }
+    };
+
+    loadImage();
+  }, [imageUrl, onError]);
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const currentAttempt = loadAttempts + 1;
@@ -31,12 +60,8 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
 
     if (loadAttempts < maxAttempts) {
       setLoadAttempts(prev => prev + 1);
-      // On utilise directement le chemin relatif pour les images uploadées
-      const newUrl = imageUrl.includes('lovable-uploads') 
-        ? imageUrl 
-        : `${window.location.origin}${imageUrl}`;
-      console.log(`Nouvelle tentative avec l'URL: ${newUrl}`);
-      e.currentTarget.src = newUrl;
+      // Forcer le rechargement de l'image
+      e.currentTarget.src = finalImageUrl + '?t=' + new Date().getTime();
     } else {
       console.error("Nombre maximum de tentatives atteint pour l'image:", imageUrl);
       onError();
@@ -44,14 +69,9 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
   };
 
   const handleImageLoad = () => {
-    console.log("Image chargée avec succès:", imageUrl);
+    console.log("Image chargée avec succès:", finalImageUrl);
     setIsImageLoaded(true);
   };
-
-  // Pour les images uploadées, on utilise directement le chemin relatif
-  const backgroundUrl = imageUrl.includes('lovable-uploads') 
-    ? imageUrl 
-    : `${window.location.origin}${imageUrl}`;
 
   return (
     <div className="min-h-screen relative">
@@ -63,11 +83,11 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
           isImageLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ 
-          backgroundImage: isImageLoaded ? `url(${backgroundUrl})` : 'none',
+          backgroundImage: isImageLoaded && finalImageUrl ? `url(${finalImageUrl})` : 'none',
         }}
       />
       <img
-        src={backgroundUrl}
+        src={finalImageUrl}
         alt=""
         className="hidden"
         onLoad={handleImageLoad}
