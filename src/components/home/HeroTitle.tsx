@@ -39,7 +39,7 @@ export const HeroTitle = () => {
       >
         <span className="font-heading tracking-tight">
           <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent font-extrabold">
-            Les Lyon d'Or
+            Lyon d'Or
           </span>
         </span>
       </motion.h1>
