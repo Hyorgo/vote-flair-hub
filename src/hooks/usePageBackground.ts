@@ -10,9 +10,9 @@ export const usePageBackground = (pageName: string) => {
         .select("*")
         .eq("page_name", pageName)
         .eq("is_active", true)
-        .single();
+        .maybeSingle();
 
-      if (error) throw error;
+      if (error && error.code !== 'PGRST116') throw error;
       return data;
     },
   });

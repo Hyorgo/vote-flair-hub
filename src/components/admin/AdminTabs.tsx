@@ -1,26 +1,39 @@
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CategoryManager } from "./CategoryManager";
 import { Statistics } from "./Statistics";
-import { Database, ChartBar } from "lucide-react";
+import { BackgroundManager } from "./BackgroundManager";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 export const AdminTabs = () => {
+  const { isLoading } = useAdminAuth();
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
     <Tabs defaultValue="categories" className="space-y-4">
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="categories" className="flex items-center gap-2">
-          <Database className="h-4 w-4" />
-          Gestion des catégories
-        </TabsTrigger>
-        <TabsTrigger value="stats" className="flex items-center gap-2">
-          <ChartBar className="h-4 w-4" />
-          Statistiques
-        </TabsTrigger>
+      <TabsList className="bg-white/50 backdrop-blur-sm">
+        <TabsTrigger value="categories">Catégories</TabsTrigger>
+        <TabsTrigger value="statistics">Statistiques</TabsTrigger>
+        <TabsTrigger value="backgrounds">Fonds</TabsTrigger>
       </TabsList>
-      <TabsContent value="categories">
+
+      <TabsContent value="categories" className="space-y-4">
         <CategoryManager />
       </TabsContent>
-      <TabsContent value="stats">
+
+      <TabsContent value="statistics">
         <Statistics />
+      </TabsContent>
+
+      <TabsContent value="backgrounds">
+        <BackgroundManager />
       </TabsContent>
     </Tabs>
   );
