@@ -41,7 +41,7 @@ export const VotingSection = ({
           </span>
         </Button>
         <h1 className="text-3xl font-bold text-center">
-          <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.3)]">
             {category?.name || ""}
           </span>
         </h1>
