@@ -15,9 +15,6 @@ interface NomineeCardProps {
 }
 
 export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps) => {
-  // Ajouter un log pour déboguer
-  console.log("Nominee image URL:", nominee.image_url);
-
   return (
     <div 
       className={cn(
@@ -33,7 +30,6 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
             className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
             onError={(e) => {
               console.error("Image loading error:", e);
-              // Utiliser une image par défaut en cas d'erreur
               e.currentTarget.src = "/placeholder.svg";
             }}
           />
@@ -49,7 +45,9 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
         variant={isSelected ? "default" : "outline"}
         className={cn(
           "w-full transition-all duration-300 mt-auto backdrop-blur-sm",
-          isSelected ? "bg-primary/90 hover:bg-primary-dark" : "bg-white/50 hover:bg-white/70"
+          isSelected 
+            ? "bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] hover:opacity-90 text-white border-none" 
+            : "bg-white/50 hover:bg-white/70"
         )}
       >
         {isSelected ? (
