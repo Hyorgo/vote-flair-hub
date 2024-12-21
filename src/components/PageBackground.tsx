@@ -77,12 +77,21 @@ export const PageBackground = memo(({ pageName, children }: PageBackgroundProps)
         {!isImageLoaded && (
           <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-800 transition-opacity duration-300" />
         )}
-        <img
-          src={background.background_value}
-          alt="Background"
-          className={`fixed inset-0 w-full h-full object-cover -z-10 transition-opacity duration-300 ${
+        <div 
+          className={`fixed inset-0 w-full h-full transition-opacity duration-300 -z-10 ${
             isImageLoaded ? 'opacity-100' : 'opacity-0'
           }`}
+          style={{ 
+            backgroundImage: `url(${background.background_value})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
+        <img
+          src={background.background_value}
+          alt=""
+          className="hidden"
           onLoad={() => {
             console.log("Image loaded successfully");
             setIsImageLoaded(true);
