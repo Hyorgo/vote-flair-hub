@@ -17,7 +17,6 @@ export const Layout = ({ children }: LayoutProps) => {
   const pageName = location.pathname === "/" ? "index" : location.pathname.slice(1);
   const { toast } = useToast();
   
-  // Activer les raccourcis clavier globaux
   useGlobalKeyboardNavigation();
 
   const showKeyboardShortcuts = () => {
@@ -42,7 +41,6 @@ export const Layout = ({ children }: LayoutProps) => {
                 alt="Lyon d'Or Logo" 
                 className="h-20 object-contain"
                 loading="eager"
-                fetchPriority="high"
               />
             </Link>
             <div className="flex items-center gap-2">

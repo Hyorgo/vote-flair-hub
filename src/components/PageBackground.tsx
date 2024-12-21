@@ -12,6 +12,7 @@ export const PageBackground = memo(({ pageName, children }: PageBackgroundProps)
   const [videoKey, setVideoKey] = useState(Date.now());
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [imageLoadError, setImageLoadError] = useState(false);
 
   useEffect(() => {
     if (background?.background_type === "video") {
@@ -20,6 +21,7 @@ export const PageBackground = memo(({ pageName, children }: PageBackgroundProps)
     }
     if (background?.background_type === "image") {
       setIsImageLoaded(false);
+      setImageLoadError(false);
     }
   }, [background?.background_value]);
 
@@ -31,7 +33,7 @@ export const PageBackground = memo(({ pageName, children }: PageBackgroundProps)
     );
   }
 
-  if (!background || error) {
+  if (!background || error || imageLoadError) {
     const defaultBackground = pageName === "thanks" 
       ? "bg-festive-gradient" 
       : "bg-gradient-to-b from-gray-900 to-gray-800";
@@ -71,21 +73,17 @@ export const PageBackground = memo(({ pageName, children }: PageBackgroundProps)
   }
 
   if (background.background_type === "image") {
-    console.log("Rendering image background with URL:", background.background_value);
     return (
       <div className="min-h-screen relative">
         {!isImageLoaded && (
           <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-800 transition-opacity duration-300" />
         )}
         <div 
-          className={`fixed inset-0 w-full h-full transition-opacity duration-300 -z-10 ${
+          className={`fixed inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-300 -z-10 ${
             isImageLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           style={{ 
             backgroundImage: `url(${background.background_value})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
           }}
         />
         <img
@@ -98,6 +96,7 @@ export const PageBackground = memo(({ pageName, children }: PageBackgroundProps)
           }}
           onError={(e) => {
             console.error("Image loading error:", e);
+            setImageLoadError(true);
             console.log("Image URL:", background.background_value);
           }}
         />
