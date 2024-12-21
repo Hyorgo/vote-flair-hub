@@ -4,7 +4,10 @@ import { motion } from "framer-motion";
 export const BrandingSection = () => {
   return (
     <div className="space-y-4">
-      <motion.div 
+      <motion.a 
+        href="https://www.ideai.fr"
+        target="_blank"
+        rel="noopener noreferrer"
         className="flex items-center justify-start"
         whileHover={{ scale: 1.02 }}
       >
@@ -13,7 +16,7 @@ export const BrandingSection = () => {
           alt="ideAI Logo" 
           className="h-20 w-20 object-contain"
         />
-      </motion.div>
+      </motion.a>
       <p className="text-white leading-relaxed max-w-sm">
         Votre partenaire digital de confiance pour des solutions web innovantes et sur mesure.
       </p>
