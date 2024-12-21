@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Settings, PartyPopper } from "lucide-react";
+import { Settings } from "lucide-react";
 import { Footer } from "./Footer";
 import { PageBackground } from "./PageBackground";
 
@@ -19,9 +19,12 @@ export const Layout = ({ children }: LayoutProps) => {
       <div className="min-h-screen flex flex-col">
         <header className="sticky top-0 z-50 bg-white/30 backdrop-blur-md border-b border-white/10 shadow-lg supports-[backdrop-filter]:bg-white/30">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-            <Link to="/" className="text-2xl font-heading font-bold text-primary flex items-center gap-2">
-              <PartyPopper className="h-6 w-6 animate-party" />
-              Application de Vote
+            <Link to="/" className="flex items-center gap-2">
+              <img 
+                src="/lovable-uploads/f615e6d4-11eb-4499-a3a3-d69273ded6e7.png" 
+                alt="Lyon d'Or Logo" 
+                className="h-12 object-contain"
+              />
             </Link>
             {!isAdmin ? (
               <Link to="/admin">
