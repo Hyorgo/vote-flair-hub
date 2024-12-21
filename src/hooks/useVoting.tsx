@@ -6,63 +6,21 @@ import { supabase } from "@/lib/supabase";
 export const useVoting = () => {
   const [currentCategory, setCurrentCategory] = useState(0);
   const [selections, setSelections] = useState<Record<string, string>>({});
-  const [email, setEmail] = useState("");
-  const [isEmailValidated, setIsEmailValidated] = useState(false);
   const { toast } = useToast();
   const { data: categories, isLoading, error } = useCategories();
-
-  const validateEmail = async (email: string) => {
-    try {
-      // Vérifier si l'email existe déjà dans validated_emails
-      const { data: existingEmail } = await supabase
-        .from("validated_emails")
-        .select("email")
-        .eq("email", email)
-        .single();
-
-      if (existingEmail) {
-        setIsEmailValidated(true);
-        return true;
-      }
-
-      // Si l'email n'existe pas, l'ajouter
-      const { error: insertError } = await supabase
-        .from("validated_emails")
-        .insert([{ email }]);
-
-      if (insertError) throw insertError;
-
-      setIsEmailValidated(true);
-      return true;
-    } catch (error) {
-      console.error("Error validating email:", error);
-      return false;
-    }
-  };
 
   const handleVote = async (nomineeId: string) => {
     const categoryId = categories?.[currentCategory]?.id;
     if (!categoryId) return;
 
-    if (!email) {
+    const userEmail = localStorage.getItem("userEmail");
+    if (!userEmail) {
       toast({
-        title: "Email requis",
-        description: "Veuillez entrer votre email pour voter",
+        title: "Session expirée",
+        description: "Veuillez vous reconnecter",
         variant: "destructive",
       });
       return;
-    }
-
-    if (!isEmailValidated) {
-      const validated = await validateEmail(email);
-      if (!validated) {
-        toast({
-          title: "Erreur de validation",
-          description: "Impossible de valider votre email",
-          variant: "destructive",
-        });
-        return;
-      }
     }
 
     const isModifying = selections[categoryId] === nomineeId;
@@ -75,7 +33,7 @@ export const useVoting = () => {
             {
               nominee_id: nomineeId,
               category_id: categoryId,
-              email: email,
+              email: userEmail,
             },
           ]);
 
@@ -121,8 +79,5 @@ export const useVoting = () => {
     categories: categories || [],
     isLoading,
     error,
-    email,
-    setEmail,
-    isEmailValidated,
   };
 };

@@ -4,10 +4,12 @@ import { VotingSection } from "@/components/VotingSection";
 import { VotingTimer } from "@/components/VotingTimer";
 import { CategoryNavigation } from "@/components/CategoryNavigation";
 import { useVoting } from "@/hooks/useVoting";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
+import { useNavigate } from "react-router-dom";
 
 const Categories = () => {
+  const navigate = useNavigate();
   const {
     currentCategory,
     setCurrentCategory,
@@ -17,10 +19,32 @@ const Categories = () => {
     categories,
     isLoading,
     error,
-    email,
-    setEmail,
-    isEmailValidated,
   } = useVoting();
+
+  // Récupérer les informations de l'utilisateur depuis le localStorage
+  const userEmail = localStorage.getItem("userEmail");
+
+  const { data: userProfile } = useQuery({
+    queryKey: ["userProfile", userEmail],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_profiles")
+        .select("*")
+        .eq("email", userEmail)
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userEmail,
+  });
+
+  // Rediriger vers la page d'accueil si pas d'email
+  React.useEffect(() => {
+    if (!userEmail) {
+      navigate("/");
+    }
+  }, [userEmail, navigate]);
 
   if (isLoading) {
     return (
@@ -67,19 +91,11 @@ const Categories = () => {
       <div className="max-w-5xl mx-auto">
         <VotingTimer />
 
-        <div className="mb-6">
-          <Label htmlFor="email">Email {isEmailValidated && "✓"}</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="Entrez votre email pour voter"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={`${
-              isEmailValidated ? "border-green-500" : ""
-            }`}
-          />
-        </div>
+        {userProfile && (
+          <div className="mb-6 text-2xl font-bold text-primary text-center">
+            Bienvenue {userProfile.first_name} ! 🎉
+          </div>
+        )}
 
         <CategoryNavigation
           categories={categories}
