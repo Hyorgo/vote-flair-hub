@@ -21,14 +21,14 @@ export const CategoryNavigation = ({
       onValueChange={onTabChange}
       className="mb-6"
     >
-      <TabsList className="w-full flex-wrap h-auto gap-2 bg-white/80 backdrop-blur-sm p-2">
+      <TabsList className="w-full flex-wrap h-auto gap-2 bg-white/40 backdrop-blur-md border border-white/20 shadow-lg p-2 rounded-xl">
         {categories.map((cat, index) => (
           <TabsTrigger
             key={cat.id}
             value={index.toString()}
             className={`${
-              selections[cat.id] ? "text-primary border-primary" : ""
-            } animate-scale-in`}
+              selections[cat.id] ? "text-primary border-primary bg-white/60" : "hover:bg-white/50"
+            } animate-scale-in backdrop-blur-sm transition-all duration-300`}
           >
             {cat.name}
           </TabsTrigger>
