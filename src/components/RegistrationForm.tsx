@@ -23,7 +23,7 @@ export const RegistrationForm = () => {
         .from("user_profiles")
         .select("email")
         .eq("email", email)
-        .single();
+        .maybeSingle();
 
       if (existingUser) {
         toast({
