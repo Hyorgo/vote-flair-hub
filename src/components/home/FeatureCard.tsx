@@ -18,7 +18,7 @@ export const FeatureCard = ({ icon: Icon, title, description }: FeatureCardProps
         <div className="absolute inset-0 bg-primary/10 rounded-full blur-xl"></div>
         <Icon className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 mx-auto text-primary relative z-10" />
       </div>
-      <h3 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3 text-gray-800">{title}</h3>
+      <h3 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3 text-navy">{title}</h3>
       <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{description}</p>
     </motion.div>
   );
