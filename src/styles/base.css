@@ -33,13 +33,12 @@
   }
 
   html {
-    @apply bg-navy min-h-screen relative overflow-hidden;
+    @apply bg-navy relative overflow-y-auto;
   }
 
   body {
-    @apply bg-transparent text-navy font-sans antialiased;
+    @apply bg-transparent text-navy font-sans antialiased min-h-screen;
     background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
-    min-height: 100vh;
   }
 
   h1, h2, h3, h4, h5, h6 {
