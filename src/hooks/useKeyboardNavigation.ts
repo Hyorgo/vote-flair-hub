@@ -1,56 +1,51 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from './use-toast';
+import { useToast } from '@/hooks/use-toast';
 
-export const useKeyboardNavigation = () => {
-  const navigate = useNavigate();
+interface UseKeyboardNavigationProps {
+  onNavigation: (direction: "prev" | "next") => void;
+  isFirstCategory: boolean;
+  isLastCategory: boolean;
+}
+
+export const useKeyboardNavigation = ({
+  onNavigation,
+  isFirstCategory,
+  isLastCategory,
+}: UseKeyboardNavigationProps) => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       // Éviter la navigation si l'utilisateur est en train de taper dans un champ
       if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
         return;
       }
 
       switch (event.key) {
-        case 'h':
-          if (event.altKey) {
-            navigate('/');
-            toast({
-              title: "Navigation",
-              description: "Retour à l'accueil",
-            });
-          }
-          break;
-        case 'c':
-          if (event.altKey) {
-            navigate('/categories');
-            toast({
-              title: "Navigation",
-              description: "Page des catégories",
-            });
-          }
-          break;
         case 'ArrowLeft':
-          if (event.altKey) {
-            window.history.back();
+          if (!isFirstCategory) {
+            onNavigation('prev');
             toast({
               title: "Navigation",
-              description: "Page précédente",
+              description: "Catégorie précédente",
+              duration: 1500,
             });
           }
           break;
-        case '?':
-          toast({
-            title: "Raccourcis clavier",
-            description: "Alt + H: Accueil | Alt + C: Catégories | Alt + ←: Retour",
-          });
+        case 'ArrowRight':
+          if (!isLastCategory) {
+            onNavigation('next');
+            toast({
+              title: "Navigation",
+              description: "Catégorie suivante",
+              duration: 1500,
+            });
+          }
           break;
       }
     };
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [navigate, toast]);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onNavigation, isFirstCategory, isLastCategory, toast]);
 };

@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { NavigationButtons } from "./voting/NavigationButtons";
 import { CategoryTitle } from "./voting/CategoryTitle";
 import { NomineesList } from "./voting/NomineesList";
+import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
 
 interface VotingSectionProps {
   category: Category;
@@ -24,6 +25,12 @@ export const VotingSection = ({
 }: VotingSectionProps) => {
   const { toast } = useToast();
 
+  useKeyboardNavigation({
+    onNavigation,
+    isFirstCategory,
+    isLastCategory,
+  });
+
   const handleVote = (nomineeId: string) => {
     const isModifying = selections[category?.id || ""] === nomineeId;
     
@@ -35,6 +42,7 @@ export const VotingSection = ({
         ? "Vous pouvez maintenant choisir un autre nominé"
         : "Cliquez à nouveau sur le même nominé pour modifier votre vote",
       variant: "default",
+      duration: 3000,
     });
   };
 

@@ -16,7 +16,7 @@ interface VoteButtonProps {
 
 export const VoteButton = ({ isSelected, onSelect }: VoteButtonProps) => {
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={200}>
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
@@ -27,7 +27,7 @@ export const VoteButton = ({ isSelected, onSelect }: VoteButtonProps) => {
               "border-2 border-white/40 rounded-lg shadow-sm",
               "transform hover:scale-102 hover:shadow-md",
               isSelected 
-                ? "bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white hover:opacity-90" 
+                ? "bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white hover:opacity-90 animate-scale-in" 
                 : "hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white bg-white"
             )}
             aria-pressed={isSelected}
@@ -44,7 +44,10 @@ export const VoteButton = ({ isSelected, onSelect }: VoteButtonProps) => {
             )}
           </Button>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent 
+          sideOffset={4}
+          className="bg-white/90 backdrop-blur-sm border border-white/20 shadow-lg"
+        >
           <p>
             {isSelected 
               ? "Cliquez à nouveau pour annuler votre vote" 
