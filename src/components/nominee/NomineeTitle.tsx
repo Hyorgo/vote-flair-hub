@@ -10,7 +10,7 @@ interface NomineeTitleProps {
 export const NomineeTitle = ({ name, isSelected }: NomineeTitleProps) => {
   return (
     <h3 className="text-lg sm:text-xl font-semibold mb-2 flex items-center gap-2 group-hover:translate-x-1 transition-transform duration-300">
-      <span className="bg-gradient-to-r from-primary via-primary-light to-accent bg-clip-text text-transparent">
+      <span className="bg-gradient-to-r from-accent via-primary to-primary-dark bg-clip-text text-transparent font-bold">
         {name}
       </span>
       {isSelected && (
