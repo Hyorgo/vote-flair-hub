@@ -14,7 +14,7 @@ export const BrandingSection = () => {
           className="h-20 w-20 object-contain"
         />
       </motion.div>
-      <p className="text-gray-600 leading-relaxed max-w-sm">
+      <p className="text-white leading-relaxed max-w-sm">
         Votre partenaire digital de confiance pour des solutions web innovantes et sur mesure.
       </p>
     </div>

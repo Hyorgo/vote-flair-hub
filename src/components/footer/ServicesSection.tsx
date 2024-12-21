@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 export const ServicesSection = () => {
   return (
     <div className="space-y-6">
-      <h3 className="font-heading font-semibold text-lg text-gray-800">Nos Services</h3>
-      <ul className="space-y-3 text-gray-600">
+      <h3 className="font-heading font-semibold text-lg text-white">Nos Services</h3>
+      <ul className="space-y-3 text-white">
         <motion.li 
           whileHover={{ x: 5 }}
           className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors"
