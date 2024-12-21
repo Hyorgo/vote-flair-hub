@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Trophy, Star, Users, ArrowRight, Award, Crown, Medal } from "lucide-react";
 import { motion } from "framer-motion";
+import { RegistrationForm } from "@/components/RegistrationForm";
 
 const Index = () => {
   const containerVariants = {
@@ -102,20 +103,12 @@ const Index = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.8 }}
-          className="text-center space-y-6"
+          className="text-center space-y-6 w-full flex flex-col items-center"
         >
-          <Link to="/categories">
-            <Button
-              size="lg"
-              className="text-lg group bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl px-8 py-6"
-            >
-              Participer aux votes
-              <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </Link>
-          <p className="text-sm text-gray-500 animate-pulse">
-            Les votes sont ouverts - Faites entendre votre voix !
-          </p>
+          <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-primary/10 w-full max-w-md">
+            <h2 className="text-2xl font-semibold mb-6 text-gray-800">Inscription pour voter</h2>
+            <RegistrationForm />
+          </div>
         </motion.div>
       </div>
     </Layout>
