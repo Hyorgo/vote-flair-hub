@@ -16,7 +16,7 @@ export const Layout = ({ children }: LayoutProps) => {
   useGlobalKeyboardNavigation();
 
   return (
-    <div className="flex flex-col min-h-screen h-screen max-h-screen overflow-y-auto">
+    <div className="flex flex-col min-h-screen h-screen max-h-screen overflow-hidden">
       {/* Background elements with lower z-index */}
       <div className="fixed inset-0 z-0">
         {!isAdmin && (
@@ -32,7 +32,7 @@ export const Layout = ({ children }: LayoutProps) => {
       </div>
       
       {/* Main content with higher z-index */}
-      <div className="relative z-10 flex flex-col min-h-screen">
+      <div className="relative z-10 flex flex-col h-full overflow-y-auto pb-[72px]">
         <Header isAdmin={isAdmin} />
         <MainContent>{children}</MainContent>
         <Footer />
