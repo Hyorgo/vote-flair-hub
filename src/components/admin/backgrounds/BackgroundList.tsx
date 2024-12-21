@@ -50,6 +50,17 @@ export const BackgroundList = ({ backgrounds, onBackgroundChange }: BackgroundLi
 
   const toggleBackgroundActive = async (background: PageBackground) => {
     try {
+      // Si on active un fond, on désactive d'abord tous les autres fonds de la même page
+      if (!background.is_active) {
+        const { error: deactivateError } = await supabase
+          .from("page_backgrounds")
+          .update({ is_active: false })
+          .eq("page_name", background.page_name);
+
+        if (deactivateError) throw deactivateError;
+      }
+
+      // Puis on met à jour le statut du fond sélectionné
       const { error } = await supabase
         .from("page_backgrounds")
         .update({ is_active: !background.is_active })
