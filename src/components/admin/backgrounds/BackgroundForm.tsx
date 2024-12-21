@@ -122,10 +122,10 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
           value={pageName}
           onValueChange={setPageName}
         >
-          <SelectTrigger>
+          <SelectTrigger className="bg-white">
             <SelectValue placeholder="Sélectionnez une page" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white shadow-lg border-0">
             <SelectItem value="index">Accueil</SelectItem>
             <SelectItem value="admin">Administration</SelectItem>
             <SelectItem value="categories">Catégories</SelectItem>
@@ -139,10 +139,10 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
           value={backgroundType}
           onValueChange={(value: "color" | "image" | "video") => setBackgroundType(value)}
         >
-          <SelectTrigger>
+          <SelectTrigger className="bg-white">
             <SelectValue placeholder="Sélectionnez un type" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white shadow-lg border-0">
             <SelectItem value="color">Couleur</SelectItem>
             <SelectItem value="image">Image</SelectItem>
             <SelectItem value="video">Vidéo</SelectItem>
