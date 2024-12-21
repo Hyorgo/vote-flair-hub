@@ -27,17 +27,16 @@ export const PageBackground = ({ pageName, children }: PageBackgroundProps) => {
     );
   }
 
-  // Show error state
-  if (error) {
-    console.error("Background loading error:", error);
+  // If no background is found or there's an error, render with default styling
+  if (!background || error) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
         {children}
       </div>
     );
   }
 
-  if (background?.background_type === "video") {
+  if (background.background_type === "video") {
     return (
       <div className="min-h-screen relative">
         <video
@@ -65,7 +64,7 @@ export const PageBackground = ({ pageName, children }: PageBackgroundProps) => {
       className="min-h-screen relative" 
       style={{
         ...style,
-        backgroundColor: background?.background_type === "color" ? background.background_value : undefined,
+        backgroundColor: background.background_type === "color" ? background.background_value : undefined,
       }}
     >
       {children}
