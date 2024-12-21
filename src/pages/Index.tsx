@@ -2,7 +2,7 @@ import React from "react";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { RegistrationForm } from "@/components/RegistrationForm";
-import { Trophy, Star, Users, ArrowRight, Award, Crown, Medal } from "lucide-react";
+import { Trophy, Crown, Award, Medal } from "lucide-react";
 
 const Index = () => {
   const containerVariants = {
@@ -22,16 +22,16 @@ const Index = () => {
 
   return (
     <Layout>
-      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-12 px-4">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-12 px-4 mt-16 sm:mt-24">
         <motion.div
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center space-y-6 relative"
         >
-          <div className="absolute -top-16 left-1/2 -translate-x-1/2">
+          <div className="absolute left-1/2 -translate-x-1/2 -top-20 sm:-top-24">
             <motion.div
-              animate={{ rotate: [-50, 50] }}
+              animate={{ rotate: [-10, 10] }}
               transition={{ 
                 duration: 2,
                 repeat: Infinity,
@@ -39,14 +39,14 @@ const Index = () => {
                 ease: "easeInOut"
               }}
             >
-              <Crown className="w-24 h-24 text-primary opacity-20" />
+              <Crown className="w-16 h-16 sm:w-24 sm:h-24 text-primary opacity-20" />
             </motion.div>
           </div>
           
-          <h1 className="text-6xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent pt-4">
             Les Lyon d'Or
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Célébrez l'excellence et participez à la reconnaissance des talents exceptionnels
           </p>
         </motion.div>
