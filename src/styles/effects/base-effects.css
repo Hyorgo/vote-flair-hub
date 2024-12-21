@@ -1,0 +1,19 @@
+@layer base {
+  html::before {
+    content: '';
+    @apply absolute top-0 left-0 w-[1200px] h-[1200px] bg-purple-500/30 rounded-full blur-[150px] animate-float;
+    animation: float 15s infinite;
+  }
+
+  html::after {
+    content: '';
+    @apply absolute bottom-0 right-0 w-[1000px] h-[1000px] bg-blue-400/30 rounded-full blur-[130px];
+    animation: float 20s infinite reverse;
+  }
+
+  .golden-halo {
+    content: '';
+    @apply absolute bottom-[-20%] left-[30%] w-[1500px] h-[1500px] bg-amber-200/40 rounded-full blur-[150px] z-0;
+    animation: float 18s infinite;
+  }
+}

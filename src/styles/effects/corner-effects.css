@@ -1,0 +1,34 @@
+@layer base {
+  /* Bokeh dans les angles */
+  .bokeh-corners::before {
+    content: '';
+    @apply absolute w-16 h-16 bg-rose-200/40 rounded-full blur-sm;
+    animation: bokeh1 15s infinite;
+    top: 5%;
+    left: 5%;
+  }
+
+  .bokeh-corners::after {
+    content: '';
+    @apply absolute w-12 h-12 bg-emerald-200/35 rounded-full blur-sm;
+    animation: bokeh2 18s infinite;
+    top: 5%;
+    right: 5%;
+  }
+
+  .bokeh-corners-bottom::before {
+    content: '';
+    @apply absolute w-20 h-20 bg-violet-200/30 rounded-full blur-sm;
+    animation: bokeh3 20s infinite;
+    bottom: 5%;
+    left: 5%;
+  }
+
+  .bokeh-corners-bottom::after {
+    content: '';
+    @apply absolute w-14 h-14 bg-amber-100/45 rounded-full blur-sm;
+    animation: bokeh1 22s infinite;
+    bottom: 5%;
+    right: 5%;
+  }
+}
