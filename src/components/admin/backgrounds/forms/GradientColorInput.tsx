@@ -8,6 +8,8 @@ import { Plus, Minus } from "lucide-react";
 interface ColorStop {
   color: string;
   position: number;
+  x?: number; // Pour la position X en %
+  y?: number; // Pour la position Y en %
 }
 
 interface GradientColorInputProps {
@@ -16,25 +18,46 @@ interface GradientColorInputProps {
 }
 
 export const GradientColorInput = ({ value, onChange }: GradientColorInputProps) => {
+  const [gradientType, setGradientType] = useState("linear");
   const [direction, setDirection] = useState("to right");
   const [colorStops, setColorStops] = useState<ColorStop[]>([
-    { color: "#ffffff", position: 0 },
-    { color: "#000000", position: 100 }
+    { color: "#ffffff", position: 0, x: 0, y: 0 },
+    { color: "#000000", position: 100, x: 100, y: 100 }
   ]);
 
   const handleGradientChange = () => {
-    const gradientStops = colorStops
-      .sort((a, b) => a.position - b.position)
-      .map(stop => `${stop.color} ${stop.position}%`)
-      .join(', ');
-    
-    const gradientValue = `linear-gradient(${direction}, ${gradientStops})`;
+    let gradientValue = "";
+    const sortedStops = [...colorStops].sort((a, b) => a.position - b.position);
+
+    switch (gradientType) {
+      case "linear":
+        const linearStops = sortedStops
+          .map(stop => `${stop.color} ${stop.position}%`)
+          .join(', ');
+        gradientValue = `linear-gradient(${direction}, ${linearStops})`;
+        break;
+
+      case "radial":
+        const radialStops = sortedStops
+          .map(stop => `${stop.color} ${stop.position}%`)
+          .join(', ');
+        gradientValue = `radial-gradient(circle at center, ${radialStops})`;
+        break;
+
+      case "conic":
+        const conicStops = sortedStops
+          .map(stop => `${stop.color} ${stop.position}deg`)
+          .join(', ');
+        gradientValue = `conic-gradient(from 0deg at center, ${conicStops})`;
+        break;
+    }
+
     onChange(gradientValue);
   };
 
   useEffect(() => {
     handleGradientChange();
-  }, [direction, colorStops]);
+  }, [gradientType, direction, colorStops]);
 
   const addColorStop = () => {
     const lastPosition = colorStops[colorStops.length - 1]?.position || 0;
@@ -42,7 +65,9 @@ export const GradientColorInput = ({ value, onChange }: GradientColorInputProps)
     
     setColorStops([...colorStops, {
       color: "#808080",
-      position: newPosition
+      position: newPosition,
+      x: 50,
+      y: 50
     }]);
   };
 
@@ -66,24 +91,43 @@ export const GradientColorInput = ({ value, onChange }: GradientColorInputProps)
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label>Direction du dégradé</Label>
+        <Label>Type de dégradé</Label>
         <Select 
-          value={direction} 
-          onValueChange={setDirection}
+          value={gradientType} 
+          onValueChange={setGradientType}
         >
           <SelectTrigger className="bg-white">
-            <SelectValue placeholder="Choisir une direction" />
+            <SelectValue placeholder="Choisir un type de dégradé" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="to right">Gauche à droite</SelectItem>
-            <SelectItem value="to left">Droite à gauche</SelectItem>
-            <SelectItem value="to bottom">Haut en bas</SelectItem>
-            <SelectItem value="to top">Bas en haut</SelectItem>
-            <SelectItem value="45deg">Diagonale (45°)</SelectItem>
-            <SelectItem value="135deg">Diagonale inversée (135°)</SelectItem>
+            <SelectItem value="linear">Linéaire</SelectItem>
+            <SelectItem value="radial">Radial</SelectItem>
+            <SelectItem value="conic">Conique</SelectItem>
           </SelectContent>
         </Select>
       </div>
+
+      {gradientType === "linear" && (
+        <div className="space-y-2">
+          <Label>Direction du dégradé</Label>
+          <Select 
+            value={direction} 
+            onValueChange={setDirection}
+          >
+            <SelectTrigger className="bg-white">
+              <SelectValue placeholder="Choisir une direction" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="to right">Gauche à droite</SelectItem>
+              <SelectItem value="to left">Droite à gauche</SelectItem>
+              <SelectItem value="to bottom">Haut en bas</SelectItem>
+              <SelectItem value="to top">Bas en haut</SelectItem>
+              <SelectItem value="45deg">Diagonale (45°)</SelectItem>
+              <SelectItem value="135deg">Diagonale inversée (135°)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       <div className="space-y-4">
         {colorStops.map((stop, index) => (
@@ -106,11 +150,11 @@ export const GradientColorInput = ({ value, onChange }: GradientColorInputProps)
               </div>
             </div>
             <div className="w-24 space-y-2">
-              <Label>Position (%)</Label>
+              <Label>{gradientType === "conic" ? "Angle (deg)" : "Position (%)"}</Label>
               <Input
                 type="number"
                 min="0"
-                max="100"
+                max={gradientType === "conic" ? "360" : "100"}
                 value={stop.position}
                 onChange={(e) => updateColorStop(index, { position: Number(e.target.value) })}
               />
@@ -143,10 +187,22 @@ export const GradientColorInput = ({ value, onChange }: GradientColorInputProps)
       <div className="mt-4">
         <div 
           className="w-full h-20 rounded-lg border"
-          style={{ background: `linear-gradient(${direction}, ${colorStops
-            .sort((a, b) => a.position - b.position)
-            .map(stop => `${stop.color} ${stop.position}%`)
-            .join(', ')})` 
+          style={{ 
+            background: `${gradientType === "linear" 
+              ? `linear-gradient(${direction}, ${colorStops
+                  .sort((a, b) => a.position - b.position)
+                  .map(stop => `${stop.color} ${stop.position}%`)
+                  .join(', ')})`
+              : gradientType === "radial"
+              ? `radial-gradient(circle at center, ${colorStops
+                  .sort((a, b) => a.position - b.position)
+                  .map(stop => `${stop.color} ${stop.position}%`)
+                  .join(', ')})`
+              : `conic-gradient(from 0deg at center, ${colorStops
+                  .sort((a, b) => a.position - b.position)
+                  .map(stop => `${stop.color} ${stop.position}deg`)
+                  .join(', ')})`
+            }`
           }}
         />
       </div>
