@@ -50,18 +50,27 @@ export const NomineeForm = ({
         const fileExt = imageFile.name.split('.').pop();
         const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
 
+        // Convertir le File en ArrayBuffer
+        const arrayBuffer = await imageFile.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
+
         const { error: uploadError, data } = await supabase.storage
           .from('nominees-images')
-          .upload(fileName, imageFile);
+          .upload(fileName, uint8Array, {
+            contentType: imageFile.type,
+            upsert: false
+          });
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.error("Upload error:", uploadError);
+          throw uploadError;
+        }
 
-        // Récupérer l'URL publique de l'image
         const { data: { publicUrl } } = supabase.storage
           .from('nominees-images')
           .getPublicUrl(fileName);
 
-        console.log("Image uploaded, public URL:", publicUrl);
+        console.log("Image uploaded successfully, public URL:", publicUrl);
         imageUrl = publicUrl;
       }
 
