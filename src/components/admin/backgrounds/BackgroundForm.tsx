@@ -33,7 +33,10 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
     try {
       let finalBackgroundValue = backgroundValue;
 
-      if (file && (backgroundType === "image" || backgroundType === "video")) {
+      if (backgroundType === "video") {
+        // For video, we directly use the URL provided
+        finalBackgroundValue = backgroundValue;
+      } else if (file && backgroundType === "image") {
         if (file.size > MAX_FILE_SIZE) {
           toast({
             title: "Erreur",
@@ -160,15 +163,26 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
             onChange={(e) => setBackgroundValue(e.target.value)}
           />
         </div>
+      ) : backgroundType === "video" ? (
+        <div className="space-y-2">
+          <Label htmlFor="background-value">URL de la vidéo</Label>
+          <Input
+            id="background-value"
+            type="url"
+            placeholder="https://example.com/video.mp4"
+            value={backgroundValue}
+            onChange={(e) => setBackgroundValue(e.target.value)}
+          />
+        </div>
       ) : (
         <div className="space-y-2">
           <Label htmlFor="file">
-            Fichier {backgroundType === "image" ? "image" : "vidéo"} (max 50MB)
+            Fichier image (max 50MB)
           </Label>
           <Input
             id="file"
             type="file"
-            accept={backgroundType === "image" ? "image/*" : "video/*"}
+            accept="image/*"
             onChange={handleFileChange}
           />
         </div>
