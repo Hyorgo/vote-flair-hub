@@ -1,7 +1,7 @@
 import React from 'react';
-import Features from '../components/home/Features';
-import HeroTitle from '../components/home/HeroTitle';
-import RegistrationCard from '../components/home/RegistrationCard';
+import { Features } from '../components/home/Features';
+import { HeroTitle } from '../components/home/HeroTitle';
+import { RegistrationCard } from '../components/home/RegistrationCard';
 
 const Index = () => {
   return (
