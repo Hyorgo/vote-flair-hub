@@ -19,7 +19,7 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [pageName, setPageName] = useState("");
   const [backgroundType, setBackgroundType] = useState<"color" | "image" | "video">("color");
-  const [backgroundValue, setBackgroundValue] = useState("");
+  const [backgroundValue, setBackgroundValue] = useState("#ffffff"); // Default white color
   const [file, setFile] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -79,7 +79,7 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
 
       setPageName("");
       setBackgroundType("color");
-      setBackgroundValue("");
+      setBackgroundValue("#ffffff"); // Reset to default white color
       setFile(null);
       onSuccess();
     } catch (error) {
