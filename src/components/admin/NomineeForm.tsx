@@ -10,7 +10,7 @@ interface NomineeFormProps {
   setNewNomineeName: (name: string) => void;
   newNomineeDescription: string;
   setNewNomineeDescription: (description: string) => void;
-  handleAddNominee: (imageUrl?: string) => void;
+  handleAddNominee: (name: string, description: string, imageUrl?: string) => void;
 }
 
 export const NomineeForm = ({
@@ -63,7 +63,7 @@ export const NomineeForm = ({
         imageUrl = publicUrl;
       }
 
-      handleAddNominee(imageUrl);
+      handleAddNominee(newNomineeName, newNomineeDescription, imageUrl);
       setImageFile(null);
     } catch (error) {
       console.error("Error uploading image:", error);

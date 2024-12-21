@@ -19,7 +19,7 @@ interface CategoryActionsProps {
   setNewNomineeName: (name: string) => void;
   newNomineeDescription: string;
   setNewNomineeDescription: (description: string) => void;
-  handleAddNominee: (imageUrl?: string) => void;
+  handleAddNominee: (name: string, description: string, imageUrl?: string) => void;
 }
 
 export const CategoryActions = ({
