@@ -57,8 +57,7 @@ export const VotingTimer = () => {
         </h2>
         <div className="flex items-center gap-2">
           <div className="relative">
-            <Timer className="h-5 w-5 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.3)]" />
-            <Timer className="absolute inset-0 h-5 w-5 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-10 blur-sm" aria-hidden="true" />
+            <Timer className="h-5 w-5 text-[#FFD700] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.3)]" />
           </div>
           <span className="font-mono text-lg">{timeLeft}</span>
         </div>
