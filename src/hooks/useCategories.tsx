@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { Category, Nominee } from "@/types/airtable";
 
 export const useCategories = () => {
   return useQuery({
@@ -14,7 +15,8 @@ export const useCategories = () => {
             id,
             name,
             description,
-            image_url
+            image_url,
+            category_id
           )
         `);
 
@@ -23,7 +25,18 @@ export const useCategories = () => {
         throw error;
       }
 
-      return categories || [];
+      // Transform the data to match the expected type
+      return (categories || []).map((category): Category => ({
+        id: category.id,
+        name: category.name,
+        nominees: (category.nominees || []).map((nominee): Nominee => ({
+          id: nominee.id,
+          name: nominee.name,
+          description: nominee.description,
+          image_url: nominee.image_url,
+          category_id: nominee.category_id
+        }))
+      }));
     },
   });
 };
