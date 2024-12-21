@@ -37,13 +37,18 @@ export default {
           DEFAULT: "#F97316",
           foreground: "#FFFFFF",
         },
+        festive: {
+          start: "#FDE1D3",
+          middle: "#FEC6A1",
+          end: "#F2FCE2",
+        },
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
         heading: ["Montserrat", "sans-serif"],
       },
       backgroundImage: {
-        'festive-gradient': 'linear-gradient(to right, #ee9ca7, #ffdde1)',
+        'festive-gradient': 'linear-gradient(135deg, var(--festive-start) 0%, var(--festive-middle) 50%, var(--festive-end) 100%)',
       },
       keyframes: {
         "slide-in": {
@@ -66,6 +71,14 @@ export default {
           "0%": { opacity: "1" },
           "50%": { opacity: "0.5" },
           "100%": { opacity: "1" },
+        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        "bounce-light": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
         }
       },
       animation: {
@@ -74,6 +87,8 @@ export default {
         "scale-in": "scale-in 0.2s ease-out",
         "party": "party 1s ease-in-out infinite",
         "shimmer": "shimmer 2s ease-in-out infinite",
+        "float": "float 3s ease-in-out infinite",
+        "bounce-light": "bounce-light 2s ease-in-out infinite"
       },
     },
   },
