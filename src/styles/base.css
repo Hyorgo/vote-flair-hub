@@ -34,11 +34,17 @@
 
   html {
     @apply bg-navy relative overflow-y-auto;
+    height: 100%;
   }
 
   body {
-    @apply bg-transparent text-navy font-sans antialiased min-h-screen;
+    @apply bg-transparent text-navy font-sans antialiased;
     background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
   }
 
   h1, h2, h3, h4, h5, h6 {

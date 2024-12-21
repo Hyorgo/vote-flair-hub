@@ -19,7 +19,7 @@ export const Layout = ({ children }: LayoutProps) => {
 
   return (
     <PageBackground pageName={pageName}>
-      <div className="min-h-screen flex flex-col">
+      <div className="flex flex-col min-h-screen">
         <Header isAdmin={isAdmin} />
         <MainContent>{children}</MainContent>
         <Footer />
