@@ -33,8 +33,10 @@
   }
 
   html {
-    @apply bg-navy relative overflow-y-auto;
+    @apply bg-navy relative;
     height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   body {
@@ -45,6 +47,7 @@
     padding: 0;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
