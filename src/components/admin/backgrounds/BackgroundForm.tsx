@@ -16,6 +16,8 @@ interface BackgroundFormProps {
   onSuccess: () => void;
 }
 
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB in bytes
+
 export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +34,16 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
       let finalBackgroundValue = backgroundValue;
 
       if (file && (backgroundType === "image" || backgroundType === "video")) {
+        if (file.size > MAX_FILE_SIZE) {
+          toast({
+            title: "Erreur",
+            description: "Le fichier est trop volumineux. La taille maximale est de 50MB.",
+            variant: "destructive",
+          });
+          setIsLoading(false);
+          return;
+        }
+
         const fileExt = file.name.split('.').pop();
         const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
         const filePath = `${fileName}`;
@@ -86,7 +98,17 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      if (selectedFile.size > MAX_FILE_SIZE) {
+        toast({
+          title: "Erreur",
+          description: "Le fichier est trop volumineux. La taille maximale est de 50MB.",
+          variant: "destructive",
+        });
+        e.target.value = '';
+        return;
+      }
+      setFile(selectedFile);
     }
   };
 
@@ -140,7 +162,9 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
         </div>
       ) : (
         <div className="space-y-2">
-          <Label htmlFor="file">Fichier {backgroundType === "image" ? "image" : "vidéo"}</Label>
+          <Label htmlFor="file">
+            Fichier {backgroundType === "image" ? "image" : "vidéo"} (max 50MB)
+          </Label>
           <Input
             id="file"
             type="file"
