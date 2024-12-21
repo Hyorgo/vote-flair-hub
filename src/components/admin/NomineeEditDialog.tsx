@@ -9,7 +9,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Pencil } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 
@@ -23,9 +22,10 @@ interface Nominee {
 interface NomineeEditDialogProps {
   nominee: Nominee;
   categoryId: string;
+  children: React.ReactNode;
 }
 
-export const NomineeEditDialog = ({ nominee, categoryId }: NomineeEditDialogProps) => {
+export const NomineeEditDialog = ({ nominee, categoryId, children }: NomineeEditDialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState(nominee.name);
   const [description, setDescription] = useState(nominee.description);
@@ -66,9 +66,7 @@ export const NomineeEditDialog = ({ nominee, categoryId }: NomineeEditDialogProp
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <Pencil className="h-4 w-4" />
-        </Button>
+        {children}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

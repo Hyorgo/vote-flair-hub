@@ -24,7 +24,7 @@ export const NomineeList = ({ nominees, categoryId, onDeleteNominee }: NomineeLi
         {nominees.map((nominee) => (
           <div 
             key={nominee.id}
-            className="flex items-center justify-between p-4 bg-white/50 rounded-lg"
+            className="flex items-center justify-between p-4 bg-white/50 rounded-lg hover:bg-white/70 transition-colors"
           >
             <div className="flex items-center gap-4">
               {nominee.image_url && (
@@ -40,10 +40,20 @@ export const NomineeList = ({ nominees, categoryId, onDeleteNominee }: NomineeLi
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <NomineeEditDialog nominee={nominee} categoryId={categoryId} />
+              <NomineeEditDialog nominee={nominee} categoryId={categoryId}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <Pencil className="h-4 w-4" />
+                  Modifier
+                </Button>
+              </NomineeEditDialog>
               <Button
                 variant="ghost"
                 size="icon"
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
                 onClick={() => onDeleteNominee(nominee.id)}
               >
                 <Trash2 className="h-4 w-4" />
