@@ -8,7 +8,7 @@ interface NomineeCardProps {
     id: string;
     name: string;
     description: string;
-    imageUrl?: string;
+    image_url?: string;
   };
   isSelected: boolean;
   onSelect: (id: string) => void;
@@ -22,10 +22,10 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
         isSelected && "ring-2 ring-primary-light before:absolute before:inset-0 before:bg-primary/5"
       )}
     >
-      {nominee.imageUrl && (
+      {nominee.image_url && (
         <div className="aspect-video rounded-lg overflow-hidden mb-4">
           <img 
-            src={nominee.imageUrl} 
+            src={nominee.image_url} 
             alt={nominee.name}
             className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
           />
