@@ -6,7 +6,7 @@ interface MainContentProps {
 
 export const MainContent = ({ children }: MainContentProps) => {
   return (
-    <main className="container mx-auto px-4 py-8 flex-grow relative">
+    <main className="container mx-auto px-4 py-8 flex-grow">
       {children}
     </main>
   );
