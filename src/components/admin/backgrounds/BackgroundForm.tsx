@@ -1,97 +1,61 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/lib/supabase";
-import { useToast } from "@/hooks/use-toast";
 import { PageSelector } from "./forms/PageSelector";
 import { BackgroundTypeSelector } from "./forms/BackgroundTypeSelector";
 import { ColorBackgroundInput } from "./forms/ColorBackgroundInput";
 import { ImageBackgroundInput } from "./forms/ImageBackgroundInput";
 import { VideoBackgroundInput } from "./forms/VideoBackgroundInput";
 import { GradientColorInput } from "./forms/GradientColorInput";
+import { useBackgroundForm } from "@/hooks/useBackgroundForm";
 
 interface BackgroundFormProps {
   onSuccess: () => void;
 }
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB in bytes
-
 export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const [pageName, setPageName] = useState("");
-  const [backgroundType, setBackgroundType] = useState<"color" | "image" | "video" | "gradient">("color");
-  const [backgroundValue, setBackgroundValue] = useState("#ffffff");
-  const [file, setFile] = useState<File | null>(null);
+  const {
+    isLoading,
+    pageName,
+    setPageName,
+    backgroundType,
+    setBackgroundType,
+    backgroundValue,
+    setBackgroundValue,
+    file,
+    setFile,
+    handleSubmit,
+  } = useBackgroundForm({ onSuccess });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      let finalBackgroundValue = backgroundValue;
-
-      if (backgroundType === "video") {
-        finalBackgroundValue = backgroundValue;
-      } else if (file && backgroundType === "image") {
-        if (file.size > MAX_FILE_SIZE) {
-          toast({
-            title: "Erreur",
-            description: "Le fichier est trop volumineux. La taille maximale est de 50MB.",
-            variant: "destructive",
-          });
-          setIsLoading(false);
-          return;
-        }
-
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `${fileName}`;
-
-        const { error: uploadError, data } = await supabase.storage
-          .from('backgrounds')
-          .upload(filePath, file);
-
-        if (uploadError) throw uploadError;
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('backgrounds')
-          .getPublicUrl(filePath);
-
-        finalBackgroundValue = publicUrl;
-      }
-
-      const { error } = await supabase
-        .from("page_backgrounds")
-        .insert([
-          {
-            page_name: pageName,
-            background_type: backgroundType,
-            background_value: finalBackgroundValue,
-            is_active: true,
-          },
-        ]);
-
-      if (error) throw error;
-
-      toast({
-        title: "Fond ajouté",
-        description: "Le nouveau fond a été ajouté avec succès.",
-      });
-
-      setPageName("");
-      setBackgroundType("color");
-      setBackgroundValue("#ffffff");
-      setFile(null);
-      onSuccess();
-    } catch (error) {
-      console.error("Error adding background:", error);
-      toast({
-        title: "Erreur",
-        description: "Impossible d'ajouter le fond.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+  const renderBackgroundInput = () => {
+    switch (backgroundType) {
+      case "color":
+        return (
+          <ColorBackgroundInput
+            value={backgroundValue}
+            onChange={setBackgroundValue}
+          />
+        );
+      case "gradient":
+        return (
+          <GradientColorInput
+            value={backgroundValue}
+            onChange={setBackgroundValue}
+          />
+        );
+      case "video":
+        return (
+          <VideoBackgroundInput
+            value={backgroundValue}
+            onChange={setBackgroundValue}
+          />
+        );
+      case "image":
+        return (
+          <ImageBackgroundInput
+            onFileChange={setFile}
+          />
+        );
+      default:
+        return null;
     }
   };
 
@@ -109,26 +73,7 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
         onChange={setBackgroundType}
       />
 
-      {backgroundType === "color" ? (
-        <ColorBackgroundInput
-          value={backgroundValue}
-          onChange={setBackgroundValue}
-        />
-      ) : backgroundType === "gradient" ? (
-        <GradientColorInput
-          value={backgroundValue}
-          onChange={setBackgroundValue}
-        />
-      ) : backgroundType === "video" ? (
-        <VideoBackgroundInput
-          value={backgroundValue}
-          onChange={setBackgroundValue}
-        />
-      ) : (
-        <ImageBackgroundInput
-          onFileChange={setFile}
-        />
-      )}
+      {renderBackgroundInput()}
 
       <Button type="submit" disabled={isLoading}>
         {isLoading ? "Ajout en cours..." : "Ajouter le fond"}
