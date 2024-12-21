@@ -34,8 +34,8 @@ export const CategoryManager = () => {
   useEffect(() => {
     const signIn = async () => {
       const { error } = await supabase.auth.signInWithPassword({
-        email: 'admin@example.com',
-        password: 'admin123'
+        email: 'g.sauvat@ideai.fr',
+        password: 'Gregolimano009:)'
       });
       
       if (error) {
