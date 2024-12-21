@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabase";
-import { useCategories } from "./useCategories";
+import { useCategories } from "./supabase/useCategories";
+import { useVotes } from "./supabase/useVotes";
 
 export const useVoting = () => {
   const [currentCategory, setCurrentCategory] = useState(0);
   const [selections, setSelections] = useState<Record<string, string>>({});
   const { toast } = useToast();
   const { data: categories, isLoading, error } = useCategories();
+  const { createVote } = useVotes();
 
   const handleVote = async (nomineeId: string) => {
     const categoryId = categories?.[currentCategory]?.id;
@@ -17,11 +18,7 @@ export const useVoting = () => {
 
     try {
       if (!isModifying) {
-        const { error } = await supabase
-          .from('votes')
-          .insert([{ nominee_id: nomineeId }]);
-          
-        if (error) throw error;
+        await createVote.mutateAsync(nomineeId);
       }
 
       setSelections((prev) => ({
