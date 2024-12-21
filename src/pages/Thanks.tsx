@@ -12,11 +12,11 @@ const Thanks = () => {
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto px-4 py-12 text-center">
+      <div className="max-w-4xl mx-auto px-4 py-12 text-center mt-32">
         <ConfettiEffect />
         <ThankYouTitle />
         
-        <p className="text-xl mb-12 text-gray-200">
+        <p className="text-xl mb-16 text-gray-200">
           Partagez votre participation et invitez vos amis à voter !
         </p>
 
