@@ -1,5 +1,7 @@
-import React from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -7,93 +9,150 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
-export const BackgroundForm = ({ onSuccess }: { onSuccess: () => void }) => {
+interface BackgroundFormProps {
+  onSuccess: () => void;
+}
+
+export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
   const { toast } = useToast();
-  const pages = ["index", "categories", "admin"];
+  const [isLoading, setIsLoading] = useState(false);
+  const [pageName, setPageName] = useState("");
+  const [backgroundType, setBackgroundType] = useState<"color" | "image" | "video">("color");
+  const [backgroundValue, setBackgroundValue] = useState("");
+  const [file, setFile] = useState<File | null>(null);
 
-  const handleBackgroundSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    
-    const backgroundData = {
-      page_name: formData.get("page_name"),
-      background_type: formData.get("background_type"),
-      background_value: formData.get("background_value"),
-    };
+    setIsLoading(true);
 
-    const { error } = await supabase
-      .from("page_backgrounds")
-      .insert([backgroundData]);
+    try {
+      let finalBackgroundValue = backgroundValue;
 
-    if (error) {
+      if (file && (backgroundType === "image" || backgroundType === "video")) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError, data } = await supabase.storage
+          .from('backgrounds')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('backgrounds')
+          .getPublicUrl(filePath);
+
+        finalBackgroundValue = publicUrl;
+      }
+
+      const { error } = await supabase
+        .from("page_backgrounds")
+        .insert([
+          {
+            page_name: pageName,
+            background_type: backgroundType,
+            background_value: finalBackgroundValue,
+            is_active: true,
+          },
+        ]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Fond ajouté",
+        description: "Le nouveau fond a été ajouté avec succès.",
+      });
+
+      setPageName("");
+      setBackgroundType("color");
+      setBackgroundValue("");
+      setFile(null);
+      onSuccess();
+    } catch (error) {
+      console.error("Error adding background:", error);
       toast({
         title: "Erreur",
-        description: "Impossible d'ajouter le fond",
+        description: "Impossible d'ajouter le fond.",
         variant: "destructive",
       });
-      return;
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    toast({
-      title: "Succès",
-      description: "Le fond a été ajouté avec succès",
-    });
-    
-    form.reset();
-    onSuccess();
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
   };
 
   return (
-    <form onSubmit={handleBackgroundSubmit} className="space-y-4 bg-white/80 backdrop-blur-sm rounded-lg p-6">
-      <h3 className="text-lg font-semibold mb-4">Ajouter un nouveau fond</h3>
+    <form onSubmit={handleSubmit} className="space-y-4 bg-white/80 backdrop-blur-sm rounded-lg p-6">
+      <h2 className="text-xl font-semibold mb-4">Ajouter un nouveau fond</h2>
       
-      <div className="grid gap-4">
-        <div className="grid gap-2">
-          <label htmlFor="page_name">Page</label>
-          <Select name="page_name" required>
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionner une page" />
-            </SelectTrigger>
-            <SelectContent>
-              {pages.map((page) => (
-                <SelectItem key={page} value={page}>
-                  {page}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="page-name">Nom de la page</Label>
+        <Select
+          value={pageName}
+          onValueChange={setPageName}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Sélectionnez une page" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="index">Accueil</SelectItem>
+            <SelectItem value="admin">Administration</SelectItem>
+            <SelectItem value="categories">Catégories</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
-        <div className="grid gap-2">
-          <label htmlFor="background_type">Type de fond</label>
-          <Select name="background_type" required>
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionner un type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="color">Couleur</SelectItem>
-              <SelectItem value="image">Image</SelectItem>
-              <SelectItem value="video">Vidéo</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="background-type">Type de fond</Label>
+        <Select
+          value={backgroundType}
+          onValueChange={(value: "color" | "image" | "video") => setBackgroundType(value)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Sélectionnez un type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="color">Couleur</SelectItem>
+            <SelectItem value="image">Image</SelectItem>
+            <SelectItem value="video">Vidéo</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
-        <div className="grid gap-2">
-          <label htmlFor="background_value">Valeur</label>
+      {backgroundType === "color" ? (
+        <div className="space-y-2">
+          <Label htmlFor="background-value">Couleur</Label>
           <Input
-            name="background_value"
-            placeholder="URL de l'image/vidéo ou code couleur"
-            required
+            id="background-value"
+            type="color"
+            value={backgroundValue}
+            onChange={(e) => setBackgroundValue(e.target.value)}
           />
         </div>
+      ) : (
+        <div className="space-y-2">
+          <Label htmlFor="file">Fichier {backgroundType === "image" ? "image" : "vidéo"}</Label>
+          <Input
+            id="file"
+            type="file"
+            accept={backgroundType === "image" ? "image/*" : "video/*"}
+            onChange={handleFileChange}
+          />
+        </div>
+      )}
 
-        <Button type="submit">Ajouter</Button>
-      </div>
+      <Button type="submit" disabled={isLoading}>
+        {isLoading ? "Ajout en cours..." : "Ajouter le fond"}
+      </Button>
     </form>
   );
 };
