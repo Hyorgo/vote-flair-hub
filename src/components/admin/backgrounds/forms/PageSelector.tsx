@@ -27,6 +27,7 @@ export const PageSelector = ({ value, onChange }: PageSelectorProps) => {
           <SelectItem value="index">Accueil</SelectItem>
           <SelectItem value="admin">Administration</SelectItem>
           <SelectItem value="categories">Catégories</SelectItem>
+          <SelectItem value="thanks">Remerciements</SelectItem>
         </SelectContent>
       </Select>
     </div>

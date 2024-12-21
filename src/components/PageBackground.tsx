@@ -29,8 +29,12 @@ export const PageBackground = ({ pageName, children }: PageBackgroundProps) => {
 
   // If no background is found or there's an error, render with default styling
   if (!background || error) {
+    const defaultBackground = pageName === "thanks" 
+      ? "bg-festive-gradient" 
+      : "bg-gradient-to-b from-gray-900 to-gray-800";
+    
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
+      <div className={`min-h-screen ${defaultBackground}`}>
         {children}
       </div>
     );
