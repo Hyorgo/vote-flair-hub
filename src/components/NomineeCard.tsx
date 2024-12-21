@@ -38,7 +38,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
             />
           </div>
         )}
-        <h3 className="text-xl font-semibold mb-2 flex items-center gap-2 text-gray-900">
+        <h3 className="text-xl font-semibold mb-2 flex items-center gap-2 text-white">
           {nominee.name}
           {isSelected && <Star className="h-4 w-4 text-yellow-400 animate-party" />}
         </h3>
