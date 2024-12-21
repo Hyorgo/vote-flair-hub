@@ -29,7 +29,7 @@ const Index = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center space-y-4 relative"
         >
-          <div className="absolute left-1/2 -translate-x-1/2 -top-20 sm:-top-24">
+          <div className="absolute left-1/2 -translate-x-1/2 -top-12 sm:-top-16">
             <motion.div
               animate={{ rotate: [-10, 10] }}
               transition={{ 
