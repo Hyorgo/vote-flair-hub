@@ -10,8 +10,8 @@
       img-src 'self' data: blob: https://*.supabase.co;
       font-src 'self' https://fonts.gstatic.com;
       connect-src 'self' https://*.supabase.co ws://localhost:* http://localhost:*;
-      media-src 'self' https://*.supabase.co;
-      frame-src 'self';
+      media-src 'self' https://*.supabase.co https://player.vimeo.com https://vimeo.com;
+      frame-src 'self' https://player.vimeo.com https://vimeo.com;
       worker-src 'self' blob:;
     ">
     <title>vote-flair-hub</title>
