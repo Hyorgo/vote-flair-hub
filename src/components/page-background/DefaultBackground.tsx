@@ -4,7 +4,7 @@ interface DefaultBackgroundProps {
 }
 
 export const DefaultBackground = ({ pageName, children }: DefaultBackgroundProps) => {
-  const isAdminPage = pageName === "admin";
+  const isAdminPage = pageName.startsWith("admin");
   
   if (isAdminPage) {
     return (
@@ -34,7 +34,7 @@ export const DefaultBackground = ({ pageName, children }: DefaultBackgroundProps
       {/* Fond de base avec dégradé */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-800 opacity-90" />
 
-      {/* Contenu de la page */}
+      {/* Contenu de la page avec z-index plus élevé */}
       <div className="relative z-[2]">
         {children}
       </div>
