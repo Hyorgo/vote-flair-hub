@@ -7,6 +7,8 @@ import { useVoting } from "@/hooks/useVoting";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { CheckCircle } from "lucide-react";
 
 const Categories = () => {
   const navigate = useNavigate();
@@ -21,7 +23,6 @@ const Categories = () => {
     error,
   } = useVoting();
 
-  // Récupérer les informations de l'utilisateur depuis le localStorage
   const userEmail = localStorage.getItem("userEmail");
 
   const { data: userProfile } = useQuery({
@@ -39,12 +40,15 @@ const Categories = () => {
     enabled: !!userEmail,
   });
 
-  // Rediriger vers la page d'accueil si pas d'email
   React.useEffect(() => {
     if (!userEmail) {
       navigate("/");
     }
   }, [userEmail, navigate]);
+
+  const handleComplete = () => {
+    navigate("/thanks");
+  };
 
   if (isLoading) {
     return (
@@ -112,6 +116,17 @@ const Categories = () => {
           isFirstCategory={currentCategory === 0}
           isLastCategory={currentCategory === categories.length - 1}
         />
+
+        <div className="mt-12 flex justify-center">
+          <Button
+            onClick={handleComplete}
+            size="lg"
+            className="text-lg gap-2 py-6 px-8 shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            <CheckCircle className="h-6 w-6" />
+            J'ai terminé mon vote !
+          </Button>
+        </div>
       </div>
     </Layout>
   );
