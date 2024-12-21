@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import { Footer } from "./Footer";
 import { Header } from "./layout/Header";
 import { MainContent } from "./layout/MainContent";
-import { PageBackground } from "./PageBackground";
 import { useGlobalKeyboardNavigation } from "@/hooks/useGlobalKeyboardNavigation";
 
 interface LayoutProps {
@@ -13,17 +12,23 @@ interface LayoutProps {
 export const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
-  const pageName = location.pathname === "/" ? "index" : location.pathname.slice(1);
   
   useGlobalKeyboardNavigation();
 
   return (
-    <PageBackground pageName={pageName}>
-      <div className="flex flex-col min-h-screen max-h-fit">
-        <Header isAdmin={isAdmin} />
-        <MainContent>{children}</MainContent>
-        <Footer />
-      </div>
-    </PageBackground>
+    <div className="flex flex-col min-h-screen max-h-fit">
+      {/* Effets de fond festifs */}
+      <div className="golden-halo" />
+      <div className="bokeh-1" />
+      <div className="bokeh-2" />
+      <div className="bokeh-3" />
+      <div className="bokeh-4" />
+      <div className="bokeh-corners" />
+      <div className="bokeh-corners-bottom" />
+      
+      <Header isAdmin={isAdmin} />
+      <MainContent>{children}</MainContent>
+      <Footer />
+    </div>
   );
 };
