@@ -18,7 +18,7 @@ export const HeroTitle = () => {
           repeatType: "reverse",
           ease: "easeInOut"
         }}
-        className="absolute left-1/2 -translate-x-1/2 -top-6 sm:-top-8"
+        className="absolute left-1/2 -translate-x-1/2 -top-16 sm:-top-20 md:-top-24"
       >
         <Crown 
           className="w-12 h-12 sm:w-16 sm:h-16 md:w-24 md:h-24 opacity-90 [&>path]:fill-[url(#crown-gradient)]" 
