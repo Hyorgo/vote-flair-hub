@@ -48,7 +48,6 @@
     animation: float 20s infinite reverse;
   }
 
-  /* Halo doré repositionné */
   .golden-halo {
     content: '';
     @apply absolute bottom-[-20%] left-[30%] w-[1200px] h-[1200px] bg-amber-200/30 rounded-full blur-[120px] z-0;
@@ -88,6 +87,39 @@
     right: 25%;
   }
 
+  /* Nouveaux effets Bokeh */
+  .bokeh-3::before {
+    content: '';
+    @apply absolute w-40 h-40 bg-pink-200/15 rounded-full blur-sm;
+    animation: bokeh3 28s infinite;
+    top: 45%;
+    left: 40%;
+  }
+
+  .bokeh-3::after {
+    content: '';
+    @apply absolute w-12 h-12 bg-yellow-200/25 rounded-full blur-sm;
+    animation: bokeh1 18s infinite;
+    bottom: 35%;
+    right: 40%;
+  }
+
+  .bokeh-4::before {
+    content: '';
+    @apply absolute w-28 h-28 bg-indigo-200/20 rounded-full blur-sm;
+    animation: bokeh2 35s infinite;
+    top: 25%;
+    left: 55%;
+  }
+
+  .bokeh-4::after {
+    content: '';
+    @apply absolute w-14 h-14 bg-teal-200/25 rounded-full blur-sm;
+    animation: bokeh3 24s infinite;
+    bottom: 15%;
+    right: 18%;
+  }
+
   @keyframes bokeh1 {
     0%, 100% {
       transform: translate(0, 0) scale(1);
@@ -112,6 +144,21 @@
     }
     66% {
       transform: translate(70px, -25px) scale(0.8);
+    }
+  }
+
+  @keyframes bokeh3 {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    30% {
+      transform: translate(60px, -40px) scale(1.15);
+    }
+    60% {
+      transform: translate(-40px, 60px) scale(0.85);
+    }
+    80% {
+      transform: translate(30px, -30px) scale(1.1);
     }
   }
 
