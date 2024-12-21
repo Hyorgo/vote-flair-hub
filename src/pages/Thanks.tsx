@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { ConfettiEffect } from "@/components/thanks/ConfettiEffect";
 import { SocialShareButtons } from "@/components/thanks/SocialShareButtons";
 import { ThankYouTitle } from "@/components/thanks/ThankYouTitle";
-import { ResultsCountdown } from "@/components/thanks/ResultsCountdown";
-import { NewsletterSignup } from "@/components/thanks/NewsletterSignup";
 
 const Thanks = () => {
   const navigate = useNavigate();
@@ -17,9 +15,6 @@ const Thanks = () => {
       <div className="max-w-4xl mx-auto px-4 py-12 text-center mt-32">
         <ConfettiEffect />
         <ThankYouTitle />
-        
-        <ResultsCountdown />
-        <NewsletterSignup />
         
         <p className="text-xl mb-16 text-gray-200">
           Partagez votre participation et invitez vos amis à voter !
