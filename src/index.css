@@ -40,29 +40,31 @@
   html::after {
     content: '';
     @apply absolute w-[200vw] h-[200vh] opacity-10;
-    background: repeating-linear-gradient(
-      35deg,
-      transparent,
-      transparent 50px,
-      rgba(255, 255, 255, 0.1) 50px,
-      rgba(255, 255, 255, 0.1) 100px
+    background: radial-gradient(
+      circle at center,
+      transparent 20px,
+      rgba(255, 255, 255, 0.1) 21px,
+      rgba(255, 255, 255, 0.1) 25px,
+      transparent 26px
     );
-    animation: lightMove 8s linear infinite;
+    background-size: 80px 80px;
+    animation: lightMove 15s linear infinite;
     top: -50%;
     left: -50%;
   }
 
   html::after {
     animation-direction: reverse;
-    animation-duration: 12s;
+    animation-duration: 20s;
     opacity: 0.05;
-    background: repeating-linear-gradient(
-      -35deg,
-      transparent,
-      transparent 70px,
-      rgba(255, 255, 255, 0.1) 70px,
-      rgba(255, 255, 255, 0.1) 140px
+    background: radial-gradient(
+      circle at center,
+      transparent 30px,
+      rgba(255, 255, 255, 0.1) 31px,
+      rgba(255, 255, 255, 0.1) 35px,
+      transparent 36px
     );
+    background-size: 120px 120px;
   }
 
   @keyframes lightMove {
@@ -70,7 +72,7 @@
       transform: translate(0, 0) rotate(0deg);
     }
     100% {
-      transform: translate(-50px, -50px) rotate(360deg);
+      transform: translate(-80px, -80px) rotate(360deg);
     }
   }
 
