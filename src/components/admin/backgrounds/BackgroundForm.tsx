@@ -1,16 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { PageSelector } from "./forms/PageSelector";
+import { BackgroundTypeSelector } from "./forms/BackgroundTypeSelector";
+import { ColorBackgroundInput } from "./forms/ColorBackgroundInput";
+import { ImageBackgroundInput } from "./forms/ImageBackgroundInput";
+import { VideoBackgroundInput } from "./forms/VideoBackgroundInput";
 
 interface BackgroundFormProps {
   onSuccess: () => void;
@@ -34,7 +30,6 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
       let finalBackgroundValue = backgroundValue;
 
       if (backgroundType === "video") {
-        // For video, we directly use the URL provided
         finalBackgroundValue = backgroundValue;
       } else if (file && backgroundType === "image") {
         if (file.size > MAX_FILE_SIZE) {
@@ -99,93 +94,34 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const selectedFile = e.target.files[0];
-      if (selectedFile.size > MAX_FILE_SIZE) {
-        toast({
-          title: "Erreur",
-          description: "Le fichier est trop volumineux. La taille maximale est de 50MB.",
-          variant: "destructive",
-        });
-        e.target.value = '';
-        return;
-      }
-      setFile(selectedFile);
-    }
-  };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-4 bg-white/80 backdrop-blur-sm rounded-lg p-6">
       <h2 className="text-xl font-semibold mb-4">Ajouter un nouveau fond</h2>
       
-      <div className="space-y-2">
-        <Label htmlFor="page-name">Nom de la page</Label>
-        <Select
-          value={pageName}
-          onValueChange={setPageName}
-        >
-          <SelectTrigger className="bg-white">
-            <SelectValue placeholder="Sélectionnez une page" />
-          </SelectTrigger>
-          <SelectContent className="bg-white shadow-lg border-0">
-            <SelectItem value="index">Accueil</SelectItem>
-            <SelectItem value="admin">Administration</SelectItem>
-            <SelectItem value="categories">Catégories</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <PageSelector 
+        value={pageName}
+        onChange={setPageName}
+      />
 
-      <div className="space-y-2">
-        <Label htmlFor="background-type">Type de fond</Label>
-        <Select
-          value={backgroundType}
-          onValueChange={(value: "color" | "image" | "video") => setBackgroundType(value)}
-        >
-          <SelectTrigger className="bg-white">
-            <SelectValue placeholder="Sélectionnez un type" />
-          </SelectTrigger>
-          <SelectContent className="bg-white shadow-lg border-0">
-            <SelectItem value="color">Couleur</SelectItem>
-            <SelectItem value="image">Image</SelectItem>
-            <SelectItem value="video">Vidéo</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <BackgroundTypeSelector
+        value={backgroundType}
+        onChange={setBackgroundType}
+      />
 
       {backgroundType === "color" ? (
-        <div className="space-y-2">
-          <Label htmlFor="background-value">Couleur</Label>
-          <Input
-            id="background-value"
-            type="color"
-            value={backgroundValue}
-            onChange={(e) => setBackgroundValue(e.target.value)}
-          />
-        </div>
+        <ColorBackgroundInput
+          value={backgroundValue}
+          onChange={setBackgroundValue}
+        />
       ) : backgroundType === "video" ? (
-        <div className="space-y-2">
-          <Label htmlFor="background-value">URL de la vidéo</Label>
-          <Input
-            id="background-value"
-            type="url"
-            placeholder="https://example.com/video.mp4"
-            value={backgroundValue}
-            onChange={(e) => setBackgroundValue(e.target.value)}
-          />
-        </div>
+        <VideoBackgroundInput
+          value={backgroundValue}
+          onChange={setBackgroundValue}
+        />
       ) : (
-        <div className="space-y-2">
-          <Label htmlFor="file">
-            Fichier image (max 50MB)
-          </Label>
-          <Input
-            id="file"
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-        </div>
+        <ImageBackgroundInput
+          onFileChange={setFile}
+        />
       )}
 
       <Button type="submit" disabled={isLoading}>
