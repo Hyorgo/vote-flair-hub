@@ -24,7 +24,7 @@ export const CategoryTitle = ({ categoryName }: CategoryTitleProps) => {
           <TooltipTrigger asChild>
             <Info className="h-5 w-5 text-[#DAA520] cursor-help" />
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent className="bg-white/90 backdrop-blur-sm border border-white/20 shadow-lg">
             <p>Sélectionnez votre nominé préféré dans cette catégorie</p>
           </TooltipContent>
         </Tooltip>
