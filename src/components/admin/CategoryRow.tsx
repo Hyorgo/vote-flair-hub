@@ -44,7 +44,12 @@ export const CategoryRow = ({
     if (showNominees) {
       loadNominees();
     }
-  }, [showNominees]);
+  }, [showNominees, loadNominees]);
+
+  const handleAddNomineeToCategory = async (name: string, description: string, imageUrl?: string) => {
+    await handleAddNomineeWithImage(name, description, imageUrl);
+    loadNominees(); // Recharger la liste après l'ajout
+  };
 
   return (
     <>
@@ -70,7 +75,7 @@ export const CategoryRow = ({
             setNewNomineeName={setNewNomineeName}
             newNomineeDescription={newNomineeDescription}
             setNewNomineeDescription={setNewNomineeDescription}
-            handleAddNominee={handleAddNomineeWithImage}
+            handleAddNominee={handleAddNomineeToCategory}
           />
         </TableCell>
       </TableRow>

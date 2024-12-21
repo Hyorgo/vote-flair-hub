@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 
@@ -14,13 +14,14 @@ export const useNomineeManagement = (categoryId: string) => {
   const [showNominees, setShowNominees] = useState(false);
   const { toast } = useToast();
 
-  const loadNominees = async () => {
+  const loadNominees = useCallback(async () => {
     const { data, error } = await supabase
       .from('nominees')
       .select('*')
       .eq('category_id', categoryId);
 
     if (error) {
+      console.error("Error loading nominees:", error);
       toast({
         title: "Erreur",
         description: "Impossible de charger les nominés",
@@ -29,8 +30,8 @@ export const useNomineeManagement = (categoryId: string) => {
       return;
     }
 
-    setNominees(data);
-  };
+    setNominees(data || []);
+  }, [categoryId, toast]);
 
   const handleDeleteNominee = async (nomineeId: string) => {
     try {
@@ -72,14 +73,17 @@ export const useNomineeManagement = (categoryId: string) => {
           image_url: imageUrl
         }]);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error adding nominee:", error);
+        throw error;
+      }
 
       toast({
         title: "Succès",
         description: "Le nominé a été ajouté",
       });
 
-      loadNominees();
+      await loadNominees();
     } catch (error) {
       console.error("Error adding nominee:", error);
       toast({

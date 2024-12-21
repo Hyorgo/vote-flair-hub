@@ -63,8 +63,10 @@ export const NomineeForm = ({
         imageUrl = publicUrl;
       }
 
-      handleAddNominee(newNomineeName, newNomineeDescription, imageUrl);
+      await handleAddNominee(newNomineeName, newNomineeDescription, imageUrl);
       setImageFile(null);
+      setNewNomineeName("");
+      setNewNomineeDescription("");
     } catch (error) {
       console.error("Error uploading image:", error);
       toast({
