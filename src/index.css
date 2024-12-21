@@ -33,7 +33,45 @@
   }
 
   html {
-    @apply bg-navy min-h-screen;
+    @apply bg-navy min-h-screen relative overflow-hidden;
+  }
+
+  html::before,
+  html::after {
+    content: '';
+    @apply absolute w-[200vw] h-[200vh] opacity-10;
+    background: repeating-linear-gradient(
+      35deg,
+      transparent,
+      transparent 50px,
+      rgba(255, 255, 255, 0.1) 50px,
+      rgba(255, 255, 255, 0.1) 100px
+    );
+    animation: lightMove 8s linear infinite;
+    top: -50%;
+    left: -50%;
+  }
+
+  html::after {
+    animation-direction: reverse;
+    animation-duration: 12s;
+    opacity: 0.05;
+    background: repeating-linear-gradient(
+      -35deg,
+      transparent,
+      transparent 70px,
+      rgba(255, 255, 255, 0.1) 70px,
+      rgba(255, 255, 255, 0.1) 140px
+    );
+  }
+
+  @keyframes lightMove {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50px, -50px) rotate(360deg);
+    }
   }
 
   body {
