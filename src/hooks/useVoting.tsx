@@ -26,8 +26,35 @@ export const useVoting = () => {
     const isModifying = selections[categoryId] === nomineeId;
 
     try {
-      if (!isModifying) {
-        const { error: voteError } = await supabase
+      // First, check if a vote already exists for this category and email
+      const { data: existingVotes } = await supabase
+        .from("votes")
+        .select("id")
+        .eq("category_id", categoryId)
+        .eq("email", userEmail)
+        .single();
+
+      if (existingVotes) {
+        // If we're modifying to remove the vote
+        if (isModifying) {
+          const { error: deleteError } = await supabase
+            .from("votes")
+            .delete()
+            .eq("id", existingVotes.id);
+
+          if (deleteError) throw deleteError;
+        } else {
+          // Update existing vote
+          const { error: updateError } = await supabase
+            .from("votes")
+            .update({ nominee_id: nomineeId })
+            .eq("id", existingVotes.id);
+
+          if (updateError) throw updateError;
+        }
+      } else if (!isModifying) {
+        // Insert new vote only if we're not trying to modify a non-existent vote
+        const { error: insertError } = await supabase
           .from("votes")
           .insert([
             {
@@ -37,7 +64,7 @@ export const useVoting = () => {
             },
           ]);
 
-        if (voteError) throw voteError;
+        if (insertError) throw insertError;
       }
 
       setSelections((prev) => ({
