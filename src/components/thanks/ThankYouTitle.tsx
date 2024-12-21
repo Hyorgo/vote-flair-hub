@@ -4,7 +4,7 @@ export const ThankYouTitle = () => {
   return (
     <div className="flex flex-col items-center gap-8 mb-8">
       <Heart 
-        className="w-12 h-12 text-pink-500 animate-bounce-light hover:scale-110 transition-transform" 
+        className="w-12 h-12 text-pink-500 animate-heart-beat" 
         strokeWidth={1.5} 
       />
       
