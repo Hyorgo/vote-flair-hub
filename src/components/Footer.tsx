@@ -7,7 +7,7 @@ import { Copyright } from "./footer/Copyright";
 
 export const Footer = () => {
   return (
-    <footer className="relative mt-auto py-12 bg-white/30 backdrop-blur-md border-t border-white/10 shadow-lg supports-[backdrop-filter]:bg-white/30 overflow-hidden">
+    <footer className="relative mt-auto py-12 bg-white/30 backdrop-blur-md border-t border-white/10 shadow-lg supports-[backdrop-filter]:bg-white/30">
       {/* Halos animés du footer */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         {/* Halo violet */}
