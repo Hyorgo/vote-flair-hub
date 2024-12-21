@@ -55,6 +55,66 @@
     animation: float 18s infinite;
   }
 
+  /* Effets Bokeh */
+  .bokeh-1::before {
+    content: '';
+    @apply absolute w-24 h-24 bg-purple-300/30 rounded-full blur-sm;
+    animation: bokeh1 20s infinite;
+    top: 15%;
+    left: 10%;
+  }
+
+  .bokeh-1::after {
+    content: '';
+    @apply absolute w-16 h-16 bg-amber-200/40 rounded-full blur-sm;
+    animation: bokeh2 25s infinite;
+    top: 60%;
+    right: 15%;
+  }
+
+  .bokeh-2::before {
+    content: '';
+    @apply absolute w-32 h-32 bg-blue-200/20 rounded-full blur-sm;
+    animation: bokeh1 30s infinite;
+    bottom: 20%;
+    left: 25%;
+  }
+
+  .bokeh-2::after {
+    content: '';
+    @apply absolute w-20 h-20 bg-purple-200/30 rounded-full blur-sm;
+    animation: bokeh2 22s infinite;
+    top: 30%;
+    right: 25%;
+  }
+
+  @keyframes bokeh1 {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(100px, 50px) scale(1.1);
+    }
+    50% {
+      transform: translate(50px, 100px) scale(0.9);
+    }
+    75% {
+      transform: translate(-50px, 50px) scale(1.2);
+    }
+  }
+
+  @keyframes bokeh2 {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(-70px, -50px) scale(1.2);
+    }
+    66% {
+      transform: translate(70px, -25px) scale(0.8);
+    }
+  }
+
   @keyframes float {
     0%, 100% {
       transform: translate(0, 0) rotate(0deg);
