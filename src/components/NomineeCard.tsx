@@ -19,7 +19,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
     <div 
       className={cn(
         "nominee-card relative animate-scale-in backdrop-blur-md bg-white/40 border border-white/20 shadow-xl p-4 rounded-lg flex flex-col h-full hover:bg-white/50 transition-all duration-300",
-        isSelected && "bg-white/50 border-yellow-400 border-2"
+        isSelected && "ring-2 ring-yellow-400"
       )}
     >
       {nominee.image_url && (
