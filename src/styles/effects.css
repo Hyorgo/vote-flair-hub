@@ -17,7 +17,7 @@
     animation: float 18s infinite;
   }
 
-  /* Effets Bokeh existants */
+  /* Effets Bokeh */
   .bokeh-1::before {
     content: '';
     @apply absolute w-24 h-24 bg-purple-300/30 rounded-full blur-sm;
