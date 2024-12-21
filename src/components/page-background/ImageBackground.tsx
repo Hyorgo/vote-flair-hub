@@ -72,22 +72,22 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Halos animés */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-[1]">
         <div className="absolute w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-3xl animate-float top-[-20%] left-[-10%]" />
         <div className="absolute w-[400px] h-[400px] bg-blue-500/20 rounded-full blur-3xl animate-float delay-1000 top-[60%] right-[-5%]" />
         <div className="absolute w-[600px] h-[600px] bg-pink-500/10 rounded-full blur-3xl animate-bounce-light top-[30%] left-[50%]" />
       </div>
 
       <div 
-        className={`absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-800 transition-opacity duration-700 ${
+        className={`absolute inset-0 z-0 bg-gradient-to-b from-gray-900 to-gray-800 transition-opacity duration-700 ${
           isImageLoaded ? 'opacity-0' : 'opacity-100'
         }`} 
       />
       
       {finalImageUrl && (
         <div 
-          className={`absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-700 ${
-            isImageLoaded ? 'opacity-100' : 'opacity-0'
+          className={`absolute inset-0 z-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-700 ${
+            isImageLoaded ? 'opacity-70' : 'opacity-0'
           }`}
           style={{ 
             backgroundImage: `url(${finalImageUrl})`,
@@ -105,7 +105,7 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
         />
       )}
       
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-[2]">{children}</div>
     </div>
   );
 };
