@@ -8,8 +8,8 @@ import {
 import { Label } from "@/components/ui/label";
 
 interface BackgroundTypeSelectorProps {
-  value: "color" | "image" | "video";
-  onChange: (value: "color" | "image" | "video") => void;
+  value: "color" | "image" | "video" | "gradient";
+  onChange: (value: "color" | "image" | "video" | "gradient") => void;
 }
 
 export const BackgroundTypeSelector = ({ value, onChange }: BackgroundTypeSelectorProps) => {
@@ -18,13 +18,14 @@ export const BackgroundTypeSelector = ({ value, onChange }: BackgroundTypeSelect
       <Label htmlFor="background-type">Type de fond</Label>
       <Select
         value={value}
-        onValueChange={(value: "color" | "image" | "video") => onChange(value)}
+        onValueChange={(value: "color" | "image" | "video" | "gradient") => onChange(value)}
       >
         <SelectTrigger className="bg-white">
           <SelectValue placeholder="Sélectionnez un type" />
         </SelectTrigger>
         <SelectContent className="bg-white shadow-lg border-0">
           <SelectItem value="color">Couleur</SelectItem>
+          <SelectItem value="gradient">Dégradé</SelectItem>
           <SelectItem value="image">Image</SelectItem>
           <SelectItem value="video">Vidéo</SelectItem>
         </SelectContent>

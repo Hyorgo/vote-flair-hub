@@ -7,6 +7,7 @@ import { BackgroundTypeSelector } from "./forms/BackgroundTypeSelector";
 import { ColorBackgroundInput } from "./forms/ColorBackgroundInput";
 import { ImageBackgroundInput } from "./forms/ImageBackgroundInput";
 import { VideoBackgroundInput } from "./forms/VideoBackgroundInput";
+import { GradientColorInput } from "./forms/GradientColorInput";
 
 interface BackgroundFormProps {
   onSuccess: () => void;
@@ -18,8 +19,8 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [pageName, setPageName] = useState("");
-  const [backgroundType, setBackgroundType] = useState<"color" | "image" | "video">("color");
-  const [backgroundValue, setBackgroundValue] = useState("#ffffff"); // Default white color
+  const [backgroundType, setBackgroundType] = useState<"color" | "image" | "video" | "gradient">("color");
+  const [backgroundValue, setBackgroundValue] = useState("#ffffff");
   const [file, setFile] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -79,7 +80,7 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
 
       setPageName("");
       setBackgroundType("color");
-      setBackgroundValue("#ffffff"); // Reset to default white color
+      setBackgroundValue("#ffffff");
       setFile(null);
       onSuccess();
     } catch (error) {
@@ -110,6 +111,11 @@ export const BackgroundForm = ({ onSuccess }: BackgroundFormProps) => {
 
       {backgroundType === "color" ? (
         <ColorBackgroundInput
+          value={backgroundValue}
+          onChange={setBackgroundValue}
+        />
+      ) : backgroundType === "gradient" ? (
+        <GradientColorInput
           value={backgroundValue}
           onChange={setBackgroundValue}
         />
