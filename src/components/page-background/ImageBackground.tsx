@@ -17,9 +17,6 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
 
   useEffect(() => {
     const loadImage = async () => {
-      setIsImageLoaded(false);
-      setLoadAttempts(0);
-      
       try {
         // Si l'URL commence par /lovable-uploads/, c'est une image du dossier public
         if (imageUrl.startsWith('/lovable-uploads/')) {
@@ -45,6 +42,8 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
       }
     };
 
+    setIsImageLoaded(false);
+    setLoadAttempts(0);
     loadImage();
   }, [imageUrl, onError]);
 
@@ -58,8 +57,8 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
       error: e,
     });
 
-    if (loadAttempts < maxAttempts) {
-      setLoadAttempts(prev => prev + 1);
+    if (currentAttempt < maxAttempts) {
+      setLoadAttempts(currentAttempt);
       // Forcer le rechargement de l'image
       e.currentTarget.src = finalImageUrl + '?t=' + new Date().getTime();
     } else {
@@ -75,24 +74,30 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
 
   return (
     <div className="min-h-screen relative">
-      {!isImageLoaded && (
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-800 transition-opacity duration-300" />
-      )}
       <div 
-        className={`fixed inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-300 -z-10 ${
-          isImageLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
-        style={{ 
-          backgroundImage: isImageLoaded && finalImageUrl ? `url(${finalImageUrl})` : 'none',
-        }}
+        className={`absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-800 transition-opacity duration-700 ${
+          isImageLoaded ? 'opacity-0' : 'opacity-100'
+        }`} 
       />
-      <img
-        src={finalImageUrl}
-        alt=""
-        className="hidden"
-        onLoad={handleImageLoad}
-        onError={handleImageError}
-      />
+      {finalImageUrl && (
+        <div 
+          className={`fixed inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-700 ${
+            isImageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+          style={{ 
+            backgroundImage: `url(${finalImageUrl})`,
+          }}
+        />
+      )}
+      {finalImageUrl && (
+        <img
+          src={finalImageUrl}
+          alt=""
+          className="hidden"
+          onLoad={handleImageLoad}
+          onError={handleImageError}
+        />
+      )}
       <div className="relative z-0">{children}</div>
     </div>
   );
