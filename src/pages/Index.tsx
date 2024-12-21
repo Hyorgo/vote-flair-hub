@@ -48,8 +48,7 @@ const Index = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <span className="absolute -inset-1 blur-md bg-gradient-to-r from-[#FFD700]/10 via-[#FDB931]/10 to-[#E8B923]/10 rounded-lg"></span>
-            <span className="relative bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#FDB931] to-[#E8B923] drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]">
+            <span className="relative bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#FDB931] to-[#E8B923] [text-shadow:0_0_10px_rgba(253,185,49,0.3),0_0_20px_rgba(253,185,49,0.2),0_0_30px_rgba(253,185,49,0.1)] drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]">
               Les Lyon d'Or
             </span>
           </motion.h1>
