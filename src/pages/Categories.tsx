@@ -120,14 +120,14 @@ const Categories = () => {
         <div className="mt-12 flex justify-center">
           <Button
             onClick={handleComplete}
+            variant="outline"
             size="lg"
-            className="text-lg gap-2 py-6 px-8 shadow-lg hover:shadow-xl transition-all duration-300 bg-white group relative"
+            className="text-lg gap-2 py-6 px-8 border border-gray-200 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white group relative"
           >
-            <CheckCircle className="h-6 w-6 text-[#FFD700] group-hover:text-white transition-colors" />
-            <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent font-bold group-hover:bg-none group-hover:text-white transition-all relative z-10">
+            <CheckCircle className="h-6 w-6 text-[#DAA520]/80 group-hover:text-white transition-colors" />
+            <span className="font-medium text-gray-700 group-hover:text-white transition-colors">
               J'ai terminé mon vote !
             </span>
-            <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-0 group-hover:opacity-100 transition-opacity rounded-md"></span>
           </Button>
         </div>
       </div>
