@@ -11,7 +11,7 @@ export const ContactLinks = () => {
           href="https://www.ideai.fr" 
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-3 text-white hover:text-primary transition-all group"
+          className="flex items-center gap-3 text-white hover:text-navy transition-all group"
           whileHover={{ x: 5 }}
         >
           <div className="p-2 bg-primary/5 rounded-lg group-hover:bg-primary/10 transition-colors">
@@ -25,7 +25,7 @@ export const ContactLinks = () => {
         
         <motion.a 
           href="mailto:contact@ideai.fr"
-          className="flex items-center gap-3 text-white hover:text-primary transition-all group"
+          className="flex items-center gap-3 text-white hover:text-navy transition-all group"
           whileHover={{ x: 5 }}
         >
           <div className="p-2 bg-primary/5 rounded-lg group-hover:bg-primary/10 transition-colors">
