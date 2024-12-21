@@ -33,10 +33,11 @@ export const VotingSection = ({
           variant="outline"
           onClick={() => onNavigation("prev")}
           disabled={isFirstCategory}
-          className="group relative px-6 py-2 border border-gray-200 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md hover:border-[#DAA520]/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+          className="group relative px-6 py-2 border border-gray-200 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none overflow-hidden"
         >
-          <ChevronLeft className="mr-2 h-4 w-4 text-[#DAA520]/80 transition-transform group-hover:-translate-x-0.5" />
-          <span className="font-medium text-gray-700 group-hover:text-[#DAA520]/80 transition-colors">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-0 group-hover:opacity-10 transition-opacity" />
+          <ChevronLeft className="mr-2 h-4 w-4 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent transition-transform group-hover:-translate-x-0.5" />
+          <span className="font-medium bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent transition-colors">
             Précédent
           </span>
         </Button>
@@ -49,12 +50,13 @@ export const VotingSection = ({
           variant="outline"
           onClick={() => onNavigation("next")}
           disabled={isLastCategory}
-          className="group relative px-6 py-2 border border-gray-200 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md hover:border-[#DAA520]/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+          className="group relative px-6 py-2 border border-gray-200 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none overflow-hidden"
         >
-          <span className="font-medium text-gray-700 group-hover:text-[#DAA520]/80 transition-colors">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-0 group-hover:opacity-10 transition-opacity" />
+          <span className="font-medium bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent transition-colors">
             Suivant
           </span>
-          <ChevronRight className="ml-2 h-4 w-4 text-[#DAA520]/80 transition-transform group-hover:translate-x-0.5" />
+          <ChevronRight className="ml-2 h-4 w-4 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent transition-transform group-hover:translate-x-0.5" />
         </Button>
       </div>
 
