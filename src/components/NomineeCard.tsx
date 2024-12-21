@@ -18,7 +18,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
   return (
     <div 
       className={cn(
-        "nominee-card relative animate-scale-in backdrop-blur-sm bg-white/90 p-4 rounded-lg",
+        "nominee-card relative animate-scale-in backdrop-blur-sm bg-white/90 p-4 rounded-lg flex flex-col h-full",
         isSelected && "ring-2 ring-primary-light before:absolute before:inset-0 before:bg-primary/5"
       )}
     >
@@ -35,12 +35,12 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
         {nominee.name}
         {isSelected && <Star className="h-4 w-4 text-primary animate-party" />}
       </h3>
-      <p className="text-gray-600 mb-4">{nominee.description}</p>
+      <p className="text-gray-600 mb-4 flex-grow">{nominee.description}</p>
       <Button
         onClick={() => onSelect(nominee.id)}
         variant={isSelected ? "default" : "outline"}
         className={cn(
-          "w-full transition-all duration-300",
+          "w-full transition-all duration-300 mt-auto",
           isSelected && "bg-primary hover:bg-primary-dark"
         )}
       >
