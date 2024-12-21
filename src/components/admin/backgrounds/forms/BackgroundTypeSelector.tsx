@@ -7,9 +7,11 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 
+type BackgroundType = 'color' | 'image' | 'video' | 'gradient';
+
 interface BackgroundTypeSelectorProps {
-  value: "color" | "image" | "video" | "gradient";
-  onChange: (value: "color" | "image" | "video" | "gradient") => void;
+  value: BackgroundType;
+  onChange: (value: BackgroundType) => void;
 }
 
 export const BackgroundTypeSelector = ({ value, onChange }: BackgroundTypeSelectorProps) => {
@@ -18,7 +20,7 @@ export const BackgroundTypeSelector = ({ value, onChange }: BackgroundTypeSelect
       <Label htmlFor="background-type">Type de fond</Label>
       <Select
         value={value}
-        onValueChange={(value: "color" | "image" | "video" | "gradient") => onChange(value)}
+        onValueChange={(value: BackgroundType) => onChange(value)}
       >
         <SelectTrigger className="bg-white">
           <SelectValue placeholder="Sélectionnez un type" />
