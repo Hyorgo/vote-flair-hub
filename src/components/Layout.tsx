@@ -14,7 +14,7 @@ export const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="min-h-screen bg-festive-gradient flex flex-col">
-      <header className="bg-white/80 backdrop-blur-sm shadow-lg">
+      <header className="sticky top-0 z-50 bg-white/30 backdrop-blur-md border-b border-white/10 shadow-lg supports-[backdrop-filter]:bg-white/30">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link to="/" className="text-2xl font-heading font-bold text-primary flex items-center gap-2">
             <PartyPopper className="h-6 w-6 animate-party" />

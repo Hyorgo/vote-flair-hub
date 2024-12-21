@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export const Footer = () => {
   return (
-    <footer className="mt-auto py-12 bg-gradient-to-b from-white/80 to-white/95 backdrop-blur-sm border-t border-primary/10">
+    <footer className="mt-auto py-12 bg-white/30 backdrop-blur-md border-t border-white/10 shadow-lg supports-[backdrop-filter]:bg-white/30">
       <div className="container mx-auto px-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
