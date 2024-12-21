@@ -50,7 +50,7 @@ export const VoteButton = ({ isSelected, onSelect }: VoteButtonProps) => {
                   <span className="font-medium text-lg">Sélectionné</span>
                 </motion.div>
               ) : (
-                <span className="font-medium text-lg text-navy group-hover:text-white transition-colors">
+                <span className="font-medium text-lg text-navy transition-colors duration-300">
                   Voter
                 </span>
               )}
