@@ -21,8 +21,12 @@ export const VotingSection = ({
   isFirstCategory,
   isLastCategory,
 }: VotingSectionProps) => {
-  // Ensure nominees is always an array by providing an empty array as fallback
-  const nominees = category?.nominees || [];
+  // S'assurer que nominees est toujours un tableau, même si category est undefined
+  const nominees = category?.nominees ?? [];
+
+  // Ajouter un log pour déboguer
+  console.log("Category:", category);
+  console.log("Nominees:", nominees);
 
   return (
     <>

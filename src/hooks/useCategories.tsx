@@ -25,18 +25,24 @@ export const useCategories = () => {
         throw error;
       }
 
-      // Transform the data to match the expected type
-      return (categories || []).map((category): Category => ({
+      // Ajouter des logs pour déboguer
+      console.log("Raw categories data:", categories);
+
+      // S'assurer que les données sont correctement formatées
+      const formattedCategories = (categories || []).map((category): Category => ({
         id: category.id,
         name: category.name,
-        nominees: (category.nominees || []).map((nominee): Nominee => ({
+        nominees: Array.isArray(category.nominees) ? category.nominees.map((nominee): Nominee => ({
           id: nominee.id,
           name: nominee.name,
           description: nominee.description,
           image_url: nominee.image_url,
           category_id: nominee.category_id
-        }))
+        })) : []
       }));
+
+      console.log("Formatted categories:", formattedCategories);
+      return formattedCategories;
     },
   });
 };
