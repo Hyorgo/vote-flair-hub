@@ -1,7 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ConfettiEffect } from "@/components/thanks/ConfettiEffect";
 import { SocialShareButtons } from "@/components/thanks/SocialShareButtons";
 import { ThankYouTitle } from "@/components/thanks/ThankYouTitle";
 
@@ -13,7 +12,6 @@ const Thanks = () => {
   return (
     <Layout>
       <div className="max-w-4xl mx-auto px-4 py-12 text-center mt-32">
-        <ConfettiEffect />
         <ThankYouTitle />
         
         <p className="text-xl mb-16 text-gray-200">
