@@ -1,61 +1,40 @@
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import confetti from "canvas-confetti";
 
 export const ConfettiEffect = () => {
-  const createConfetti = useCallback(() => {
-    const duration = 2000; // Reduced from 3000ms to 2000ms
+  useEffect(() => {
+    const duration = 3000;
     const animationEnd = Date.now() + duration;
-    const defaults = { 
-      startVelocity: 25, // Reduced from 30
-      spread: 300, // Reduced from 360
-      ticks: 50, // Reduced from 60
-      zIndex: 0,
-      particleCount: 30, // Fixed particle count instead of calculating
-      origin: { y: 0.6 }, // Start lower in the screen
-      disableForReducedMotion: true
-    };
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-    const randomInRange = (min: number, max: number) => {
+    function randomInRange(min: number, max: number) {
       return Math.random() * (max - min) + min;
-    };
+    }
 
-    let frame: number;
-    const animate = () => {
+    const interval = setInterval(() => {
       const timeLeft = animationEnd - Date.now();
 
       if (timeLeft <= 0) {
+        clearInterval(interval);
         return;
       }
 
-      // Launch confetti from two sides with fixed amount
+      const particleCount = 50;
+
       confetti({
         ...defaults,
-        origin: { x: randomInRange(0.2, 0.3), y: 0.6 }
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
       });
       confetti({
         ...defaults,
-        origin: { x: randomInRange(0.7, 0.8), y: 0.6 }
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
       });
+    }, 250);
 
-      frame = requestAnimationFrame(animate);
-    };
-
-    // Only run the animation once instead of continuously
-    animate();
-
-    return () => {
-      cancelAnimationFrame(frame);
-    };
+    return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    
-    if (!prefersReducedMotion) {
-      const cleanup = createConfetti();
-      return cleanup;
-    }
-  }, [createConfetti]);
 
   return null;
 };
