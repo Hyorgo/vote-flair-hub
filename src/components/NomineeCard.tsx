@@ -38,11 +38,13 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
             />
           </div>
         )}
-        <h3 className="text-xl font-semibold mb-2 flex items-center gap-2 text-white">
-          {nominee.name}
+        <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+          <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent">
+            {nominee.name}
+          </span>
           {isSelected && <Star className="h-4 w-4 text-yellow-400 animate-party" />}
         </h3>
-        <p className="text-white/90 mb-4 flex-grow">{nominee.description}</p>
+        <p className="text-gray-700 mb-4 flex-grow">{nominee.description}</p>
         <Button
           onClick={() => onSelect(nominee.id)}
           variant="outline"
@@ -59,7 +61,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
               <span className="font-medium">Sélectionné</span>
             </>
           ) : (
-            <span className="font-medium text-white group-hover:text-white transition-colors">Voter</span>
+            <span className="font-medium text-gray-700 group-hover:text-white transition-colors">Voter</span>
           )}
         </Button>
       </div>
