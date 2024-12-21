@@ -45,11 +45,14 @@ const Index = () => {
           
           <motion.h1 
             className="text-5xl sm:text-6xl md:text-8xl font-bold relative"
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <span className="relative bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#FDB931] to-[#E8B923] [text-shadow:0_0_5px_#FFD700,0_0_8px_#FDB931,0_0_10px_#E8B923] drop-shadow-[0_2px_2px_rgba(253,185,49,0.3)] tracking-wide">
-              Les Lyon d'Or
+            <span className="relative font-heading tracking-tight">
+              <span className="bg-gradient-to-r from-[#B8860B] via-[#DAA520] to-[#FFD700] bg-clip-text text-transparent font-extrabold">
+                Les Lyon d'Or
+              </span>
+              <span className="absolute inset-0 bg-gradient-to-r from-[#B8860B] via-[#DAA520] to-[#FFD700] opacity-10 blur-sm" aria-hidden="true"></span>
             </span>
           </motion.h1>
 
