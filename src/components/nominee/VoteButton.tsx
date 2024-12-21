@@ -28,7 +28,7 @@ export const VoteButton = ({ isSelected, onSelect }: VoteButtonProps) => {
               onClick={onSelect}
               variant="outline"
               className={cn(
-                "w-full transition-all duration-500 mt-auto group relative",
+                "w-full transition-all duration-500 mt-auto group/button relative",
                 "border-2 rounded-lg shadow-sm",
                 "transform hover:shadow-lg hover:translate-y-[-2px]",
                 "focus-visible:ring-2 focus-visible:ring-focus-outline focus-visible:ring-offset-2",
@@ -50,7 +50,7 @@ export const VoteButton = ({ isSelected, onSelect }: VoteButtonProps) => {
                   <span className="font-medium text-lg">Sélectionné</span>
                 </motion.div>
               ) : (
-                <span className="font-medium text-lg text-navy group-hover:text-white transition-colors">
+                <span className="font-medium text-lg text-navy group-hover/button:text-white transition-colors opacity-0 group-hover/button:opacity-100">
                   Voter
                 </span>
               )}
