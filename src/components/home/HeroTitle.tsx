@@ -8,9 +8,9 @@ export const HeroTitle = () => {
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="text-center space-y-4 relative"
+      className="text-center space-y-6 md:space-y-8 px-4 md:px-0 relative"
     >
-      <div className="absolute left-1/2 -translate-x-1/2 -top-12 sm:-top-16">
+      <div className="absolute left-1/2 -translate-x-1/2 -top-10 sm:-top-16">
         <motion.div
           animate={{ rotate: [-10, 10] }}
           transition={{ 
@@ -21,7 +21,7 @@ export const HeroTitle = () => {
           }}
         >
           <Crown 
-            className="w-16 h-16 sm:w-24 sm:h-24 opacity-90 [&>path]:fill-[url(#crown-gradient)]" 
+            className="w-12 h-12 sm:w-16 sm:h-16 md:w-24 md:h-24 opacity-90 [&>path]:fill-[url(#crown-gradient)]" 
             strokeWidth={0}
           />
           <svg width="0" height="0">
@@ -35,7 +35,7 @@ export const HeroTitle = () => {
       </div>
       
       <motion.h1 
-        className="text-5xl sm:text-6xl md:text-8xl font-bold relative"
+        className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold relative"
         whileHover={{ scale: 1.02 }}
         transition={{ type: "spring", stiffness: 300 }}
       >
@@ -47,7 +47,7 @@ export const HeroTitle = () => {
         </span>
       </motion.h1>
 
-      <p className="text-lg sm:text-xl md:text-2xl text-white max-w-2xl mx-auto leading-relaxed font-medium">
+      <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white max-w-2xl mx-auto leading-relaxed font-medium px-4">
         Célébrez l'excellence et participez à la reconnaissance des talents exceptionnels
       </p>
     </motion.div>

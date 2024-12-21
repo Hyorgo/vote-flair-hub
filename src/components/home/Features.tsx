@@ -42,7 +42,7 @@ export const Features = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-5xl w-full px-4 sm:px-6 lg:px-8"
     >
       {features.map((feature, index) => (
         <motion.div key={index} variants={itemVariants}>

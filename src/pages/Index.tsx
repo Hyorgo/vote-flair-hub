@@ -7,7 +7,7 @@ import { RegistrationCard } from "@/components/home/RegistrationCard";
 const Index = () => {
   return (
     <Layout>
-      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-12 px-4 mt-8 sm:mt-16">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-8 sm:space-y-10 lg:space-y-12 py-6 sm:py-8 lg:py-12">
         <HeroTitle />
         <Features />
         <RegistrationCard />
