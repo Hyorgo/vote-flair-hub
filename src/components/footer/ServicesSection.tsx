@@ -8,9 +8,9 @@ export const ServicesSection = () => {
       <ul className="space-y-3">
         {[
           { label: "Développement web", href: "#" },
-          { label: "Applications mobiles", href: "#" },
+          { label: "Référencement naturel", href: "#" },
           { label: "Intelligence artificielle", href: "#" },
-          { label: "Conseil en innovation", href: "#" },
+          { label: "Applications mobiles", href: "#" },
         ].map((service, index) => (
           <motion.li key={index} whileHover={{ x: 5 }}>
             <a
