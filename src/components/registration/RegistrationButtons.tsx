@@ -11,7 +11,7 @@ export const RegistrationButtons = ({ isSubmitting, onExistingUser }: Registrati
     <div className="space-y-2">
       <Button
         type="submit"
-        className="w-full bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] hover:opacity-90 text-white border-none shadow-lg h-9"
+        className="w-full bg-gradient-to-r from-primary via-primary-light to-accent hover:opacity-90 text-white border-none shadow-lg h-9"
         disabled={isSubmitting}
       >
         {isSubmitting ? "Inscription en cours..." : "S'inscrire pour voter"}

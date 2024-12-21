@@ -34,8 +34,8 @@ export const VoteButton = ({ isSelected, onSelect }: VoteButtonProps) => {
                 "focus-visible:ring-2 focus-visible:ring-focus-outline focus-visible:ring-offset-2",
                 "focus-visible:outline-none focus-visible:z-10",
                 isSelected 
-                  ? "bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white border-yellow-400 hover:opacity-90 animate-scale-in" 
-                  : "hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white hover:border-yellow-400 bg-white border-white/40"
+                  ? "bg-gradient-to-r from-primary via-primary-light to-accent text-white border-primary hover:opacity-90 animate-scale-in" 
+                  : "hover:bg-gradient-to-r hover:from-primary hover:via-primary-light hover:to-accent hover:text-white hover:border-primary bg-white border-white/40"
               )}
               aria-pressed={isSelected}
               aria-label={isSelected ? "Annuler le vote" : "Voter pour ce nominé"}

@@ -39,18 +39,18 @@ export default {
           contrast: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#FEC6A1",
+          DEFAULT: "#E2E8F0",
           foreground: "#1B365D",
           contrast: "#1A1F2C",
         },
         accent: {
-          DEFAULT: "#F97316",
+          DEFAULT: "#8B5CF6",
           foreground: "#FFFFFF",
           contrast: "#FFFFFF",
         },
         festive: {
-          start: "#FDE1D3",
-          middle: "#FEC6A1",
+          start: "#F3E8FF",
+          middle: "#E9D5FF",
           end: "#F2FCE2",
         },
         focus: {

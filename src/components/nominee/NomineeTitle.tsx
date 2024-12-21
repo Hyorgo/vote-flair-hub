@@ -10,7 +10,7 @@ interface NomineeTitleProps {
 export const NomineeTitle = ({ name, isSelected }: NomineeTitleProps) => {
   return (
     <h3 className="text-lg sm:text-xl font-semibold mb-2 flex items-center gap-2 group-hover:translate-x-1 transition-transform duration-300">
-      <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent">
+      <span className="bg-gradient-to-r from-primary via-primary-light to-accent bg-clip-text text-transparent">
         {name}
       </span>
       {isSelected && (
@@ -20,7 +20,7 @@ export const NomineeTitle = ({ name, isSelected }: NomineeTitleProps) => {
           transition={{ duration: 0.5, type: "spring" }}
         >
           <Star 
-            className="h-5 w-5 text-yellow-400 animate-bounce-light" 
+            className="h-5 w-5 text-primary animate-bounce-light" 
             aria-label="Sélectionné"
           />
         </motion.div>
