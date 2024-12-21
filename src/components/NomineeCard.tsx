@@ -22,21 +22,25 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      whileHover={{ scale: 1.02 }}
+      whileHover={{ 
+        scale: 1.03,
+        transition: { duration: 0.2 }
+      }}
       className="relative h-full"
       role="article"
       aria-label={`Nominé : ${nominee.name}`}
     >
       {isSelected && (
-        <div className="absolute inset-0 rounded-lg ring-2 ring-yellow-400 animate-shimmer pointer-events-none" />
+        <div className="absolute inset-0 rounded-lg ring-4 ring-yellow-400/50 animate-pulse pointer-events-none" />
       )}
       <div 
         className={cn(
-          "nominee-card relative bg-white/90 backdrop-blur-sm border-2 border-white/40",
+          "nominee-card relative bg-white/90 backdrop-blur-sm border-2",
           "shadow-lg p-3 sm:p-6 rounded-lg flex flex-col h-full",
-          "transform transition-all duration-300 ease-out",
-          "hover:bg-white hover:-translate-y-1",
-          isSelected && "ring-2 ring-yellow-400"
+          "transform transition-all duration-500 ease-out",
+          "hover:bg-white hover:shadow-xl hover:border-yellow-400/50",
+          isSelected ? "border-yellow-400 ring-2 ring-yellow-400" : "border-white/40",
+          "group"
         )}
       >
         <NomineeImage 
@@ -49,7 +53,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
           isSelected={isSelected}
         />
 
-        <p className="text-sm sm:text-base text-navy mb-4 flex-grow leading-relaxed">
+        <p className="text-sm sm:text-base text-navy mb-4 flex-grow leading-relaxed group-hover:text-navy/80 transition-colors duration-300">
           {nominee.description}
         </p>
 

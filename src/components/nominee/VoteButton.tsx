@@ -8,6 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { motion } from "framer-motion";
 
 interface VoteButtonProps {
   isSelected: boolean;
@@ -19,30 +20,39 @@ export const VoteButton = ({ isSelected, onSelect }: VoteButtonProps) => {
     <TooltipProvider delayDuration={200}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button
-            onClick={onSelect}
-            variant="outline"
-            className={cn(
-              "w-full transition-all duration-300 mt-auto group relative",
-              "border-2 border-white/40 rounded-lg shadow-sm",
-              "transform hover:scale-102 hover:shadow-md",
-              isSelected 
-                ? "bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white hover:opacity-90 animate-scale-in" 
-                : "hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white bg-white"
-            )}
-            aria-pressed={isSelected}
+          <motion.div
+            whileTap={{ scale: 0.95 }}
+            className="w-full"
           >
-            {isSelected ? (
-              <>
-                <Check className="mr-2 h-4 w-4 animate-scale-in" aria-hidden="true" />
-                <span className="font-medium">Sélectionné</span>
-              </>
-            ) : (
-              <span className="font-medium text-navy group-hover:text-white transition-colors">
-                Voter
-              </span>
-            )}
-          </Button>
+            <Button
+              onClick={onSelect}
+              variant="outline"
+              className={cn(
+                "w-full transition-all duration-500 mt-auto group relative",
+                "border-2 rounded-lg shadow-sm",
+                "transform hover:shadow-lg hover:translate-y-[-2px]",
+                isSelected 
+                  ? "bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white border-yellow-400 hover:opacity-90 animate-scale-in" 
+                  : "hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white hover:border-yellow-400 bg-white border-white/40"
+              )}
+              aria-pressed={isSelected}
+            >
+              {isSelected ? (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="flex items-center justify-center gap-2"
+                >
+                  <Check className="h-5 w-5 animate-scale-in" aria-hidden="true" />
+                  <span className="font-medium text-lg">Sélectionné</span>
+                </motion.div>
+              ) : (
+                <span className="font-medium text-lg text-navy group-hover:text-white transition-colors">
+                  Voter
+                </span>
+              )}
+            </Button>
+          </motion.div>
         </TooltipTrigger>
         <TooltipContent 
           sideOffset={4}
