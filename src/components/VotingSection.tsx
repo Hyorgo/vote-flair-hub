@@ -43,14 +43,14 @@ export const VotingSection = ({
   return (
     <TooltipProvider>
       <>
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 px-4 sm:px-0">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="outline"
                 onClick={() => onNavigation("prev")}
                 disabled={isFirstCategory}
-                className="group relative px-8 py-3 border-2 border-gray-200 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:bg-none disabled:hover:scale-100"
+                className="w-full sm:w-auto group relative px-6 py-3 border-2 border-gray-200 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:bg-none disabled:hover:scale-100"
               >
                 <ChevronLeft className="mr-2 h-5 w-5 text-[#DAA520] group-hover:text-white transition-colors" />
                 <span className="font-semibold text-gray-700 group-hover:text-white transition-colors">
@@ -63,8 +63,8 @@ export const VotingSection = ({
             </TooltipContent>
           </Tooltip>
 
-          <div className="flex items-center gap-2">
-            <h1 className="text-3xl font-bold text-center">
+          <div className="flex items-center gap-2 order-first sm:order-none">
+            <h1 className="text-2xl sm:text-3xl font-bold text-center">
               <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.3)]">
                 {category?.name || ""}
               </span>
@@ -85,7 +85,7 @@ export const VotingSection = ({
                 variant="outline"
                 onClick={() => onNavigation("next")}
                 disabled={isLastCategory}
-                className="group relative px-8 py-3 border-2 border-gray-200 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:bg-none disabled:hover:scale-100"
+                className="w-full sm:w-auto group relative px-6 py-3 border-2 border-gray-200 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:bg-none disabled:hover:scale-100"
               >
                 <span className="font-semibold text-gray-700 group-hover:text-white transition-colors">
                   Suivant
@@ -99,7 +99,7 @@ export const VotingSection = ({
           </Tooltip>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 px-2 sm:px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 px-4 sm:px-6 max-w-7xl mx-auto">
           {nominees.map((nominee) => (
             <NomineeCard
               key={nominee.id}

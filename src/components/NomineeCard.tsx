@@ -37,7 +37,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
         whileHover={{ scale: 1.02 }}
-        className="relative"
+        className="relative h-full"
         role="article"
         aria-label={`Nominé : ${nominee.name}`}
       >
@@ -47,7 +47,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
         <div 
           className={cn(
             "nominee-card relative bg-white/90 backdrop-blur-sm border-2 border-white/40",
-            "shadow-lg hover:shadow-xl p-4 rounded-lg flex flex-col h-full",
+            "shadow-lg hover:shadow-xl p-4 sm:p-6 rounded-lg flex flex-col h-full",
             "transform transition-all duration-300 ease-out",
             "hover:bg-white hover:-translate-y-1",
             isSelected && "ring-2 ring-yellow-400"
@@ -82,7 +82,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
               )}
             </div>
           )}
-          <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+          <h3 className="text-lg sm:text-xl font-semibold mb-2 flex items-center gap-2">
             <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent">
               {nominee.name}
             </span>
@@ -93,7 +93,9 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
               />
             )}
           </h3>
-          <p className="text-gray-700 mb-4 flex-grow">{nominee.description}</p>
+          <p className="text-sm sm:text-base text-gray-700 mb-4 flex-grow leading-relaxed">
+            {nominee.description}
+          </p>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
