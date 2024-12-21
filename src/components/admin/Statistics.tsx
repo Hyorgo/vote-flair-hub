@@ -7,11 +7,24 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+// Define types for our statistics data
+type VoteStatistic = {
+  nominee_id: string;
+  nominee_name: string;
+  category_id: string;
+  category_name: string;
+  vote_count: number;
+};
+
+type CategoryStats = {
+  [key: string]: VoteStatistic[];
+};
+
 export const Statistics = () => {
   const { toast } = useToast();
   const { config, updateEndDate } = useVotingConfig();
   
-  const { data: stats } = useQuery({
+  const { data: stats } = useQuery<VoteStatistic[]>({
     queryKey: ['vote-statistics'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -19,7 +32,7 @@ export const Statistics = () => {
         .select('*');
       
       if (error) throw error;
-      return data;
+      return data as VoteStatistic[];
     }
   });
 
@@ -48,13 +61,14 @@ export const Statistics = () => {
   });
 
   // Organiser les données par catégorie
-  const votesByCategory = stats?.reduce((acc, curr) => {
-    if (!acc[curr.category_name || '']) {
-      acc[curr.category_name || ''] = [];
+  const votesByCategory: CategoryStats = stats?.reduce((acc, curr) => {
+    const categoryName = curr.category_name || '';
+    if (!acc[categoryName]) {
+      acc[categoryName] = [];
     }
-    acc[curr.category_name || ''].push(curr);
+    acc[categoryName].push(curr);
     return acc;
-  }, {} as Record<string, typeof stats>);
+  }, {} as CategoryStats) || {};
 
   const handleEndDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -100,7 +114,7 @@ export const Statistics = () => {
               <CardTitle>Détail des votes par catégorie</CardTitle>
             </CardHeader>
             <CardContent>
-              {Object.entries(votesByCategory || {}).map(([category, nominees]) => (
+              {Object.entries(votesByCategory).map(([category, nominees]) => (
                 <div key={category} className="mb-8">
                   <h3 className="text-lg font-semibold mb-4">{category}</h3>
                   <Table>
@@ -136,7 +150,7 @@ export const Statistics = () => {
 
         <TabsContent value="charts">
           <div className="grid grid-cols-1 gap-6">
-            {Object.entries(votesByCategory || {}).map(([category, nominees]) => (
+            {Object.entries(votesByCategory).map(([category, nominees]) => (
               <Card key={category}>
                 <CardHeader>
                   <CardTitle>{category}</CardTitle>
