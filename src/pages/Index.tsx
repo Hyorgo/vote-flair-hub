@@ -48,12 +48,12 @@ const Index = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <span className="relative bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#FDB931] to-[#E8B923] [text-shadow:0_0_15px_#FFD700,0_0_25px_#FDB931,0_0_35px_#E8B923] drop-shadow-[0_2px_2px_rgba(253,185,49,0.5)]">
+            <span className="relative bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#FDB931] to-[#E8B923] [text-shadow:0_0_15px_#FFD700,0_0_25px_#FDB931,0_0_35px_#E8B923] drop-shadow-[0_4px_4px_rgba(253,185,49,0.7)] tracking-wide">
               Les Lyon d'Or
             </span>
           </motion.h1>
 
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-800 max-w-2xl mx-auto leading-relaxed font-medium">
             Célébrez l'excellence et participez à la reconnaissance des talents exceptionnels
           </p>
         </motion.div>
