@@ -24,17 +24,22 @@ export const CategoryNavigation = ({
   return (
     <div className="space-y-4 mb-6 px-3 sm:px-0 transition-all duration-300">
       <div className="flex items-center justify-between mb-0 pb-1">
-        <span className="text-sm font-medium text-white">
-          Progression : {votedCategories} / {totalCategories} catégories
-        </span>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+          <span className="text-sm font-medium text-white">
+            Progression : {votedCategories} / {totalCategories} catégories
+          </span>
+          <span className="text-sm font-medium text-white/80">
+            (Catégorie {currentCategory + 1} sur {totalCategories})
+          </span>
+        </div>
         <span className="text-sm font-medium text-white">
           {Math.round(progressPercentage)}%
         </span>
       </div>
       <Progress 
         value={progressPercentage} 
-        className="h-2 bg-gray-200"
-        indicatorClassName="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B]"
+        className="h-2 bg-gray-200 transition-all duration-700 ease-in-out"
+        indicatorClassName="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] transition-all duration-700 ease-in-out"
       />
       <Tabs
         value={currentCategory.toString()}
