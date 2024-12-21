@@ -23,7 +23,7 @@ export const Layout = ({ children }: LayoutProps) => {
               <img 
                 src="/lovable-uploads/f615e6d4-11eb-4499-a3a3-d69273ded6e7.png" 
                 alt="Lyon d'Or Logo" 
-                className="h-12 object-contain"
+                className="h-20 object-contain" // Changé de h-12 à h-20
               />
             </Link>
             {!isAdmin ? (
