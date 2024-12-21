@@ -21,7 +21,9 @@ export const Layout = ({ children }: LayoutProps) => {
       <div className="fixed inset-0 z-0">
         {!isAdmin && (
           <>
-            <div className="absolute inset-0 bg-navy" />
+            {/* Navy background below everything */}
+            <div className="absolute inset-0 bg-navy -z-10" />
+            {/* Halos above the navy background */}
             <div className="golden-halo" />
             <div className="fuchsia-halo" />
             <div className="blue-halo" />
