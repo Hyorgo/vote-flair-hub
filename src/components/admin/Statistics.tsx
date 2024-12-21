@@ -1,29 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useVotingConfig } from '@/hooks/supabase/useVotingConfig';
-import { useToast } from '@/hooks/use-toast';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-// Define types for our statistics data
-type VoteStatistic = {
-  nominee_id: string;
-  nominee_name: string;
-  category_id: string;
-  category_name: string;
-  vote_count: number;
-};
-
-type CategoryStats = {
-  [key: string]: VoteStatistic[];
-};
+import { StatCard } from './stats/StatCard';
+import { VotingEndDate } from './stats/VotingEndDate';
+import { CategoryStatsTable } from './stats/CategoryStatsTable';
+import { CategoryCharts } from './stats/CategoryCharts';
+import { VoteStatistic, CategoryStats } from './types';
 
 export const Statistics = () => {
-  const { toast } = useToast();
-  const { config, updateEndDate } = useVotingConfig();
-  
   const { data: stats } = useQuery<VoteStatistic[]>({
     queryKey: ['vote-statistics'],
     queryFn: async () => {
@@ -60,7 +44,6 @@ export const Statistics = () => {
     }
   });
 
-  // Organiser les données par catégorie
   const votesByCategory: CategoryStats = stats?.reduce((acc, curr) => {
     const categoryName = curr.category_name || '';
     if (!acc[categoryName]) {
@@ -70,36 +53,12 @@ export const Statistics = () => {
     return acc;
   }, {} as CategoryStats) || {};
 
-  const handleEndDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      await updateEndDate.mutateAsync(new Date(e.target.value));
-      toast({
-        title: "Date de fin mise à jour",
-        description: "La nouvelle date de fin des votes a été enregistrée.",
-      });
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de mettre à jour la date de fin des votes.",
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatCard title="Total des votes" value={totalVotes?.toString() || "0"} />
         <StatCard title="Catégories" value={categoriesCount?.toString() || "0"} />
-        <div className="bg-white rounded-lg p-4 shadow-sm">
-          <h3 className="text-sm font-medium text-gray-500">Date de fin des votes</h3>
-          <input
-            type="datetime-local"
-            className="mt-1 w-full rounded-md border-gray-300"
-            value={config?.end_date ? new Date(config.end_date).toISOString().slice(0, 16) : ''}
-            onChange={handleEndDateChange}
-          />
-        </div>
+        <VotingEndDate />
       </div>
 
       <Tabs defaultValue="table" className="w-full">
@@ -109,77 +68,13 @@ export const Statistics = () => {
         </TabsList>
 
         <TabsContent value="table">
-          <Card>
-            <CardHeader>
-              <CardTitle>Détail des votes par catégorie</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {Object.entries(votesByCategory).map(([category, nominees]) => (
-                <div key={category} className="mb-8">
-                  <h3 className="text-lg font-semibold mb-4">{category}</h3>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Nominé</TableHead>
-                        <TableHead className="text-right">Nombre de votes</TableHead>
-                        <TableHead className="text-right">Pourcentage</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {nominees.map((nominee) => {
-                        const totalCategoryVotes = nominees.reduce((sum, n) => sum + (n.vote_count || 0), 0);
-                        const percentage = totalCategoryVotes > 0 
-                          ? ((nominee.vote_count || 0) / totalCategoryVotes * 100).toFixed(1)
-                          : "0.0";
-                        
-                        return (
-                          <TableRow key={nominee.nominee_id}>
-                            <TableCell>{nominee.nominee_name}</TableCell>
-                            <TableCell className="text-right">{nominee.vote_count || 0}</TableCell>
-                            <TableCell className="text-right">{percentage}%</TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+          <CategoryStatsTable votesByCategory={votesByCategory} />
         </TabsContent>
 
         <TabsContent value="charts">
-          <div className="grid grid-cols-1 gap-6">
-            {Object.entries(votesByCategory).map(([category, nominees]) => (
-              <Card key={category}>
-                <CardHeader>
-                  <CardTitle>{category}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[300px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={nominees}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="nominee_name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Bar dataKey="vote_count" fill="#3b82f6" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <CategoryCharts votesByCategory={votesByCategory} />
         </TabsContent>
       </Tabs>
     </div>
   );
 };
-
-const StatCard = ({ title, value }: { title: string; value: string }) => (
-  <div className="bg-white rounded-lg p-4 shadow-sm">
-    <h3 className="text-sm font-medium text-gray-500">{title}</h3>
-    <p className="text-2xl font-bold mt-1">{value}</p>
-  </div>
-);
