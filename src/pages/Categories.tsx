@@ -92,6 +92,15 @@ const Categories = () => {
 
   return (
     <Layout>
+      {/* Effets de fond festifs */}
+      <div className="golden-halo" />
+      <div className="bokeh-1" />
+      <div className="bokeh-2" />
+      <div className="bokeh-3" />
+      <div className="bokeh-4" />
+      <div className="bokeh-corners" />
+      <div className="bokeh-corners-bottom" />
+      
       <div className="max-w-5xl mx-auto">
         <VotingTimer />
 
