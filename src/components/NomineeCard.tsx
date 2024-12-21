@@ -16,49 +16,53 @@ interface NomineeCardProps {
 
 export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps) => {
   return (
-    <div 
-      className={cn(
-        "nominee-card relative animate-scale-in backdrop-blur-md bg-white/40 border border-white/20 shadow-xl p-4 rounded-lg flex flex-col h-full hover:bg-white/50 transition-all duration-300",
-        isSelected && "ring-1 ring-yellow-400 animate-shimmer"
+    <div className="relative">
+      {isSelected && (
+        <div className="absolute inset-0 rounded-lg ring-1 ring-yellow-400 animate-shimmer pointer-events-none" />
       )}
-    >
-      {nominee.image_url && (
-        <div className="aspect-video rounded-lg overflow-hidden mb-4">
-          <img 
-            src={nominee.image_url} 
-            alt={nominee.name}
-            className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
-            onError={(e) => {
-              console.error("Image loading error:", e);
-              e.currentTarget.src = "/placeholder.svg";
-            }}
-          />
-        </div>
-      )}
-      <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
-        {nominee.name}
-        {isSelected && <Star className="h-4 w-4 text-yellow-400 animate-party" />}
-      </h3>
-      <p className="text-gray-600 mb-4 flex-grow">{nominee.description}</p>
-      <Button
-        onClick={() => onSelect(nominee.id)}
-        variant={isSelected ? "default" : "outline"}
+      <div 
         className={cn(
-          "w-full transition-all duration-300 mt-auto backdrop-blur-sm",
-          isSelected 
-            ? "bg-accent hover:bg-accent/90 text-white border-none" 
-            : "bg-white/50 hover:bg-white/70"
+          "nominee-card relative animate-scale-in backdrop-blur-md bg-white/40 border border-white/20 shadow-xl p-4 rounded-lg flex flex-col h-full hover:bg-white/50 transition-all duration-300",
         )}
       >
-        {isSelected ? (
-          <>
-            <Check className="mr-2 h-4 w-4" />
-            Sélectionné
-          </>
-        ) : (
-          "Voter"
+        {nominee.image_url && (
+          <div className="aspect-video rounded-lg overflow-hidden mb-4">
+            <img 
+              src={nominee.image_url} 
+              alt={nominee.name}
+              className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+              onError={(e) => {
+                console.error("Image loading error:", e);
+                e.currentTarget.src = "/placeholder.svg";
+              }}
+            />
+          </div>
         )}
-      </Button>
+        <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+          {nominee.name}
+          {isSelected && <Star className="h-4 w-4 text-yellow-400 animate-party" />}
+        </h3>
+        <p className="text-gray-600 mb-4 flex-grow">{nominee.description}</p>
+        <Button
+          onClick={() => onSelect(nominee.id)}
+          variant={isSelected ? "default" : "outline"}
+          className={cn(
+            "w-full transition-all duration-300 mt-auto backdrop-blur-sm",
+            isSelected 
+              ? "bg-accent hover:bg-accent/90 text-white border-none" 
+              : "bg-white/50 hover:bg-white/70"
+          )}
+        >
+          {isSelected ? (
+            <>
+              <Check className="mr-2 h-4 w-4" />
+              Sélectionné
+            </>
+          ) : (
+            "Voter"
+          )}
+        </Button>
+      </div>
     </div>
   );
 };
