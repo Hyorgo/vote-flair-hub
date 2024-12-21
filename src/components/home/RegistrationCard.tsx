@@ -7,7 +7,7 @@ export const RegistrationCard = () => {
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5, delay: 0.8 }}
+      transition={{ duration: 0.5 }}
       className="w-full flex justify-center px-4 sm:px-6"
     >
       <div className="bg-white/30 backdrop-blur-md p-4 sm:p-6 rounded-2xl shadow-xl border border-white/20 w-full max-w-sm">
