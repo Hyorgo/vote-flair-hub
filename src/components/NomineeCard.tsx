@@ -19,7 +19,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
     <div 
       className={cn(
         "nominee-card relative animate-scale-in backdrop-blur-md bg-white/40 border border-white/20 shadow-xl p-4 rounded-lg flex flex-col h-full hover:bg-white/50 transition-all duration-300",
-        isSelected && "ring-2 ring-primary-light before:absolute before:inset-0 before:bg-primary/5"
+        isSelected && "bg-white/50 before:absolute before:inset-0 before:bg-white/5"
       )}
     >
       {nominee.image_url && (
@@ -37,7 +37,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
       )}
       <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
         {nominee.name}
-        {isSelected && <Star className="h-4 w-4 text-primary animate-party" />}
+        {isSelected && <Star className="h-4 w-4 text-accent animate-party" />}
       </h3>
       <p className="text-gray-600 mb-4 flex-grow">{nominee.description}</p>
       <Button
@@ -46,7 +46,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
         className={cn(
           "w-full transition-all duration-300 mt-auto backdrop-blur-sm",
           isSelected 
-            ? "bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] hover:opacity-90 text-white border-none" 
+            ? "bg-accent hover:bg-accent/90 text-white border-none" 
             : "bg-white/50 hover:bg-white/70"
         )}
       >
