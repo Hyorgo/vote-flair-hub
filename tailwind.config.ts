@@ -29,7 +29,7 @@ export default {
         foreground: "hsl(var(--foreground))",
         navy: {
           DEFAULT: "#1B365D",
-          dark: "#0D1B30", // Bleu marine encore plus foncé
+          dark: "#070E19", // Bleu marine encore plus foncé
           light: "#234578",
         },
         primary: {
