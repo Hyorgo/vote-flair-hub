@@ -35,9 +35,13 @@ export const VotingSection = ({
           variant="outline"
           onClick={() => onNavigation("prev")}
           disabled={isFirstCategory}
+          className="group relative"
         >
-          <ChevronLeft className="mr-2 h-4 w-4" />
-          Précédent
+          <ChevronLeft className="mr-2 h-4 w-4 group-hover:text-white transition-colors" />
+          <span className="relative z-10 group-hover:text-white transition-colors">
+            Précédent
+          </span>
+          <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-0 group-hover:opacity-100 transition-opacity rounded-md"></span>
         </Button>
         <h1 className="text-3xl font-bold text-center text-primary">
           {category?.name || ""}
@@ -46,9 +50,13 @@ export const VotingSection = ({
           variant="outline"
           onClick={() => onNavigation("next")}
           disabled={isLastCategory}
+          className="group relative"
         >
-          Suivant
-          <ChevronRight className="ml-2 h-4 w-4" />
+          <span className="relative z-10 group-hover:text-white transition-colors">
+            Suivant
+          </span>
+          <ChevronRight className="ml-2 h-4 w-4 group-hover:text-white transition-colors" />
+          <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-0 group-hover:opacity-100 transition-opacity rounded-md"></span>
         </Button>
       </div>
 
