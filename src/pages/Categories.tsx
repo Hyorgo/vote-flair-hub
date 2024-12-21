@@ -121,12 +121,13 @@ const Categories = () => {
           <Button
             onClick={handleComplete}
             size="lg"
-            className="text-lg gap-2 py-6 px-8 shadow-lg hover:shadow-xl transition-all duration-300 bg-white relative group"
+            className="text-lg gap-2 py-6 px-8 shadow-lg hover:shadow-xl transition-all duration-300 bg-white group relative"
           >
-            <CheckCircle className="h-6 w-6 text-[#FFD700]" />
-            <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent font-bold">
+            <CheckCircle className="h-6 w-6 text-[#FFD700] group-hover:text-white transition-colors" />
+            <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent font-bold group-hover:bg-none group-hover:text-white transition-all relative z-10">
               J'ai terminé mon vote !
             </span>
+            <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-0 group-hover:opacity-100 transition-opacity rounded-md"></span>
           </Button>
         </div>
       </div>
