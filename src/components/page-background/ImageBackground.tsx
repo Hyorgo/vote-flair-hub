@@ -31,9 +31,10 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
 
     if (loadAttempts < maxAttempts) {
       setLoadAttempts(prev => prev + 1);
-      // Construire l'URL complète avec le domaine si nécessaire
-      const baseUrl = imageUrl.startsWith('http') ? imageUrl : `${window.location.origin}${imageUrl}`;
-      const newUrl = `${baseUrl}?retry=${currentAttempt}&t=${Date.now()}`;
+      // On utilise directement le chemin relatif pour les images uploadées
+      const newUrl = imageUrl.includes('lovable-uploads') 
+        ? imageUrl 
+        : `${window.location.origin}${imageUrl}`;
       console.log(`Nouvelle tentative avec l'URL: ${newUrl}`);
       e.currentTarget.src = newUrl;
     } else {
@@ -47,8 +48,8 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
     setIsImageLoaded(true);
   };
 
-  // Construire l'URL complète si c'est un chemin relatif
-  const fullImageUrl = imageUrl.startsWith('http') 
+  // Pour les images uploadées, on utilise directement le chemin relatif
+  const backgroundUrl = imageUrl.includes('lovable-uploads') 
     ? imageUrl 
     : `${window.location.origin}${imageUrl}`;
 
@@ -62,11 +63,11 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
           isImageLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ 
-          backgroundImage: isImageLoaded ? `url(${fullImageUrl})` : 'none',
+          backgroundImage: isImageLoaded ? `url(${backgroundUrl})` : 'none',
         }}
       />
       <img
-        src={fullImageUrl}
+        src={backgroundUrl}
         alt=""
         className="hidden"
         onLoad={handleImageLoad}
