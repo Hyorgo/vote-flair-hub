@@ -7,12 +7,13 @@ export interface Category {
 export interface Nominee {
   id: string;
   name: string;
-  description?: string;
+  description: string;
   image_url?: string;
+  category_id: string;
 }
 
 export interface Vote {
   id?: string;
-  nomineeId: string;
-  timestamp?: string;
+  nominee_id: string;
+  created_at?: string;
 }

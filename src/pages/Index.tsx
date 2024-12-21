@@ -1,27 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
-import { useToast } from "@/hooks/use-toast";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { useAirtableData } from "@/hooks/useAirtableData";
 import { VotingSection } from "@/components/VotingSection";
 import { VotingTimer } from "@/components/VotingTimer";
+import { CategoryNavigation } from "@/components/CategoryNavigation";
+import { useVoting } from "@/hooks/useVoting";
 
 const END_TIME = new Date(Date.now() + 24 * 60 * 60 * 1000).getTime();
 
 const Index = () => {
-  const [currentCategory, setCurrentCategory] = useState(0);
-  const [selections, setSelections] = useState<Record<string, string>>({});
   const [timeLeft, setTimeLeft] = useState<string>("");
-  const { toast } = useToast();
-  const { categories, nominees, voteMutation } = useAirtableData();
+  const {
+    currentCategory,
+    setCurrentCategory,
+    selections,
+    handleVote,
+    handleNavigation,
+    categories,
+    isLoading,
+    error,
+  } = useVoting();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -37,61 +34,13 @@ const Index = () => {
       if (distance < 0) {
         clearInterval(timer);
         setTimeLeft("VOTES TERMINÉS");
-        toast({
-          title: "Les votes sont terminés !",
-          description: "Merci de votre participation.",
-        });
       }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [toast]);
+  }, []);
 
-  const handleVote = async (nomineeId: string) => {
-    const categoryId = categories.data?.[currentCategory]?.id;
-    if (!categoryId) return;
-
-    const isModifying = selections[categoryId] === nomineeId;
-
-    try {
-      if (!isModifying) {
-        await voteMutation.mutateAsync(nomineeId);
-      }
-
-      setSelections((prev) => ({
-        ...prev,
-        [categoryId]: isModifying ? "" : nomineeId,
-      }));
-
-      toast({
-        title: isModifying ? "Vote annulé !" : "Vote enregistré !",
-        description: isModifying
-          ? "Vous pouvez maintenant choisir un autre nominé"
-          : "Cliquez à nouveau sur le même nominé pour modifier votre vote",
-        className: "animate-bounce",
-      });
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'enregistrement du vote",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleNavigation = (direction: "prev" | "next") => {
-    setCurrentCategory((prev) =>
-      direction === "next"
-        ? Math.min(prev + 1, (categories.data?.length || 1) - 1)
-        : Math.max(prev - 1, 0)
-    );
-  };
-
-  const handleTabChange = (value: string) => {
-    setCurrentCategory(Number(value));
-  };
-
-  if (categories.isLoading || nominees.isLoading) {
+  if (isLoading) {
     return (
       <Layout>
         <div className="flex justify-center items-center min-h-[60vh]">
@@ -101,7 +50,7 @@ const Index = () => {
     );
   }
 
-  if (categories.error || nominees.error) {
+  if (error) {
     return (
       <Layout>
         <div className="text-center py-10">
@@ -116,7 +65,7 @@ const Index = () => {
     );
   }
 
-  if (!categories.data?.length) {
+  if (!categories.length) {
     return (
       <Layout>
         <div className="text-center py-10">
@@ -131,75 +80,28 @@ const Index = () => {
     );
   }
 
-  const category = categories.data[currentCategory];
-  const progress = ((currentCategory + 1) / categories.data.length) * 100;
+  const progress = ((currentCategory + 1) / categories.length) * 100;
 
   return (
     <Layout>
       <div className="max-w-5xl mx-auto">
         <VotingTimer timeLeft={timeLeft} progress={progress} />
 
-        <Tabs
-          value={currentCategory.toString()}
-          onValueChange={handleTabChange}
-          className="mb-6"
-        >
-          <TabsList className="w-full flex-wrap h-auto gap-2 bg-white/80 backdrop-blur-sm p-2">
-            {categories.data.map((cat, index) => (
-              <TabsTrigger
-                key={cat.id}
-                value={index.toString()}
-                className={`${
-                  selections[cat.id] ? "text-primary border-primary" : ""
-                } animate-scale-in`}
-              >
-                {cat.name}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+        <CategoryNavigation
+          categories={categories}
+          currentCategory={currentCategory}
+          selections={selections}
+          onTabChange={(value) => setCurrentCategory(Number(value))}
+        />
 
         <VotingSection
-          category={category}
+          category={categories[currentCategory]}
           selections={selections}
           onVote={handleVote}
           onNavigation={handleNavigation}
           isFirstCategory={currentCategory === 0}
-          isLastCategory={currentCategory === categories.data.length - 1}
+          isLastCategory={currentCategory === categories.length - 1}
         />
-
-        <Pagination className="mt-8">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => handleNavigation("prev")}
-                className={
-                  currentCategory === 0 ? "opacity-50 cursor-not-allowed" : ""
-                }
-              />
-            </PaginationItem>
-            {categories.data.map((_, index) => (
-              <PaginationItem key={index}>
-                <PaginationLink
-                  onClick={() => setCurrentCategory(index)}
-                  isActive={currentCategory === index}
-                >
-                  {index + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => handleNavigation("next")}
-                className={
-                  currentCategory === categories.data.length - 1
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
       </div>
     </Layout>
   );

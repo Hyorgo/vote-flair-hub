@@ -9,7 +9,85 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      nominees: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          description: string
+          id: string
+          image_url: string | null
+          name: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          description: string
+          id?: string
+          image_url?: string | null
+          name: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          description?: string
+          id?: string
+          image_url?: string | null
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nominees_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      votes: {
+        Row: {
+          created_at: string | null
+          id: string
+          nominee_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          nominee_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          nominee_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "votes_nominee_id_fkey"
+            columns: ["nominee_id"]
+            isOneToOne: false
+            referencedRelation: "nominees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
