@@ -46,7 +46,10 @@ export const CategoryNavigation = ({
         onValueChange={onTabChange}
         className="w-full"
       >
-        <TabsList className="w-full flex-wrap h-auto gap-2 bg-white/40 backdrop-blur-md border border-white/20 shadow-lg p-2 rounded-xl overflow-x-auto">
+        <TabsList 
+          className="w-full flex-wrap h-auto gap-2 bg-white/40 backdrop-blur-md border border-white/20 shadow-lg p-2 rounded-xl overflow-x-auto"
+          aria-label="Navigation des catégories"
+        >
           {categories.map((cat, index) => (
             <TabsTrigger
               key={cat.id}
@@ -54,10 +57,13 @@ export const CategoryNavigation = ({
               className={cn(
                 "transition-all duration-300 relative whitespace-nowrap min-w-[100px]",
                 "text-sm sm:text-base py-2 px-3 sm:px-4",
+                "focus-visible:ring-2 focus-visible:ring-focus-outline focus-visible:ring-offset-2",
+                "focus-visible:outline-none focus-visible:z-10",
                 selections[cat.id] 
                   ? "text-primary border-primary bg-white/60 after:content-['✓'] after:ml-1 after:text-green-500" 
                   : "hover:bg-white/50"
               )}
+              aria-label={`Catégorie ${cat.name}${selections[cat.id] ? ' (Votée)' : ''}`}
             >
               {cat.name}
             </TabsTrigger>

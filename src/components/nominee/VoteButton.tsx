@@ -31,11 +31,14 @@ export const VoteButton = ({ isSelected, onSelect }: VoteButtonProps) => {
                 "w-full transition-all duration-500 mt-auto group relative",
                 "border-2 rounded-lg shadow-sm",
                 "transform hover:shadow-lg hover:translate-y-[-2px]",
+                "focus-visible:ring-2 focus-visible:ring-focus-outline focus-visible:ring-offset-2",
+                "focus-visible:outline-none focus-visible:z-10",
                 isSelected 
                   ? "bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white border-yellow-400 hover:opacity-90 animate-scale-in" 
                   : "hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white hover:border-yellow-400 bg-white border-white/40"
               )}
               aria-pressed={isSelected}
+              aria-label={isSelected ? "Annuler le vote" : "Voter pour ce nominé"}
             >
               {isSelected ? (
                 <motion.div
@@ -57,6 +60,7 @@ export const VoteButton = ({ isSelected, onSelect }: VoteButtonProps) => {
         <TooltipContent 
           sideOffset={4}
           className="bg-white/90 backdrop-blur-sm border border-white/20 shadow-lg"
+          role="tooltip"
         >
           <p className="text-navy">
             {isSelected 
