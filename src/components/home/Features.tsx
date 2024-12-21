@@ -8,6 +8,7 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
+      delayChildren: 0.3,
       staggerChildren: 0.2,
     },
   },
@@ -15,7 +16,15 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      damping: 12,
+      stiffness: 100,
+    },
+  },
 };
 
 export const Features = () => {
