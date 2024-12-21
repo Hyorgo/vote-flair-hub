@@ -55,7 +55,7 @@ export const VotingTimer = () => {
   return (
     <TooltipProvider>
       <div className={cn(
-        "mb-6 p-6 rounded-lg shadow-lg transition-all duration-300",
+        "mt-24 mb-6 p-6 rounded-lg shadow-lg transition-all duration-300",
         "bg-gradient-to-r from-white/90 to-white/80 backdrop-blur-sm",
         "border-2 border-white/40"
       )}>
