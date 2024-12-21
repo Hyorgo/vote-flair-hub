@@ -33,7 +33,7 @@ export const RegistrationFields = ({
             value={firstName}
             onChange={(e) => onFirstNameChange(e.target.value)}
             placeholder="Jean"
-            className="bg-white/20 backdrop-blur-sm border-white/20 focus:border-primary/50 focus:ring-primary/50 h-9"
+            className="bg-white/20 backdrop-blur-sm border-white/20 focus:border-primary/50 focus:ring-primary/50 h-9 placeholder:text-white/70"
           />
         </div>
 
@@ -48,7 +48,7 @@ export const RegistrationFields = ({
             value={lastName}
             onChange={(e) => onLastNameChange(e.target.value)}
             placeholder="Dupont"
-            className="bg-white/20 backdrop-blur-sm border-white/20 focus:border-primary/50 focus:ring-primary/50 h-9"
+            className="bg-white/20 backdrop-blur-sm border-white/20 focus:border-primary/50 focus:ring-primary/50 h-9 placeholder:text-white/70"
           />
         </div>
       </div>
@@ -64,7 +64,7 @@ export const RegistrationFields = ({
           value={email}
           onChange={(e) => onEmailChange(e.target.value)}
           placeholder="jean.dupont@example.com"
-          className="bg-white/20 backdrop-blur-sm border-white/20 focus:border-primary/50 focus:ring-primary/50 h-9"
+          className="bg-white/20 backdrop-blur-sm border-white/20 focus:border-primary/50 focus:ring-primary/50 h-9 placeholder:text-white/70"
         />
       </div>
     </>
