@@ -61,16 +61,20 @@ export const PageBackground = ({ pageName, children }: PageBackgroundProps) => {
     );
   }
 
-  const style = getBackgroundStyle();
+  const style = {
+    ...(background.background_type === "color" && { backgroundColor: background.background_value }),
+    ...(background.background_type === "gradient" && { background: background.background_value }),
+    ...(background.background_type === "image" && {
+      backgroundImage: `url(${background.background_value})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundAttachment: 'fixed'
+    })
+  };
   
   return (
-    <div 
-      className="min-h-screen relative" 
-      style={{
-        ...style,
-        backgroundColor: background.background_type === "color" ? background.background_value : undefined,
-      }}
-    >
+    <div className="min-h-screen relative" style={style}>
       {children}
     </div>
   );
