@@ -32,7 +32,7 @@
   .blue-halo {
     content: '';
     @apply absolute w-[800px] h-[800px] rounded-full blur-[150px] z-0;
-    background-color: rgba(27, 207, 248, 0.3); /* #1BCF8 avec 30% d'opacité */
+    background-color: rgba(27, 54, 93, 0.3); /* Bleu marine foncé avec 30% d'opacité */
     top: 30%;
     right: 20%;
     animation: float 22s infinite;
