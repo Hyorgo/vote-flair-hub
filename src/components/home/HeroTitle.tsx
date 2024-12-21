@@ -20,7 +20,10 @@ export const HeroTitle = () => {
             ease: "easeInOut"
           }}
         >
-          <Crown className="w-16 h-16 sm:w-24 sm:h-24 opacity-90 [&>path]:fill-[url(#crown-gradient)]" />
+          <Crown 
+            className="w-16 h-16 sm:w-24 sm:h-24 opacity-90 [&>path]:fill-[url(#crown-gradient)]" 
+            strokeWidth={0}
+          />
           <svg width="0" height="0">
             <linearGradient id="crown-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#FFD700" />
