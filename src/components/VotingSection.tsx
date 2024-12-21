@@ -2,7 +2,7 @@ import React from "react";
 import { NomineeCard } from "./NomineeCard";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Category, Nominee } from "@/types/airtable";
+import { Category } from "@/types/airtable";
 
 interface VotingSectionProps {
   category: Category;

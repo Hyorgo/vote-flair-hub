@@ -1,9 +1,3 @@
-export interface Category {
-  id: string;
-  name: string;
-  nominees: Nominee[];
-}
-
 export interface Nominee {
   id: string;
   name: string;
@@ -12,8 +6,8 @@ export interface Nominee {
   category_id: string;
 }
 
-export interface Vote {
-  id?: string;
-  nominee_id: string;
-  created_at?: string;
+export interface Category {
+  id: string;
+  name: string;
+  nominees: Nominee[];
 }
