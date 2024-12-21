@@ -49,17 +49,14 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
           className={cn(
             "w-full transition-all duration-300 mt-auto backdrop-blur-sm relative group",
             isSelected 
-              ? "bg-white" 
+              ? "bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white hover:opacity-90" 
               : "bg-white/50 hover:bg-white/70"
           )}
         >
           {isSelected ? (
             <>
-              <Check className="mr-2 h-4 w-4 text-[#FFD700]" />
-              <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent font-bold">
-                Sélectionné
-              </span>
-              <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-10 rounded-md"></span>
+              <Check className="mr-2 h-4 w-4" />
+              Sélectionné
             </>
           ) : (
             "Voter"
