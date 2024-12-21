@@ -5,6 +5,30 @@ import { PageBackground } from "@/integrations/supabase/types/background";
 export const useBackgroundActions = (onSuccess: () => void) => {
   const { toast } = useToast();
 
+  const deleteAllBackgrounds = async (pageName: string) => {
+    const { error } = await supabase
+      .from("page_backgrounds")
+      .delete()
+      .eq("page_name", pageName);
+
+    if (error) {
+      console.error("Error deleting backgrounds:", error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer les fonds",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Succès",
+      description: "Les fonds ont été supprimés avec succès",
+    });
+    
+    onSuccess();
+  };
+
   const toggleBackgroundActive = async (background: PageBackground) => {
     const { error } = await supabase
       .from("page_backgrounds")
@@ -54,5 +78,6 @@ export const useBackgroundActions = (onSuccess: () => void) => {
   return {
     toggleBackgroundActive,
     deleteBackground,
+    deleteAllBackgrounds,
   };
 };
