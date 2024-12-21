@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Settings, PartyPopper } from "lucide-react";
+import { Footer } from "./Footer";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,7 +13,7 @@ export const Layout = ({ children }: LayoutProps) => {
   const isAdmin = location.pathname.startsWith("/admin");
 
   return (
-    <div className="min-h-screen bg-festive-gradient">
+    <div className="min-h-screen bg-festive-gradient flex flex-col">
       <header className="bg-white/80 backdrop-blur-sm shadow-lg">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link to="/" className="text-2xl font-heading font-bold text-primary flex items-center gap-2">
@@ -32,9 +33,10 @@ export const Layout = ({ children }: LayoutProps) => {
           )}
         </div>
       </header>
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex-grow">
         {children}
       </main>
+      <Footer />
     </div>
   );
 };
