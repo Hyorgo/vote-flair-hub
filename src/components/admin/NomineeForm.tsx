@@ -56,10 +56,12 @@ export const NomineeForm = ({
 
         if (uploadError) throw uploadError;
 
+        // Récupérer l'URL publique de l'image
         const { data: { publicUrl } } = supabase.storage
           .from('nominees-images')
           .getPublicUrl(fileName);
 
+        console.log("Image uploaded, public URL:", publicUrl);
         imageUrl = publicUrl;
       }
 

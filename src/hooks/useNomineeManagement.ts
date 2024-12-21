@@ -15,6 +15,7 @@ export const useNomineeManagement = (categoryId: string) => {
   const { toast } = useToast();
 
   const loadNominees = useCallback(async () => {
+    console.log("Loading nominees for category:", categoryId);
     const { data, error } = await supabase
       .from('nominees')
       .select('*')
@@ -30,6 +31,7 @@ export const useNomineeManagement = (categoryId: string) => {
       return;
     }
 
+    console.log("Nominees loaded:", data);
     setNominees(data || []);
   }, [categoryId, toast]);
 
@@ -64,20 +66,23 @@ export const useNomineeManagement = (categoryId: string) => {
     imageUrl?: string
   ) => {
     try {
-      const { error } = await supabase
+      console.log("Adding nominee with image:", { name, description, imageUrl, categoryId });
+      const { error, data } = await supabase
         .from('nominees')
         .insert([{
           category_id: categoryId,
           name: name.trim(),
           description: description.trim(),
           image_url: imageUrl
-        }]);
+        }])
+        .select();
 
       if (error) {
         console.error("Error adding nominee:", error);
         throw error;
       }
 
+      console.log("Nominee added successfully:", data);
       toast({
         title: "Succès",
         description: "Le nominé a été ajouté",
