@@ -20,17 +20,13 @@ export const Layout = ({ children }: LayoutProps) => {
       {/* Background elements with lower z-index */}
       <div className="fixed inset-0 z-0">
         {!isAdmin && (
-          <div className="absolute inset-0 bg-navy" />
+          <>
+            <div className="absolute inset-0 bg-navy" />
+            <div className="golden-halo" />
+            <div className="fuchsia-halo" />
+            <div className="blue-halo" />
+          </>
         )}
-        <div className="absolute inset-0">
-          <div className="golden-halo" />
-          <div className="bokeh-1" />
-          <div className="bokeh-2" />
-          <div className="bokeh-3" />
-          <div className="bokeh-4" />
-          <div className="bokeh-corners" />
-          <div className="bokeh-corners-bottom" />
-        </div>
       </div>
       
       {/* Main content with higher z-index */}
