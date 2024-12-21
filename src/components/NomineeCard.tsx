@@ -22,7 +22,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
       )}
       <div 
         className={cn(
-          "nominee-card relative animate-scale-in bg-white backdrop-blur-md border border-white/40 shadow-xl p-4 rounded-lg flex flex-col h-full hover:bg-white/90 transition-all duration-300",
+          "nominee-card relative animate-scale-in bg-white border border-white/40 shadow-xl p-4 rounded-lg flex flex-col h-full hover:bg-white/90 transition-all duration-300",
         )}
       >
         {nominee.image_url && (
@@ -49,10 +49,10 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
           onClick={() => onSelect(nominee.id)}
           variant="outline"
           className={cn(
-            "w-full transition-all duration-300 mt-auto group relative border border-white/40 rounded-lg shadow-sm backdrop-blur-sm",
+            "w-full transition-all duration-300 mt-auto group relative border border-white/40 rounded-lg shadow-sm",
             isSelected 
               ? "bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white hover:opacity-90" 
-              : "hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white bg-white/20"
+              : "hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white bg-white"
           )}
         >
           {isSelected ? (
