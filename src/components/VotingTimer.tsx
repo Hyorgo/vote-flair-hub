@@ -75,7 +75,7 @@ export const VotingTimer = () => {
                 <span className="font-mono text-xl font-semibold">{timeLeft}</span>
               </div>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent className="bg-white/90 backdrop-blur-sm border border-white/20 shadow-lg">
               <p>Temps restant pour voter</p>
             </TooltipContent>
           </Tooltip>
