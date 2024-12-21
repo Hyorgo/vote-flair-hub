@@ -29,11 +29,11 @@ export const ImageBackgroundInput = ({ onFileChange }: ImageBackgroundInputProps
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="file">
+      <Label htmlFor="background-image-file">
         Fichier image (max 50MB)
       </Label>
       <Input
-        id="file"
+        id="background-image-file"
         type="file"
         accept="image/*"
         onChange={handleFileChange}

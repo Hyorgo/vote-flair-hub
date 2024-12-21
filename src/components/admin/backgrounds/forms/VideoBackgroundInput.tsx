@@ -9,9 +9,9 @@ interface VideoBackgroundInputProps {
 export const VideoBackgroundInput = ({ value, onChange }: VideoBackgroundInputProps) => {
   return (
     <div className="space-y-2">
-      <Label htmlFor="background-value">URL de la vidéo</Label>
+      <Label htmlFor="background-video-value">URL de la vidéo</Label>
       <Input
-        id="background-value"
+        id="background-video-value"
         type="url"
         placeholder="https://example.com/video.mp4"
         value={value}

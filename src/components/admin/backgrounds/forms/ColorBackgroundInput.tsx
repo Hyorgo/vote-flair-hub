@@ -12,9 +12,9 @@ export const ColorBackgroundInput = ({ value, onChange }: ColorBackgroundInputPr
   
   return (
     <div className="space-y-2">
-      <Label htmlFor="background-value">Couleur</Label>
+      <Label htmlFor="background-color-value">Couleur</Label>
       <Input
-        id="background-value"
+        id="background-color-value"
         type="color"
         value={safeValue}
         onChange={(e) => onChange(e.target.value)}

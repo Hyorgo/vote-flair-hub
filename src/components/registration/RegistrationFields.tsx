@@ -23,9 +23,11 @@ export const RegistrationFields = ({
     <>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="firstName" className="text-sm font-medium text-navy">Prénom</Label>
+          <Label htmlFor="registration-first-name" className="text-sm font-medium text-navy">
+            Prénom
+          </Label>
           <Input
-            id="firstName"
+            id="registration-first-name"
             type="text"
             required
             value={firstName}
@@ -36,9 +38,11 @@ export const RegistrationFields = ({
         </div>
 
         <div>
-          <Label htmlFor="lastName" className="text-sm font-medium text-navy">Nom</Label>
+          <Label htmlFor="registration-last-name" className="text-sm font-medium text-navy">
+            Nom
+          </Label>
           <Input
-            id="lastName"
+            id="registration-last-name"
             type="text"
             required
             value={lastName}
@@ -50,9 +54,11 @@ export const RegistrationFields = ({
       </div>
 
       <div>
-        <Label htmlFor="email" className="text-sm font-medium text-navy">Email</Label>
+        <Label htmlFor="registration-email" className="text-sm font-medium text-navy">
+          Email
+        </Label>
         <Input
-          id="email"
+          id="registration-email"
           type="email"
           required
           value={email}
