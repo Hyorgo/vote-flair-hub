@@ -16,12 +16,12 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
   useEffect(() => {
     setIsImageLoaded(false);
     setLoadAttempts(0);
-    console.log("Tentative de chargement de l'image:", imageUrl);
+    console.log("Attempting to load image:", imageUrl);
   }, [imageUrl]);
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const currentAttempt = loadAttempts + 1;
-    console.error("Détails de l'erreur de chargement:", {
+    console.error("Image loading error details:", {
       src: e.currentTarget.src,
       naturalWidth: e.currentTarget.naturalWidth,
       naturalHeight: e.currentTarget.naturalHeight,
@@ -31,44 +31,21 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
 
     if (loadAttempts < maxAttempts) {
       setLoadAttempts(prev => prev + 1);
-      // Ajout d'un timestamp pour éviter le cache
-      const newUrl = imageUrl.startsWith('http') 
-        ? `${imageUrl}?retry=${currentAttempt}&t=${Date.now()}`
-        : `${window.location.origin}${imageUrl}?retry=${currentAttempt}&t=${Date.now()}`;
-      
-      console.log(`Nouvelle tentative avec l'URL: ${newUrl}`);
+      // Force cache bypass with timestamp
+      const timestamp = Date.now();
+      const newUrl = `${imageUrl}?retry=${currentAttempt}&t=${timestamp}`;
+      console.log(`Retrying with URL: ${newUrl}`);
       e.currentTarget.src = newUrl;
-      
-      toast({
-        title: "Chargement de l'image",
-        description: `Tentative ${currentAttempt}/${maxAttempts}...`,
-        variant: "default",
-      });
     } else {
-      console.error("Nombre maximum de tentatives atteint pour l'image:", imageUrl);
-      toast({
-        title: "Erreur de chargement",
-        description: "Impossible de charger l'image de fond",
-        variant: "destructive",
-      });
+      console.error("Max load attempts reached for image:", imageUrl);
       onError();
     }
   };
 
   const handleImageLoad = () => {
-    console.log("Image chargée avec succès:", imageUrl);
+    console.log("Image loaded successfully:", imageUrl);
     setIsImageLoaded(true);
-    toast({
-      title: "Image chargée",
-      description: "L'image de fond a été chargée avec succès",
-      variant: "default",
-    });
   };
-
-  // Construire l'URL complète si c'est un chemin relatif
-  const fullImageUrl = imageUrl.startsWith('http') 
-    ? imageUrl 
-    : `${window.location.origin}${imageUrl}`;
 
   return (
     <div className="min-h-screen relative">
@@ -80,16 +57,15 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
           isImageLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ 
-          backgroundImage: isImageLoaded ? `url(${fullImageUrl})` : 'none',
+          backgroundImage: isImageLoaded ? `url(${imageUrl})` : 'none',
         }}
       />
       <img
-        src={fullImageUrl}
+        src={imageUrl}
         alt=""
         className="hidden"
         onLoad={handleImageLoad}
         onError={handleImageError}
-        crossOrigin="anonymous"
       />
       <div className="relative z-0">{children}</div>
     </div>
