@@ -49,7 +49,12 @@ export const VotingTimer = () => {
   return (
     <div className="mb-6 p-4 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg">
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-lg font-semibold text-primary">Temps restant</h2>
+        <h2 className="text-lg font-semibold relative">
+          <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent">
+            Temps restant
+          </span>
+          <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-10 blur-sm" aria-hidden="true"></span>
+        </h2>
         <div className="flex items-center gap-2">
           <Timer className="h-5 w-5 text-primary animate-pulse" />
           <span className="font-mono text-lg">{timeLeft}</span>
