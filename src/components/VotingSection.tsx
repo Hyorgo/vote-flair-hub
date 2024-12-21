@@ -35,7 +35,7 @@ export const VotingSection = ({
           variant="outline"
           onClick={() => onNavigation("prev")}
           disabled={isFirstCategory}
-          className="group"
+          className="group hover:bg-white"
         >
           <ChevronLeft className="mr-2 h-4 w-4" />
           <span className="bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#FFD700] group-hover:via-[#DAA520] group-hover:to-[#B8860B] group-hover:text-transparent transition-all">
@@ -49,7 +49,7 @@ export const VotingSection = ({
           variant="outline"
           onClick={() => onNavigation("next")}
           disabled={isLastCategory}
-          className="group"
+          className="group hover:bg-white"
         >
           <span className="bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#FFD700] group-hover:via-[#DAA520] group-hover:to-[#B8860B] group-hover:text-transparent transition-all">
             Suivant
