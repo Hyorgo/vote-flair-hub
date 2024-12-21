@@ -18,7 +18,7 @@ export const usePageBackground = (pageName: string) => {
     refetchOnWindowFocus: true,
     refetchInterval: 2000,
     staleTime: 0,
-    cacheTime: 0,
+    gcTime: 0,
   });
 
   const getBackgroundStyle = () => {

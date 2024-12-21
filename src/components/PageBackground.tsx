@@ -28,7 +28,10 @@ export const PageBackground = ({ pageName, children }: PageBackgroundProps) => {
           playsInline
           className="fixed inset-0 w-full h-full object-cover -z-10"
           src={background.background_value}
-          onError={(e) => console.error("Video loading error:", e)}
+          onError={(e) => {
+            console.error("Video loading error:", e);
+            console.log("Video URL:", background.background_value);
+          }}
         />
         <div className="relative z-0">{children}</div>
       </div>
