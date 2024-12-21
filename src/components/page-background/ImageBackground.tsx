@@ -16,12 +16,12 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
   useEffect(() => {
     setIsImageLoaded(false);
     setLoadAttempts(0);
-    console.log("Attempting to load image:", imageUrl);
+    console.log("Tentative de chargement de l'image:", imageUrl);
   }, [imageUrl]);
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const currentAttempt = loadAttempts + 1;
-    console.error("Image loading error details:", {
+    console.error("Détails de l'erreur de chargement:", {
       src: e.currentTarget.src,
       naturalWidth: e.currentTarget.naturalWidth,
       naturalHeight: e.currentTarget.naturalHeight,
@@ -31,21 +31,26 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
 
     if (loadAttempts < maxAttempts) {
       setLoadAttempts(prev => prev + 1);
-      // Force cache bypass with timestamp
-      const timestamp = Date.now();
-      const newUrl = `${imageUrl}?retry=${currentAttempt}&t=${timestamp}`;
-      console.log(`Retrying with URL: ${newUrl}`);
+      // Construire l'URL complète avec le domaine si nécessaire
+      const baseUrl = imageUrl.startsWith('http') ? imageUrl : `${window.location.origin}${imageUrl}`;
+      const newUrl = `${baseUrl}?retry=${currentAttempt}&t=${Date.now()}`;
+      console.log(`Nouvelle tentative avec l'URL: ${newUrl}`);
       e.currentTarget.src = newUrl;
     } else {
-      console.error("Max load attempts reached for image:", imageUrl);
+      console.error("Nombre maximum de tentatives atteint pour l'image:", imageUrl);
       onError();
     }
   };
 
   const handleImageLoad = () => {
-    console.log("Image loaded successfully:", imageUrl);
+    console.log("Image chargée avec succès:", imageUrl);
     setIsImageLoaded(true);
   };
+
+  // Construire l'URL complète si c'est un chemin relatif
+  const fullImageUrl = imageUrl.startsWith('http') 
+    ? imageUrl 
+    : `${window.location.origin}${imageUrl}`;
 
   return (
     <div className="min-h-screen relative">
@@ -57,11 +62,11 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
           isImageLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ 
-          backgroundImage: isImageLoaded ? `url(${imageUrl})` : 'none',
+          backgroundImage: isImageLoaded ? `url(${fullImageUrl})` : 'none',
         }}
       />
       <img
-        src={imageUrl}
+        src={fullImageUrl}
         alt=""
         className="hidden"
         onLoad={handleImageLoad}
