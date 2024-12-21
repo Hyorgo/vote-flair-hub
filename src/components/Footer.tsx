@@ -49,14 +49,14 @@ export const Footer = () => {
               </motion.a>
               
               <motion.a 
-                href="mailto:contact@lyondigitalservices.fr"
+                href="mailto:contact@ideai.fr"
                 className="flex items-center gap-3 text-gray-600 hover:text-primary transition-all group"
                 whileHover={{ x: 5 }}
               >
                 <div className="p-2 bg-primary/5 rounded-lg group-hover:bg-primary/10 transition-colors">
                   <Mail className="h-5 w-5" />
                 </div>
-                <span>contact@lyondigitalservices.fr</span>
+                <span>contact@ideai.fr</span>
               </motion.a>
             </div>
           </div>
