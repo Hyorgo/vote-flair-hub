@@ -18,6 +18,9 @@ export default {
       },
     },
     extend: {
+      scale: {
+        '102': '1.02',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -68,9 +71,9 @@ export default {
           "50%": { transform: "rotate(3deg)" },
         },
         "shimmer": {
-          "0%": { opacity: "1" },
+          "0%": { opacity: "0.8" },
           "50%": { opacity: "0.5" },
-          "100%": { opacity: "1" },
+          "100%": { opacity: "0.8" },
         },
         "float": {
           "0%, 100%": { transform: "translateY(0)" },

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Star, ImageOff } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 interface NomineeCardProps {
   nominee: {
@@ -29,17 +30,25 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
   };
 
   return (
-    <div 
-      className="relative" 
-      role="article" 
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ scale: 1.02 }}
+      className="relative"
+      role="article"
       aria-label={`Nominé : ${nominee.name}`}
     >
       {isSelected && (
-        <div className="absolute inset-0 rounded-lg ring-1 ring-yellow-400 animate-shimmer pointer-events-none" />
+        <div className="absolute inset-0 rounded-lg ring-2 ring-yellow-400 animate-shimmer pointer-events-none" />
       )}
       <div 
         className={cn(
-          "nominee-card relative animate-scale-in bg-white border border-white/40 shadow-xl p-4 rounded-lg flex flex-col h-full hover:bg-white/90 transition-all duration-300",
+          "nominee-card relative bg-white/90 backdrop-blur-sm border-2 border-white/40",
+          "shadow-lg hover:shadow-xl p-4 rounded-lg flex flex-col h-full",
+          "transform transition-all duration-300 ease-out",
+          "hover:bg-white hover:-translate-y-1",
+          isSelected && "ring-2 ring-yellow-400"
         )}
       >
         {nominee.image_url && (
@@ -58,13 +67,15 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
                 src={nominee.image_url} 
                 alt={`Photo de ${nominee.name}`}
                 className={cn(
-                  "w-full h-full object-cover transition-all duration-300",
-                  imageLoaded ? "opacity-100" : "opacity-0",
-                  "hover:scale-105"
+                  "w-full h-full object-cover transition-all duration-500",
+                  "transform hover:scale-105",
+                  imageLoaded ? "opacity-100" : "opacity-0"
                 )}
                 onLoad={handleImageLoad}
                 onError={handleImageError}
                 loading="lazy"
+                width={400}
+                height={225}
               />
             )}
           </div>
@@ -75,7 +86,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
           </span>
           {isSelected && (
             <Star 
-              className="h-4 w-4 text-yellow-400 animate-party" 
+              className="h-4 w-4 text-yellow-400 animate-bounce-light" 
               aria-label="Sélectionné"
             />
           )}
@@ -85,7 +96,9 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
           onClick={() => onSelect(nominee.id)}
           variant="outline"
           className={cn(
-            "w-full transition-all duration-300 mt-auto group relative border border-white/40 rounded-lg shadow-sm",
+            "w-full transition-all duration-300 mt-auto group relative",
+            "border-2 border-white/40 rounded-lg shadow-sm",
+            "transform hover:scale-102 hover:shadow-md",
             isSelected 
               ? "bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white hover:opacity-90" 
               : "hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white bg-white"
@@ -94,7 +107,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
         >
           {isSelected ? (
             <>
-              <Check className="mr-2 h-4 w-4" aria-hidden="true" />
+              <Check className="mr-2 h-4 w-4 animate-scale-in" aria-hidden="true" />
               <span className="font-medium">Sélectionné</span>
             </>
           ) : (
@@ -104,6 +117,6 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
           )}
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 };
