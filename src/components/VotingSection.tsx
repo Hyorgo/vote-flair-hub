@@ -21,10 +21,8 @@ export const VotingSection = ({
   isFirstCategory,
   isLastCategory,
 }: VotingSectionProps) => {
-  // Vérification explicite que nominees est un tableau
   const nominees = Array.isArray(category?.nominees) ? category.nominees : [];
 
-  // Log pour déboguer
   console.log("Category:", category);
   console.log("Nominees array:", nominees);
 
@@ -35,10 +33,10 @@ export const VotingSection = ({
           variant="outline"
           onClick={() => onNavigation("prev")}
           disabled={isFirstCategory}
-          className="group hover:bg-white"
+          className="group relative px-6 py-2 border border-gray-200 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
         >
-          <ChevronLeft className="mr-2 h-4 w-4" />
-          <span className="bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#FFD700] group-hover:via-[#DAA520] group-hover:to-[#B8860B] group-hover:text-transparent transition-all">
+          <ChevronLeft className="mr-2 h-4 w-4 text-primary transition-transform group-hover:-translate-x-0.5" />
+          <span className="font-medium">
             Précédent
           </span>
         </Button>
@@ -49,12 +47,12 @@ export const VotingSection = ({
           variant="outline"
           onClick={() => onNavigation("next")}
           disabled={isLastCategory}
-          className="group hover:bg-white"
+          className="group relative px-6 py-2 border border-gray-200 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
         >
-          <span className="bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#FFD700] group-hover:via-[#DAA520] group-hover:to-[#B8860B] group-hover:text-transparent transition-all">
+          <span className="font-medium">
             Suivant
           </span>
-          <ChevronRight className="ml-2 h-4 w-4" />
+          <ChevronRight className="ml-2 h-4 w-4 text-primary transition-transform group-hover:translate-x-0.5" />
         </Button>
       </div>
 
