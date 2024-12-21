@@ -19,7 +19,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
     <div 
       className={cn(
         "nominee-card relative animate-scale-in backdrop-blur-md bg-white/40 border border-white/20 shadow-xl p-4 rounded-lg flex flex-col h-full hover:bg-white/50 transition-all duration-300",
-        isSelected && "ring-2 ring-primary-light before:absolute before:inset-0 before:bg-primary/5"
+        isSelected && "before:absolute before:inset-[-2px] before:rounded-lg before:bg-gradient-to-r before:from-[#FFD700] before:via-[#DAA520] before:to-[#B8860B] before:-z-10"
       )}
     >
       {nominee.image_url && (
@@ -37,7 +37,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
       )}
       <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
         {nominee.name}
-        {isSelected && <Star className="h-4 w-4 text-primary animate-party" />}
+        {isSelected && <Star className="h-4 w-4 text-[#DAA520] animate-party" />}
       </h3>
       <p className="text-gray-600 mb-4 flex-grow">{nominee.description}</p>
       <Button
