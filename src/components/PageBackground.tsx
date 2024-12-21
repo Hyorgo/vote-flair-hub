@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { usePageBackground } from "@/hooks/usePageBackground";
+import { Loader2 } from "lucide-react";
 
 interface PageBackgroundProps {
   pageName: string;
@@ -7,7 +8,7 @@ interface PageBackgroundProps {
 }
 
 export const PageBackground = ({ pageName, children }: PageBackgroundProps) => {
-  const { background, getBackgroundStyle } = usePageBackground(pageName);
+  const { background, isLoading, error, getBackgroundStyle } = usePageBackground(pageName);
   const [videoKey, setVideoKey] = useState(Date.now());
 
   useEffect(() => {
@@ -16,6 +17,25 @@ export const PageBackground = ({ pageName, children }: PageBackgroundProps) => {
       setVideoKey(Date.now());
     }
   }, [background?.background_value]);
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    console.error("Background loading error:", error);
+    return (
+      <div className="min-h-screen">
+        {children}
+      </div>
+    );
+  }
 
   if (background?.background_type === "video") {
     return (

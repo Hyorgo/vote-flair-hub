@@ -5,6 +5,8 @@ export const usePageBackground = (pageName: string) => {
   const { data: background, isLoading, error, refetch } = useQuery({
     queryKey: ["page-background", pageName],
     queryFn: async () => {
+      console.log("Fetching background for page:", pageName); // Debug log
+      
       const { data, error } = await supabase
         .from("page_backgrounds")
         .select("*")
@@ -12,9 +14,15 @@ export const usePageBackground = (pageName: string) => {
         .eq("is_active", true)
         .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error) {
+        console.error("Supabase error:", error); // Debug log
+        throw error;
+      }
+
+      console.log("Background data received:", data); // Debug log
       return data;
     },
+    retry: 2, // Retry failed requests twice
     refetchOnWindowFocus: true,
     refetchInterval: 2000,
     staleTime: 0,
