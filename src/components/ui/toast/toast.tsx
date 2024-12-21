@@ -1,4 +1,5 @@
 import * as React from "react"
+import { type ComponentPropsWithoutRef } from "react"
 import * as ToastPrimitives from "@radix-ui/react-toast"
 import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -11,6 +12,7 @@ import type {
   ToastRootRef,
   ToastTitleRef,
   ToastViewportRef,
+  ToastActionProps
 } from "./types"
 
 const ToastProvider = ToastPrimitives.Provider
@@ -43,8 +45,8 @@ const Toast = React.forwardRef<ToastRootRef, ToastProps>(
 )
 Toast.displayName = ToastPrimitives.Root.displayName
 
-const ToastAction = React.forwardRef<ToastActionRef, ComponentPropsWithoutRef<typeof ToastPrimitives.Action>>(
-  ({ className, ...props }, ref) => (
+const ToastAction = React.forwardRef<ToastActionRef, ToastActionProps>(
+  ({ className, altText, ...props }, ref) => (
     <ToastPrimitives.Action
       ref={ref}
       className={cn(

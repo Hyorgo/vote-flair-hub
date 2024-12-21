@@ -1,6 +1,6 @@
 import * as React from "react"
 import { reducer } from "./toast-reducer"
-import { genId, State, ToasterToast } from "./toast-state"
+import { Action, State, ToasterToast, genId } from "./toast-state"
 import { toastTimeouts } from "./toast-timeouts"
 
 const listeners: Array<(state: State) => void> = []
@@ -37,7 +37,12 @@ function toast({ ...props }: Toast) {
     },
   })
 
-  toastTimeouts.addToRemoveQueue(id, dispatch)
+  toastTimeouts.addToRemoveQueue(id, () => {
+    return {
+      type: "REMOVE_TOAST" as const,
+      toastId: id,
+    }
+  })
 
   return {
     id,

@@ -21,10 +21,20 @@ export const reducer = (state: State, action: Action): State => {
       const { toastId } = action
 
       if (toastId) {
-        toastTimeouts.addToRemoveQueue(toastId)
+        toastTimeouts.addToRemoveQueue(toastId, () => {
+          return {
+            type: "REMOVE_TOAST" as const,
+            toastId,
+          }
+        })
       } else {
         state.toasts.forEach((toast) => {
-          toastTimeouts.addToRemoveQueue(toast.id)
+          toastTimeouts.addToRemoveQueue(toast.id, () => {
+            return {
+              type: "REMOVE_TOAST" as const,
+              toastId: toast.id,
+            }
+          })
         })
       }
 
