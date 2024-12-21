@@ -14,8 +14,3 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     },
   },
 });
-
-// Add global error handler for development debugging
-supabase.rest.on('error', (error) => {
-  console.error('Supabase request failed:', error);
-});
