@@ -57,8 +57,7 @@ export const VotingTimer = () => {
       <div className={cn(
         "mb-6 p-6 rounded-lg shadow-lg transition-all duration-300",
         "bg-gradient-to-r from-white/90 to-white/80 backdrop-blur-sm",
-        "border-2 border-white/40",
-        isUrgent && "animate-pulse"
+        "border-2 border-white/40"
       )}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold relative">
@@ -71,7 +70,7 @@ export const VotingTimer = () => {
             <TooltipTrigger asChild>
               <div className="flex items-center gap-3">
                 {isUrgent && (
-                  <AlertTriangle className="h-5 w-5 text-yellow-500 animate-bounce" />
+                  <AlertTriangle className="h-5 w-5 text-yellow-500" />
                 )}
                 <Timer className="h-6 w-6 text-[#DAA520]" />
                 <span className="font-mono text-xl font-semibold">{timeLeft}</span>
