@@ -60,6 +60,13 @@ export type Database = {
             referencedRelation: "categories"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "nominees_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "vote_statistics"
+            referencedColumns: ["category_id"]
+          },
         ]
       }
       votes: {
@@ -86,11 +93,27 @@ export type Database = {
             referencedRelation: "nominees"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "votes_nominee_id_fkey"
+            columns: ["nominee_id"]
+            isOneToOne: false
+            referencedRelation: "vote_statistics"
+            referencedColumns: ["nominee_id"]
+          },
         ]
       }
     }
     Views: {
-      [_ in never]: never
+      vote_statistics: {
+        Row: {
+          category_id: string | null
+          category_name: string | null
+          nominee_id: string | null
+          nominee_name: string | null
+          vote_count: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

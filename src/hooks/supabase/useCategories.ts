@@ -20,12 +20,16 @@ export const useCategories = () => {
           )
         `);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error loading categories:", error);
+        throw error;
+      }
 
+      // Transform the data to match the expected type and ensure nominees is always an array
       return (data || []).map((category): Category => ({
         id: category.id,
         name: category.name,
-        nominees: category.nominees || []
+        nominees: Array.isArray(category.nominees) ? category.nominees : []
       }));
     },
   });

@@ -21,6 +21,9 @@ export const VotingSection = ({
   isFirstCategory,
   isLastCategory,
 }: VotingSectionProps) => {
+  // Ensure nominees is always an array, even if undefined
+  const nominees = category?.nominees || [];
+
   return (
     <>
       <div className="flex justify-between items-center mb-8">
@@ -33,7 +36,7 @@ export const VotingSection = ({
           Précédent
         </Button>
         <h1 className="text-3xl font-bold text-center text-primary">
-          {category.name}
+          {category?.name}
         </h1>
         <Button
           variant="outline"
@@ -46,7 +49,7 @@ export const VotingSection = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {category.nominees.map((nominee) => (
+        {nominees.map((nominee) => (
           <NomineeCard
             key={nominee.id}
             nominee={nominee}
