@@ -1,5 +1,4 @@
 import * as React from "react"
-
 import type {
   ToastActionElement,
   ToastProps,
@@ -147,11 +146,6 @@ function toast({ ...props }: Toast) {
     })
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
 
-  // Ensure toast is removed after TOAST_REMOVE_DELAY
-  setTimeout(() => {
-    dismiss()
-  }, TOAST_REMOVE_DELAY)
-
   dispatch({
     type: "ADD_TOAST",
     toast: {
@@ -159,12 +153,13 @@ function toast({ ...props }: Toast) {
       id,
       open: true,
       onOpenChange: (open) => {
-        if (!open) {
-          dismiss()
-        }
+        if (!open) dismiss()
       },
     },
   })
+
+  // Démarrer le timer de suppression automatique
+  setTimeout(dismiss, TOAST_REMOVE_DELAY)
 
   return {
     id: id,
