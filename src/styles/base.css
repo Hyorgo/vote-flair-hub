@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700&display=swap');
+@import './animations.css';
+@import './effects.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 221 83% 25%;
+    --card: 0 0% 100%;
+    --card-foreground: 221 83% 25%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 221 83% 25%;
+    --primary: 322 84% 58%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 19% 27%;
+    --secondary-foreground: 221 83% 25%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 262 83% 58%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 322 84% 58%;
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply bg-navy min-h-screen relative overflow-hidden;
+  }
+
+  html::before {
+    content: '';
+    @apply absolute top-0 left-0 w-[1000px] h-[1000px] bg-purple-500/20 rounded-full blur-[150px] animate-float;
+    animation: float 15s infinite;
+  }
+
+  html::after {
+    content: '';
+    @apply absolute bottom-0 right-0 w-[800px] h-[800px] bg-blue-400/20 rounded-full blur-[130px];
+    animation: float 20s infinite reverse;
+  }
+
+  body {
+    @apply bg-transparent text-navy font-sans antialiased;
+    background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold text-navy;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-focus-ring ring-offset-2 ring-offset-background transition-shadow duration-200;
+  }
+
+  button:focus-visible {
+    @apply ring-2 ring-focus-outline ring-offset-2 scale-[1.02] transition-all duration-200;
+  }
+
+  a:focus-visible {
+    @apply ring-2 ring-focus-outline ring-offset-2 rounded-md transition-shadow duration-200;
+  }
+}
+
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+}
+
+.button-primary {
+  @apply bg-primary/90 backdrop-blur-sm text-primary-contrast px-4 py-2 rounded-lg 
+    hover:bg-primary-dark transition-colors
+    focus-visible:ring-2 focus-visible:ring-focus-outline focus-visible:ring-offset-2
+    focus-visible:outline-none;
+}
+
+.nominee-card {
+  @apply bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6 
+    hover:bg-white/90 transition-all duration-300
+    focus-within:ring-2 focus-within:ring-focus-ring focus-within:ring-offset-4
+    focus-within:outline-none;
+}
