@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CategoryManager } from "./CategoryManager";
 import { Statistics } from "./Statistics";
 import { BackgroundManager } from "./BackgroundManager";
+import { ParticipantsTable } from "./participants/ParticipantsTable";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 export const AdminTabs = () => {
@@ -22,6 +23,7 @@ export const AdminTabs = () => {
         <TabsTrigger value="categories">Catégories</TabsTrigger>
         <TabsTrigger value="statistics">Statistiques</TabsTrigger>
         <TabsTrigger value="backgrounds">Fonds</TabsTrigger>
+        <TabsTrigger value="participants">Participants</TabsTrigger>
       </TabsList>
 
       <TabsContent value="categories" className="space-y-4">
@@ -34,6 +36,10 @@ export const AdminTabs = () => {
 
       <TabsContent value="backgrounds">
         <BackgroundManager />
+      </TabsContent>
+
+      <TabsContent value="participants">
+        <ParticipantsTable />
       </TabsContent>
     </Tabs>
   );
