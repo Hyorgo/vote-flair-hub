@@ -71,28 +71,27 @@ export const PageBackground = memo(({ pageName, children }: PageBackgroundProps)
   }
 
   if (background.background_type === "image") {
+    console.log("Rendering image background with URL:", background.background_value);
     return (
       <div className="min-h-screen relative">
         {!isImageLoaded && (
           <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-800 transition-opacity duration-300" />
         )}
-        <div 
-          className={`fixed inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-300 -z-10 ${
+        <img
+          src={background.background_value}
+          alt="Background"
+          className={`fixed inset-0 w-full h-full object-cover -z-10 transition-opacity duration-300 ${
             isImageLoaded ? 'opacity-100' : 'opacity-0'
           }`}
-          style={{ backgroundImage: `url(${background.background_value})` }}
-        >
-          <img
-            src={background.background_value}
-            alt="Background"
-            className="hidden"
-            onLoad={() => setIsImageLoaded(true)}
-            onError={(e) => {
-              console.error("Image loading error:", e);
-              console.log("Image URL:", background.background_value);
-            }}
-          />
-        </div>
+          onLoad={() => {
+            console.log("Image loaded successfully");
+            setIsImageLoaded(true);
+          }}
+          onError={(e) => {
+            console.error("Image loading error:", e);
+            console.log("Image URL:", background.background_value);
+          }}
+        />
         <div className="relative z-0">{children}</div>
       </div>
     );
