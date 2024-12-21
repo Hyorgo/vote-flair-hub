@@ -39,8 +39,7 @@
   }
 
   body {
-    @apply text-navy font-sans antialiased;
-    background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
+    @apply bg-transparent text-navy font-sans antialiased;
     min-height: 100%;
     margin: 0;
     padding: 0;
