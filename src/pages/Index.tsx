@@ -1,10 +1,8 @@
 import React from "react";
 import { Layout } from "@/components/Layout";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Trophy, Star, Users, ArrowRight, Award, Crown, Medal } from "lucide-react";
 import { motion } from "framer-motion";
 import { RegistrationForm } from "@/components/RegistrationForm";
+import { Trophy, Star, Users, ArrowRight, Award, Crown, Medal } from "lucide-react";
 
 const Index = () => {
   const containerVariants = {
