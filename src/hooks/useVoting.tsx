@@ -27,22 +27,24 @@ export const useVoting = () => {
 
     try {
       // First, check if a vote already exists for this category and email
-      const { data: existingVotes } = await supabase
+      const { data: existingVote, error: fetchError } = await supabase
         .from("votes")
         .select("id")
         .eq("category_id", categoryId)
         .eq("email", userEmail)
-        .single();
+        .maybeSingle(); // Changed from .single() to .maybeSingle()
+
+      if (fetchError) throw fetchError;
 
       let success = false;
 
-      if (existingVotes) {
+      if (existingVote) {
         // If we're modifying to remove the vote
         if (isModifying) {
           const { error: deleteError } = await supabase
             .from("votes")
             .delete()
-            .eq("id", existingVotes.id);
+            .eq("id", existingVote.id);
 
           if (!deleteError) success = true;
         } else {
@@ -50,7 +52,7 @@ export const useVoting = () => {
           const { error: updateError } = await supabase
             .from("votes")
             .update({ nominee_id: nomineeId })
-            .eq("id", existingVotes.id);
+            .eq("id", existingVote.id);
 
           if (!updateError) success = true;
         }
