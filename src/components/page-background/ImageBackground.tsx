@@ -8,10 +8,36 @@ interface ImageBackgroundProps {
 
 export const ImageBackground = ({ imageUrl, children, onError }: ImageBackgroundProps) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [loadAttempts, setLoadAttempts] = useState(0);
+  const maxAttempts = 3;
 
   useEffect(() => {
     setIsImageLoaded(false);
+    setLoadAttempts(0);
   }, [imageUrl]);
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    console.error("Image loading error details:", {
+      src: e.currentTarget.src,
+      naturalWidth: e.currentTarget.naturalWidth,
+      naturalHeight: e.currentTarget.naturalHeight,
+      attempt: loadAttempts + 1,
+    });
+
+    if (loadAttempts < maxAttempts) {
+      setLoadAttempts(prev => prev + 1);
+      // Retry loading with a cache-busting parameter
+      e.currentTarget.src = `${imageUrl}?retry=${loadAttempts + 1}`;
+    } else {
+      console.error("Max retry attempts reached for image:", imageUrl);
+      onError();
+    }
+  };
+
+  const handleImageLoad = () => {
+    console.log("Image loaded successfully:", imageUrl);
+    setIsImageLoaded(true);
+  };
 
   return (
     <div className="min-h-screen relative">
@@ -23,22 +49,15 @@ export const ImageBackground = ({ imageUrl, children, onError }: ImageBackground
           isImageLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ 
-          backgroundImage: `url(${imageUrl})`,
+          backgroundImage: isImageLoaded ? `url(${imageUrl})` : 'none',
         }}
       />
       <img
         src={imageUrl}
         alt=""
         className="hidden"
-        onLoad={() => {
-          console.log("Image loaded successfully");
-          setIsImageLoaded(true);
-        }}
-        onError={(e) => {
-          console.error("Image loading error:", e);
-          onError();
-          console.log("Image URL:", imageUrl);
-        }}
+        onLoad={handleImageLoad}
+        onError={handleImageError}
       />
       <div className="relative z-0">{children}</div>
     </div>
