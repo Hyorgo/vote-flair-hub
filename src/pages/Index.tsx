@@ -22,12 +22,12 @@ const Index = () => {
 
   return (
     <Layout>
-      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-12 px-4 mt-16 sm:mt-24">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-12 px-4 mt-8 sm:mt-16">
         <motion.div
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center space-y-6 relative"
+          className="text-center space-y-4 relative"
         >
           <div className="absolute left-1/2 -translate-x-1/2 -top-20 sm:-top-24">
             <motion.div
@@ -43,7 +43,7 @@ const Index = () => {
             </motion.div>
           </div>
           
-          <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent pt-4">
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
             Les Lyon d'Or
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
