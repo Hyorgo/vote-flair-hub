@@ -7,11 +7,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
-import { Pencil, Save, X } from "lucide-react";
+import { Download } from "lucide-react";
+import { ParticipantRow } from "./ParticipantRow";
+import { exportToCSV } from "@/utils/csvExport";
 
 interface Participant {
   id: string;
@@ -97,6 +98,19 @@ export const ParticipantsTable = () => {
     setEditForm(null);
   };
 
+  const handleExportCSV = () => {
+    const exportData = participants.map(({ first_name, last_name, email }) => ({
+      first_name,
+      last_name,
+      email,
+    }));
+    exportToCSV(exportData, "participants");
+    toast({
+      title: "Succès",
+      description: "Le fichier CSV a été téléchargé",
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[200px]">
@@ -106,96 +120,39 @@ export const ParticipantsTable = () => {
   }
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Prénom</TableHead>
-            <TableHead>Nom</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {participants.map((participant) => (
-            <TableRow key={participant.id}>
-              <TableCell>
-                {editingId === participant.id ? (
-                  <Input
-                    value={editForm?.first_name || ""}
-                    onChange={(e) =>
-                      setEditForm({
-                        ...editForm!,
-                        first_name: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  participant.first_name
-                )}
-              </TableCell>
-              <TableCell>
-                {editingId === participant.id ? (
-                  <Input
-                    value={editForm?.last_name || ""}
-                    onChange={(e) =>
-                      setEditForm({
-                        ...editForm!,
-                        last_name: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  participant.last_name
-                )}
-              </TableCell>
-              <TableCell>
-                {editingId === participant.id ? (
-                  <Input
-                    value={editForm?.email || ""}
-                    onChange={(e) =>
-                      setEditForm({
-                        ...editForm!,
-                        email: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  participant.email
-                )}
-              </TableCell>
-              <TableCell className="text-right">
-                {editingId === participant.id ? (
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={handleSave}
-                    >
-                      <Save className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={handleCancel}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleEdit(participant)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                )}
-              </TableCell>
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <Button onClick={handleExportCSV} variant="outline">
+          <Download className="h-4 w-4 mr-2" />
+          Exporter CSV
+        </Button>
+      </div>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Prénom</TableHead>
+              <TableHead>Nom</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {participants.map((participant) => (
+              <ParticipantRow
+                key={participant.id}
+                participant={participant}
+                editingId={editingId}
+                editForm={editForm}
+                onEdit={handleEdit}
+                onSave={handleSave}
+                onCancel={handleCancel}
+                setEditForm={setEditForm}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };
