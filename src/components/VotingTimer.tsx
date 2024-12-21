@@ -56,13 +56,16 @@ export const VotingTimer = () => {
           <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-10 blur-sm" aria-hidden="true"></span>
         </h2>
         <div className="flex items-center gap-2">
-          <Timer className="h-5 w-5 text-primary animate-pulse" />
+          <div className="relative">
+            <Timer className="h-5 w-5 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.3)]" />
+            <Timer className="absolute inset-0 h-5 w-5 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] opacity-10 blur-sm" aria-hidden="true" />
+          </div>
           <span className="font-mono text-lg">{timeLeft}</span>
         </div>
       </div>
       <Progress 
         value={progress} 
-        className="h-2 bg-gradient-to-r from-[#FFD700]/20 via-[#DAA520]/20 to-[#B8860B]/20 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.1)]"
+        className="h-2 bg-gradient-to-r from-[#FFD700]/20 via-[#DAA520]/20 to-[#B8860B]/20"
         indicatorClassName="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.3)]"
       />
     </div>
