@@ -15,6 +15,9 @@ interface NomineeCardProps {
 }
 
 export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps) => {
+  // Ajouter un log pour déboguer
+  console.log("Nominee image URL:", nominee.image_url);
+
   return (
     <div 
       className={cn(
@@ -28,6 +31,11 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
             src={nominee.image_url} 
             alt={nominee.name}
             className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+            onError={(e) => {
+              console.error("Image loading error:", e);
+              // Utiliser une image par défaut en cas d'erreur
+              e.currentTarget.src = "/placeholder.svg";
+            }}
           />
         </div>
       )}
