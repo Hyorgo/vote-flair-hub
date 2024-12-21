@@ -17,7 +17,7 @@ export const Layout = ({ children }: LayoutProps) => {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link to="/" className="text-2xl font-heading font-bold text-primary flex items-center gap-2">
             <PartyPopper className="h-6 w-6 animate-party" />
-            VoteApp
+            Application de Vote
           </Link>
           {!isAdmin ? (
             <Link to="/admin">
