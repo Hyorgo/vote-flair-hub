@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 221 83% 25%;
+    --card: 0 0% 100%;
+    --card-foreground: 221 83% 25%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 221 83% 25%;
+    --primary: 322 84% 58%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 19% 27%;
+    --secondary-foreground: 221 83% 25%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 262 83% 58%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 322 84% 58%;
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply bg-navy min-h-screen relative overflow-hidden;
+  }
+
+  body {
+    @apply bg-transparent text-navy font-sans antialiased;
+    background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold text-navy;
+  }
+}
