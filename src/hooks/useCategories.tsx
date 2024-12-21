@@ -25,21 +25,30 @@ export const useCategories = () => {
         throw error;
       }
 
-      // Ajouter des logs pour déboguer
-      console.log("Raw categories data:", categories);
+      // Vérification et transformation des données
+      if (!categories || !Array.isArray(categories)) {
+        console.warn("Categories data is not an array:", categories);
+        return [];
+      }
 
-      // S'assurer que les données sont correctement formatées
-      const formattedCategories = (categories || []).map((category): Category => ({
-        id: category.id,
-        name: category.name,
-        nominees: Array.isArray(category.nominees) ? category.nominees.map((nominee): Nominee => ({
-          id: nominee.id,
-          name: nominee.name,
-          description: nominee.description,
-          image_url: nominee.image_url,
-          category_id: nominee.category_id
-        })) : []
-      }));
+      const formattedCategories = categories.map((category): Category => {
+        // Vérification que category.nominees est un tableau
+        const nominees = Array.isArray(category.nominees) 
+          ? category.nominees 
+          : [];
+
+        return {
+          id: category.id,
+          name: category.name,
+          nominees: nominees.map((nominee): Nominee => ({
+            id: nominee.id,
+            name: nominee.name,
+            description: nominee.description || "",
+            image_url: nominee.image_url,
+            category_id: nominee.category_id
+          }))
+        };
+      });
 
       console.log("Formatted categories:", formattedCategories);
       return formattedCategories;
