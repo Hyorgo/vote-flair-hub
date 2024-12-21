@@ -45,21 +45,21 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
         <p className="text-gray-600 mb-4 flex-grow">{nominee.description}</p>
         <Button
           onClick={() => onSelect(nominee.id)}
-          variant={isSelected ? "default" : "outline"}
+          variant="outline"
           className={cn(
-            "w-full transition-all duration-300 mt-auto backdrop-blur-sm relative group",
+            "w-full transition-all duration-300 mt-auto group relative border border-gray-200 rounded-lg shadow-sm",
             isSelected 
               ? "bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white hover:opacity-90" 
-              : "bg-white/50 hover:bg-white/70"
+              : "hover:bg-gradient-to-r hover:from-[#FFD700] hover:via-[#DAA520] hover:to-[#B8860B] hover:text-white"
           )}
         >
           {isSelected ? (
             <>
               <Check className="mr-2 h-4 w-4" />
-              Sélectionné
+              <span className="font-medium">Sélectionné</span>
             </>
           ) : (
-            "Voter"
+            <span className="font-medium text-gray-700 group-hover:text-white transition-colors">Voter</span>
           )}
         </Button>
       </div>
