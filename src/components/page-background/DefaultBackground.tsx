@@ -40,8 +40,8 @@ export const DefaultBackground = ({ pageName, children }: DefaultBackgroundProps
         <div className="absolute w-[700px] h-[700px] bg-violet-400/20 rounded-full blur-[90px] animate-float delay-500 top-[40%] left-[10%]" />
       </div>
 
-      {/* Fond de base avec dégradé */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-800 opacity-90" />
+      {/* Fond de base avec dégradé plus sombre */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-[#0F172A] to-gray-900 opacity-95" />
 
       {/* Contenu de la page avec z-index plus élevé */}
       <div className="relative z-[2] min-h-screen">
