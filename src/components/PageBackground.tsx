@@ -1,6 +1,10 @@
-import React, { useEffect, useState, memo } from "react";
+import React, { useState, memo } from "react";
 import { usePageBackground } from "@/hooks/usePageBackground";
-import { Loader2 } from "lucide-react";
+import { LoadingState } from "./page-background/LoadingState";
+import { DefaultBackground } from "./page-background/DefaultBackground";
+import { VideoBackground } from "./page-background/VideoBackground";
+import { ImageBackground } from "./page-background/ImageBackground";
+import { StaticBackground } from "./page-background/StaticBackground";
 
 interface PageBackgroundProps {
   pageName: string;
@@ -9,99 +13,28 @@ interface PageBackgroundProps {
 
 export const PageBackground = memo(({ pageName, children }: PageBackgroundProps) => {
   const { background, isLoading, error } = usePageBackground(pageName);
-  const [videoKey, setVideoKey] = useState(Date.now());
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [imageLoadError, setImageLoadError] = useState(false);
 
-  useEffect(() => {
-    if (background?.background_type === "video") {
-      setVideoKey(Date.now());
-      setIsVideoLoaded(false);
-    }
-    if (background?.background_type === "image") {
-      setIsImageLoaded(false);
-      setImageLoadError(false);
-    }
-  }, [background?.background_value]);
-
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-800">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (!background || error || imageLoadError) {
-    const defaultBackground = pageName === "thanks" 
-      ? "bg-festive-gradient" 
-      : "bg-gradient-to-b from-gray-900 to-gray-800";
-    
-    return (
-      <div className={`min-h-screen ${defaultBackground} transition-colors duration-300`}>
-        {children}
-      </div>
-    );
+    return <DefaultBackground pageName={pageName}>{children}</DefaultBackground>;
   }
 
   if (background.background_type === "video") {
-    return (
-      <div className="min-h-screen relative">
-        {!isVideoLoaded && (
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-800 transition-opacity duration-300" />
-        )}
-        <video
-          key={videoKey}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className={`fixed inset-0 w-full h-full object-cover -z-10 transition-opacity duration-300 ${
-            isVideoLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          src={background.background_value}
-          onLoadedData={() => setIsVideoLoaded(true)}
-          onError={(e) => {
-            console.error("Video loading error:", e);
-            console.log("Video URL:", background.background_value);
-          }}
-        />
-        <div className="relative z-0">{children}</div>
-      </div>
-    );
+    return <VideoBackground videoUrl={background.background_value}>{children}</VideoBackground>;
   }
 
   if (background.background_type === "image") {
     return (
-      <div className="min-h-screen relative">
-        {!isImageLoaded && (
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-800 transition-opacity duration-300" />
-        )}
-        <div 
-          className={`fixed inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-300 -z-10 ${
-            isImageLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={{ 
-            backgroundImage: `url(${background.background_value})`,
-          }}
-        />
-        <img
-          src={background.background_value}
-          alt=""
-          className="hidden"
-          onLoad={() => {
-            console.log("Image loaded successfully");
-            setIsImageLoaded(true);
-          }}
-          onError={(e) => {
-            console.error("Image loading error:", e);
-            setImageLoadError(true);
-            console.log("Image URL:", background.background_value);
-          }}
-        />
-        <div className="relative z-0">{children}</div>
-      </div>
+      <ImageBackground 
+        imageUrl={background.background_value} 
+        onError={() => setImageLoadError(true)}
+      >
+        {children}
+      </ImageBackground>
     );
   }
 
@@ -116,11 +49,7 @@ export const PageBackground = memo(({ pageName, children }: PageBackgroundProps)
     })
   };
   
-  return (
-    <div className="min-h-screen relative" style={style}>
-      {children}
-    </div>
-  );
+  return <StaticBackground style={style}>{children}</StaticBackground>;
 });
 
 PageBackground.displayName = 'PageBackground';
