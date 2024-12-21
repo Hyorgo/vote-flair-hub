@@ -39,8 +39,8 @@ export const VotingSection = ({
   };
 
   return (
-    <>
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 px-4 sm:px-0">
+    <div className="space-y-6 sm:space-y-8">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-3 sm:px-0 transition-all duration-300">
         <NavigationButtons
           onNavigation={onNavigation}
           isFirstCategory={isFirstCategory}
@@ -54,6 +54,6 @@ export const VotingSection = ({
         selections={selections}
         onVote={handleVote}
       />
-    </>
+    </div>
   );
 };

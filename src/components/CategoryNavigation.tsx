@@ -17,13 +17,12 @@ export const CategoryNavigation = ({
   selections,
   onTabChange,
 }: CategoryNavigationProps) => {
-  // Calculer le pourcentage de progression
   const totalCategories = categories.length;
   const votedCategories = Object.keys(selections).length;
   const progressPercentage = (votedCategories / totalCategories) * 100;
 
   return (
-    <div className="space-y-4 mb-6">
+    <div className="space-y-4 mb-6 px-3 sm:px-0 transition-all duration-300">
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-gray-700">
           Progression : {votedCategories} / {totalCategories} catégories
@@ -40,16 +39,18 @@ export const CategoryNavigation = ({
       <Tabs
         value={currentCategory.toString()}
         onValueChange={onTabChange}
+        className="w-full"
       >
-        <TabsList className="w-full flex-wrap h-auto gap-2 bg-white/40 backdrop-blur-md border border-white/20 shadow-lg p-2 rounded-xl">
+        <TabsList className="w-full flex-wrap h-auto gap-2 bg-white/40 backdrop-blur-md border border-white/20 shadow-lg p-2 rounded-xl overflow-x-auto">
           {categories.map((cat, index) => (
             <TabsTrigger
               key={cat.id}
               value={index.toString()}
               className={cn(
-                "transition-all duration-300 relative",
+                "transition-all duration-300 relative whitespace-nowrap min-w-[100px]",
+                "text-sm sm:text-base py-2 px-3 sm:px-4",
                 selections[cat.id] 
-                  ? "text-primary border-primary bg-white/60 after:content-['✓'] after:ml-2 after:text-green-500" 
+                  ? "text-primary border-primary bg-white/60 after:content-['✓'] after:ml-1 after:text-green-500" 
                   : "hover:bg-white/50"
               )}
             >

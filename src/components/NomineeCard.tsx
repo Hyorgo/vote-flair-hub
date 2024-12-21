@@ -33,7 +33,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
       <div 
         className={cn(
           "nominee-card relative bg-white/90 backdrop-blur-sm border-2 border-white/40",
-          "shadow-lg hover:shadow-xl p-4 sm:p-6 rounded-lg flex flex-col h-full",
+          "shadow-lg p-3 sm:p-6 rounded-lg flex flex-col h-full",
           "transform transition-all duration-300 ease-out",
           "hover:bg-white hover:-translate-y-1",
           isSelected && "ring-2 ring-yellow-400"
