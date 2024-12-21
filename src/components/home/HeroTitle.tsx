@@ -37,7 +37,7 @@ export const HeroTitle = () => {
         </span>
       </motion.h1>
 
-      <p className="text-lg sm:text-xl md:text-2xl text-gray-800 max-w-2xl mx-auto leading-relaxed font-medium">
+      <p className="text-lg sm:text-xl md:text-2xl text-white max-w-2xl mx-auto leading-relaxed font-medium">
         Célébrez l'excellence et participez à la reconnaissance des talents exceptionnels
       </p>
     </motion.div>
