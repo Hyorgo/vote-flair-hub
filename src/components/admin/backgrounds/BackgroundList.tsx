@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Trash2, Check, X } from "lucide-react";
+import { Check, X, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { PageBackground } from "@/integrations/supabase/types/background";
@@ -15,7 +15,6 @@ export const BackgroundList = ({ backgrounds, onBackgroundChange }: BackgroundLi
   const deleteBackground = async (background: PageBackground) => {
     try {
       if (background.background_type !== "color" && background.background_value) {
-        // Extract the file name from the URL
         const fileName = background.background_value.split('/').pop();
         if (fileName) {
           const { error: deleteStorageError } = await supabase.storage
@@ -99,6 +98,7 @@ export const BackgroundList = ({ backgrounds, onBackgroundChange }: BackgroundLi
                 variant="ghost"
                 size="icon"
                 onClick={() => toggleBackgroundActive(background)}
+                title={background.is_active ? "Désactiver" : "Activer"}
               >
                 {background.is_active ? (
                   <X className="h-4 w-4" />
@@ -110,6 +110,7 @@ export const BackgroundList = ({ backgrounds, onBackgroundChange }: BackgroundLi
                 variant="ghost"
                 size="icon"
                 onClick={() => deleteBackground(background)}
+                title="Supprimer"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
