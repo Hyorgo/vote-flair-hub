@@ -17,7 +17,7 @@ export const DefaultBackground = ({ pageName, children }: DefaultBackgroundProps
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Halos animés */}
-      <div className="absolute inset-0 z-[1]">
+      <div className="absolute inset-0 z-[1] overflow-hidden">
         {/* Halo violet plus grand et plus opaque */}
         <div className="absolute w-[800px] h-[800px] bg-purple-500/30 rounded-full blur-[100px] animate-float top-[-30%] left-[-20%]" />
         
@@ -35,7 +35,7 @@ export const DefaultBackground = ({ pageName, children }: DefaultBackgroundProps
       <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-800 opacity-90" />
 
       {/* Contenu de la page avec z-index plus élevé */}
-      <div className="relative z-[2]">
+      <div className="relative z-[2] min-h-screen">
         {children}
       </div>
     </div>
