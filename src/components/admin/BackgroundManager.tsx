@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { PageBackground } from "@/integrations/supabase/types/background";
+import { Trash2 } from "lucide-react";
 
 export const BackgroundManager = () => {
   const { toast } = useToast();
@@ -86,6 +87,29 @@ export const BackgroundManager = () => {
     refetch();
   };
 
+  const deleteBackground = async (backgroundId: string) => {
+    const { error } = await supabase
+      .from("page_backgrounds")
+      .delete()
+      .eq("id", backgroundId);
+
+    if (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer le fond",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Succès",
+      description: "Le fond a été supprimé avec succès",
+    });
+    
+    refetch();
+  };
+
   return (
     <div className="space-y-8">
       <form onSubmit={handleBackgroundSubmit} className="space-y-4 bg-white/80 backdrop-blur-sm rounded-lg p-6">
@@ -152,12 +176,21 @@ export const BackgroundManager = () => {
                   Valeur: {background.background_value}
                 </p>
               </div>
-              <Button
-                variant={background.is_active ? "default" : "secondary"}
-                onClick={() => toggleBackgroundActive(background)}
-              >
-                {background.is_active ? "Actif" : "Inactif"}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant={background.is_active ? "default" : "secondary"}
+                  onClick={() => toggleBackgroundActive(background)}
+                >
+                  {background.is_active ? "Actif" : "Inactif"}
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="icon"
+                  onClick={() => deleteBackground(background.id)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           ))}
         </div>
