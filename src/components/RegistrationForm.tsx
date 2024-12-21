@@ -66,6 +66,52 @@ export const RegistrationForm = () => {
     }
   };
 
+  const handleExistingUser = async () => {
+    if (!email) {
+      toast({
+        title: "Email requis",
+        description: "Veuillez entrer votre email pour continuer.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { data: existingUser } = await supabase
+        .from("user_profiles")
+        .select("email")
+        .eq("email", email)
+        .maybeSingle();
+
+      if (!existingUser) {
+        toast({
+          title: "Email non trouvé",
+          description: "Cet email n'est pas enregistré. Veuillez vous inscrire.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      localStorage.setItem("userEmail", email);
+      
+      toast({
+        title: "Connexion réussie !",
+        description: "Vous allez être redirigé vers les catégories.",
+      });
+
+      setTimeout(() => {
+        navigate("/categories");
+      }, 1500);
+    } catch (error) {
+      console.error("Error:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la vérification de l'email.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
       <div className="grid grid-cols-2 gap-4">
@@ -109,13 +155,24 @@ export const RegistrationForm = () => {
         />
       </div>
 
-      <Button
-        type="submit"
-        className="w-full bg-primary/80 hover:bg-primary backdrop-blur-sm text-white shadow-lg h-9"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? "Inscription en cours..." : "S'inscrire pour voter"}
-      </Button>
+      <div className="space-y-2">
+        <Button
+          type="submit"
+          className="w-full bg-primary/80 hover:bg-primary backdrop-blur-sm text-white shadow-lg h-9"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Inscription en cours..." : "S'inscrire pour voter"}
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleExistingUser}
+          className="w-full backdrop-blur-sm border-white/20 hover:bg-white/10 text-gray-800 h-9"
+        >
+          Déjà inscrit
+        </Button>
+      </div>
     </form>
   );
 };
