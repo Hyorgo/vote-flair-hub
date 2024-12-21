@@ -126,7 +126,7 @@ const Categories = () => {
           isLastCategory={currentCategory === categories.length - 1}
         />
 
-        <div className="mt-12 flex justify-center">
+        <div className="mt-12 mb-24 flex justify-center">
           <Button
             onClick={handleComplete}
             variant="outline"
