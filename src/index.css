@@ -33,7 +33,34 @@
   }
 
   html {
-    @apply bg-navy min-h-screen;
+    @apply bg-navy min-h-screen relative overflow-hidden;
+  }
+
+  html::before {
+    content: '';
+    @apply absolute top-0 left-0 w-[800px] h-[800px] bg-purple-500/10 rounded-full blur-[120px] animate-float;
+    animation: float 15s infinite;
+  }
+
+  html::after {
+    content: '';
+    @apply absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-400/10 rounded-full blur-[100px];
+    animation: float 20s infinite reverse;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+      transform: translate(5%, 5%) rotate(5deg);
+    }
+    50% {
+      transform: translate(0, 10%) rotate(0deg);
+    }
+    75% {
+      transform: translate(-5%, 5%) rotate(-5deg);
+    }
   }
 
   body {
