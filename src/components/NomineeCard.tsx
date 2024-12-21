@@ -49,7 +49,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
           isSelected={isSelected}
         />
 
-        <p className="text-sm sm:text-base text-gray-700 mb-4 flex-grow leading-relaxed">
+        <p className="text-sm sm:text-base text-navy mb-4 flex-grow leading-relaxed">
           {nominee.description}
         </p>
 

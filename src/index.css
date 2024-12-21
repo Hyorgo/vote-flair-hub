@@ -7,15 +7,15 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 221 83% 25%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 221 83% 25%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 221 83% 25%;
     --primary: 322 84% 58%;
     --primary-foreground: 0 0% 100%;
     --secondary: 24 96% 81%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary-foreground: 221 83% 25%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 24 94% 53%;
@@ -33,13 +33,13 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-navy font-sans antialiased;
     background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
     min-height: 100vh;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading font-semibold;
+    @apply font-heading font-semibold text-navy;
   }
 }
 

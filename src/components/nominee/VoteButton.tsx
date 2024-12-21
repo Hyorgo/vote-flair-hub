@@ -38,7 +38,7 @@ export const VoteButton = ({ isSelected, onSelect }: VoteButtonProps) => {
                 <span className="font-medium">Sélectionné</span>
               </>
             ) : (
-              <span className="font-medium text-gray-700 group-hover:text-white transition-colors">
+              <span className="font-medium text-navy group-hover:text-white transition-colors">
                 Voter
               </span>
             )}
@@ -48,7 +48,7 @@ export const VoteButton = ({ isSelected, onSelect }: VoteButtonProps) => {
           sideOffset={4}
           className="bg-white/90 backdrop-blur-sm border border-white/20 shadow-lg"
         >
-          <p>
+          <p className="text-navy">
             {isSelected 
               ? "Cliquez à nouveau pour annuler votre vote" 
               : "Cliquez pour voter pour ce nominé"}

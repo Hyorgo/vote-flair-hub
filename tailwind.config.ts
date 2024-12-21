@@ -27,6 +27,7 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        navy: "#1B365D",
         primary: {
           DEFAULT: "#D946EF",
           light: "#F0ABFC",
@@ -34,7 +35,7 @@ export default {
         },
         secondary: {
           DEFAULT: "#FEC6A1",
-          foreground: "#1F2937",
+          foreground: "#1B365D",
         },
         accent: {
           DEFAULT: "#F97316",
