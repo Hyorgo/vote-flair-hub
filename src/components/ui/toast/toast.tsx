@@ -46,7 +46,7 @@ const Toast = React.forwardRef<ToastRootRef, ToastProps>(
 Toast.displayName = ToastPrimitives.Root.displayName
 
 const ToastAction = React.forwardRef<ToastActionRef, ToastActionProps>(
-  ({ className, altText, ...props }, ref) => (
+  ({ className, altText = "Action de notification", ...props }, ref) => (
     <ToastPrimitives.Action
       ref={ref}
       className={cn(
