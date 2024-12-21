@@ -7,7 +7,7 @@ export const ServicesSection = () => {
       <h3 className="font-heading font-semibold text-lg text-white">Nos services</h3>
       <ul className="space-y-3">
         {[
-          { label: "Développement web", href: "#" },
+          { label: "Création de site web", href: "#" },
           { label: "Référencement naturel", href: "#" },
           { label: "Intelligence artificielle", href: "#" },
           { label: "Applications mobiles", href: "#" },
