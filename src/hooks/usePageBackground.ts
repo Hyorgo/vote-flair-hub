@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 
 export const usePageBackground = (pageName: string) => {
-  const { data: background, isLoading, error } = useQuery({
+  const { data: background, isLoading, error, refetch } = useQuery({
     queryKey: ["page-background", pageName],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -15,9 +15,10 @@ export const usePageBackground = (pageName: string) => {
       if (error && error.code !== 'PGRST116') throw error;
       return data;
     },
-    // Ajout des options de refetch pour mettre à jour le fond en temps réel
     refetchOnWindowFocus: true,
-    refetchInterval: 1000, // Vérifie toutes les secondes
+    refetchInterval: 2000,
+    staleTime: 0,
+    cacheTime: 0,
   });
 
   const getBackgroundStyle = () => {
@@ -44,5 +45,6 @@ export const usePageBackground = (pageName: string) => {
     isLoading,
     error,
     getBackgroundStyle,
+    refetch,
   };
 };
