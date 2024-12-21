@@ -86,6 +86,31 @@ export const CategoryRow = ({
     }
   };
 
+  const handleDeleteNominee = async (nomineeId: string) => {
+    try {
+      const { error } = await supabase
+        .from('nominees')
+        .delete()
+        .eq('id', nomineeId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Succès",
+        description: "Le nominé a été supprimé",
+      });
+
+      loadNominees();
+    } catch (error) {
+      console.error("Error deleting nominee:", error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer le nominé",
+        variant: "destructive",
+      });
+    }
+  };
+
   React.useEffect(() => {
     if (showNominees) {
       loadNominees();
