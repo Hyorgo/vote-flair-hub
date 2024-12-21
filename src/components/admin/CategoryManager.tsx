@@ -28,6 +28,30 @@ export const CategoryManager = () => {
   const [newNomineeName, setNewNomineeName] = useState("");
   const [newNomineeDescription, setNewNomineeDescription] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Connexion automatique pour l'administration
+  useEffect(() => {
+    const signIn = async () => {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: 'admin@example.com',
+        password: 'admin123'
+      });
+      
+      if (error) {
+        console.error('Erreur de connexion:', error.message);
+        toast({
+          title: "Erreur de connexion",
+          description: "Impossible de se connecter à l'interface d'administration.",
+          variant: "destructive",
+        });
+      } else {
+        setIsLoading(false);
+      }
+    };
+
+    signIn();
+  }, []);
 
   // Fetch categories
   const { data: categories = [] } = useQuery({
@@ -46,10 +70,10 @@ export const CategoryManager = () => {
         ...category,
         nominees: category.nominees[0].count || 0
       }));
-    }
+    },
+    enabled: !isLoading // N'exécute la requête que lorsque l'authentification est terminée
   });
 
-  // Add category mutation
   const addCategoryMutation = useMutation({
     mutationFn: async (name: string) => {
       const { data, error } = await supabase
@@ -160,6 +184,10 @@ export const CategoryManager = () => {
     setNewNomineeDescription("");
     setSelectedCategory(null);
   };
+
+  if (isLoading) {
+    return <div>Chargement de l'interface d'administration...</div>;
+  }
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 space-y-6">
