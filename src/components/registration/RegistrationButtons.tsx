@@ -11,7 +11,7 @@ export const RegistrationButtons = ({ isSubmitting, onExistingUser }: Registrati
     <div className="space-y-2">
       <Button
         type="submit"
-        className="w-full bg-gradient-to-r from-primary/90 via-accent to-primary-light hover:opacity-90 text-white 
+        className="w-full bg-gradient-to-r from-accent via-primary to-primary-dark hover:opacity-90 text-white 
           shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 h-9"
         disabled={isSubmitting}
       >
