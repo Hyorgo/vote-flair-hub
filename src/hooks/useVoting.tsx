@@ -19,6 +19,7 @@ export const useVoting = () => {
         title: "Session expirée",
         description: "Veuillez vous reconnecter",
         variant: "destructive",
+        duration: 3000, // Ajout d'une durée de 3 secondes
       });
       return;
     }
@@ -26,7 +27,6 @@ export const useVoting = () => {
     const isModifying = selections[categoryId] === nomineeId;
 
     try {
-      // First, check if a vote already exists for this category and email
       const { data: existingVotes } = await supabase
         .from("votes")
         .select("id")
@@ -35,7 +35,6 @@ export const useVoting = () => {
         .single();
 
       if (existingVotes) {
-        // If we're modifying to remove the vote
         if (isModifying) {
           const { error: deleteError } = await supabase
             .from("votes")
@@ -44,7 +43,6 @@ export const useVoting = () => {
 
           if (deleteError) throw deleteError;
         } else {
-          // Update existing vote
           const { error: updateError } = await supabase
             .from("votes")
             .update({ nominee_id: nomineeId })
@@ -53,7 +51,6 @@ export const useVoting = () => {
           if (updateError) throw updateError;
         }
       } else if (!isModifying) {
-        // Insert new vote only if we're not trying to modify a non-existent vote
         const { error: insertError } = await supabase
           .from("votes")
           .insert([
@@ -78,6 +75,7 @@ export const useVoting = () => {
           ? "Vous pouvez maintenant choisir un autre nominé"
           : "Cliquez à nouveau sur le même nominé pour modifier votre vote",
         className: "animate-bounce",
+        duration: 3000, // Ajout d'une durée de 3 secondes
       });
     } catch (error: any) {
       console.error("Error voting:", error);
@@ -85,6 +83,7 @@ export const useVoting = () => {
         title: "Erreur",
         description: "Une erreur est survenue lors de l'enregistrement du vote",
         variant: "destructive",
+        duration: 3000, // Ajout d'une durée de 3 secondes
       });
     }
   };
