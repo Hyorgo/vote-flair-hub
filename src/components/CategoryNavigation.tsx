@@ -23,7 +23,7 @@ export const CategoryNavigation = ({
 
   return (
     <div className="space-y-4 mb-6 px-3 sm:px-0 transition-all duration-300">
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between mb-1">
         <span className="text-sm font-medium text-white">
           Progression : {votedCategories} / {totalCategories} catégories
         </span>
