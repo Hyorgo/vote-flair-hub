@@ -49,7 +49,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
           className={cn(
             "w-full transition-all duration-300 mt-auto backdrop-blur-sm",
             isSelected 
-              ? "bg-accent hover:bg-accent/90 text-white border-none" 
+              ? "bg-festive-gradient text-white border-none shadow-lg hover:shadow-xl" 
               : "bg-white/50 hover:bg-white/70"
           )}
         >
