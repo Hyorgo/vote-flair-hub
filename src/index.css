@@ -48,10 +48,10 @@
     animation: float 20s infinite reverse;
   }
 
-  /* Halo doré avec une meilleure visibilité */
+  /* Halo doré repositionné */
   .golden-halo {
     content: '';
-    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-amber-200/30 rounded-full blur-[120px] z-0;
+    @apply absolute bottom-[-20%] left-[30%] w-[1200px] h-[1200px] bg-amber-200/30 rounded-full blur-[120px] z-0;
     animation: float 18s infinite;
   }
 
