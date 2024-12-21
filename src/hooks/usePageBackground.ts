@@ -5,24 +5,26 @@ export const usePageBackground = (pageName: string) => {
   const { data: background, isLoading, error, refetch } = useQuery({
     queryKey: ["page-background", pageName],
     queryFn: async () => {
-      console.log("Fetching background for page:", pageName); // Debug log
+      console.log("Fetching background for page:", pageName);
       
       const { data, error } = await supabase
         .from("page_backgrounds")
         .select("*")
         .eq("page_name", pageName)
         .eq("is_active", true)
-        .maybeSingle();
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
 
       if (error) {
-        console.error("Supabase error:", error); // Debug log
+        console.error("Supabase error:", error);
         throw error;
       }
 
-      console.log("Background data received:", data); // Debug log
+      console.log("Background data received:", data);
       return data;
     },
-    retry: 2, // Retry failed requests twice
+    retry: 2,
     refetchOnWindowFocus: true,
     refetchInterval: 2000,
     staleTime: 0,
@@ -40,9 +42,11 @@ export const usePageBackground = (pageName: string) => {
           backgroundImage: `url(${background.background_value})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
         };
       case "video":
-        return {}; // Video background will be handled separately in the component
+        return {};
       default:
         return {};
     }
