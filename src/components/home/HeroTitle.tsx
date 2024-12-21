@@ -10,7 +10,7 @@ export const HeroTitle = () => {
       transition={{ duration: 0.8, ease: "easeOut" }}
       className="text-center space-y-6 md:space-y-8 px-4 md:px-0 relative"
     >
-      <div className="absolute left-1/2 -translate-x-1/2 -top-10 sm:-top-16">
+      <div className="absolute left-1/2 -translate-x-1/2 -top-6 sm:-top-8">
         <motion.div
           animate={{ rotate: [-10, 10] }}
           transition={{ 
