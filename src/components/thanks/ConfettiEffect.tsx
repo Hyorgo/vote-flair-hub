@@ -3,7 +3,7 @@ import confetti from "canvas-confetti";
 
 export const ConfettiEffect = () => {
   const createConfetti = useCallback(() => {
-    const duration = 800; // Reduced from 1500 to 800ms
+    const duration = 600; // Reduced from 800 to 600ms
     const animationEnd = Date.now() + duration;
     const defaults = { 
       startVelocity: 30,
