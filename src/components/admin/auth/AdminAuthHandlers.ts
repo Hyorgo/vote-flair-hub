@@ -4,7 +4,7 @@ import { toast } from "@/hooks/use-toast";
 export const createAdminAccount = async (setIsLoading: (loading: boolean) => void) => {
   setIsLoading(true);
   const adminEmail = "g.sauvat@ideai.fr";
-  const adminPassword = "admin123";
+  const adminPassword = "Gregolimano009";
 
   try {
     // Try to sign in first to check if the account exists
