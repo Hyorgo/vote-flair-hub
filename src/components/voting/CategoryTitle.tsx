@@ -7,12 +7,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { motion } from "framer-motion";
+import { Category } from "@/types/airtable";
 
 interface CategoryTitleProps {
-  categoryName: string;
+  category: Category;
 }
 
-export const CategoryTitle = ({ categoryName }: CategoryTitleProps) => {
+export const CategoryTitle = ({ category }: CategoryTitleProps) => {
   return (
     <TooltipProvider>
       <motion.div 
@@ -22,7 +23,7 @@ export const CategoryTitle = ({ categoryName }: CategoryTitleProps) => {
       >
         <h1 className="text-2xl sm:text-3xl font-bold text-center relative">
           <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.3)]">
-            {categoryName}
+            {category.name}
           </span>
           <motion.div
             className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] origin-left"
