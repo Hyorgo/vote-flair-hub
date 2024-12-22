@@ -9,27 +9,7 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   try {
     console.log("Attempting to create admin account for:", adminEmail);
     
-    // Try to sign in first
-    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-      email: adminEmail,
-      password: adminPassword,
-    });
-
-    if (signInError) {
-      console.log("Sign in failed, attempting signup:", signInError);
-      // Only try to sign up if sign in fails
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: adminEmail,
-        password: adminPassword,
-      });
-
-      if (signUpError) {
-        console.error("Sign up error:", signUpError);
-        throw signUpError;
-      }
-    }
-
-    // Check if admin exists in admin_users table
+    // Check if admin exists in admin_users table first
     const { data: existingAdmin, error: checkError } = await supabase
       .from('admin_users')
       .select('email')
@@ -42,7 +22,21 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
     }
 
     if (!existingAdmin) {
-      // Insert into admin_users table if not exists
+      // Try to sign up since admin doesn't exist in our table
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: adminEmail,
+        password: adminPassword,
+      });
+
+      if (signUpError) {
+        // If user exists in auth but not in admin_users, that's okay
+        if (signUpError.message !== "User already registered") {
+          console.error("Sign up error:", signUpError);
+          throw signUpError;
+        }
+      }
+
+      // Insert into admin_users table
       const { error: insertError } = await supabase
         .from('admin_users')
         .insert([{ email: adminEmail }]);
