@@ -3,15 +3,17 @@ import confetti from "canvas-confetti";
 
 export const ConfettiEffect = () => {
   const createConfetti = useCallback(() => {
-    const duration = 1500; // Reduced duration from 2000 to 1500
+    const duration = 1500;
     const animationEnd = Date.now() + duration;
     const defaults = { 
-      startVelocity: 45, // Increased velocity for higher launch
+      startVelocity: 30, // Reduced velocity since we're falling down
       spread: 360,
-      ticks: 50, // Slightly reduced ticks for shorter particle life
+      ticks: 50,
       zIndex: 0,
       particleCount: 50,
-      origin: { y: 0.8 }, // Start from lower to shoot higher
+      origin: { y: 0 }, // Start from top of screen
+      gravity: 1, // Add gravity for natural falling motion
+      scalar: 0.7, // Slightly reduce the size of particles
       disableForReducedMotion: true,
       colors: ['#FFD700', '#FEC6A1', '#F97316', '#B8860B', '#FF69B4', '#4B0082']
     };
@@ -28,18 +30,18 @@ export const ConfettiEffect = () => {
         return;
       }
 
-      // Launch confetti from multiple points
+      // Launch confetti from multiple points across the top of the screen
       confetti({
         ...defaults,
-        origin: { x: randomInRange(0.1, 0.3), y: 0.8 }
+        origin: { x: randomInRange(0.1, 0.3), y: 0 }
       });
       confetti({
         ...defaults,
-        origin: { x: randomInRange(0.4, 0.6), y: 0.8 }
+        origin: { x: randomInRange(0.4, 0.6), y: 0 }
       });
       confetti({
         ...defaults,
-        origin: { x: randomInRange(0.7, 0.9), y: 0.8 }
+        origin: { x: randomInRange(0.7, 0.9), y: 0 }
       });
 
       frame = requestAnimationFrame(animate);
