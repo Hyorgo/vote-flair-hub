@@ -20,14 +20,13 @@ const AdminLogin = () => {
     const adminPassword = "admin123";
 
     try {
-      // First, try to sign up the admin user
+      // First, create the auth user
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: adminEmail,
         password: adminPassword,
       });
 
       if (signUpError) {
-        // If user already exists, that's fine, we'll just show a message
         if (signUpError.message.includes("User already registered")) {
           toast({
             title: "Compte existant",
@@ -38,24 +37,31 @@ const AdminLogin = () => {
         throw signUpError;
       }
 
-      // If signup was successful, create the admin user record
-      if (signUpData.user) {
-        const { error: adminError } = await supabase
-          .from('admin_users')
-          .insert([{ email: adminEmail }]);
+      // Then, create the admin user record
+      const { error: adminError } = await supabase
+        .from('admin_users')
+        .insert([{ email: adminEmail }]);
 
-        if (adminError) throw adminError;
-
-        toast({
-          title: "Compte créé",
-          description: "Le compte admin a été créé avec succès. Vous pouvez maintenant vous connecter.",
-        });
+      if (adminError) {
+        if (adminError.code === '23505') { // Unique violation
+          toast({
+            title: "Compte existant",
+            description: "Le compte admin existe déjà. Utilisez les identifiants fournis pour vous connecter.",
+          });
+          return;
+        }
+        throw adminError;
       }
+
+      toast({
+        title: "Compte créé",
+        description: "Le compte admin a été créé avec succès. Vous pouvez maintenant vous connecter.",
+      });
     } catch (error: any) {
       console.error("Error:", error);
       toast({
         title: "Erreur",
-        description: "Erreur lors de la création du compte admin",
+        description: error.message || "Erreur lors de la création du compte admin",
         variant: "destructive",
       });
     } finally {
@@ -98,7 +104,7 @@ const AdminLogin = () => {
       console.error("Login error:", error);
       toast({
         title: "Erreur de connexion",
-        description: "Email ou mot de passe incorrect, ou accès non autorisé.",
+        description: error.message || "Email ou mot de passe incorrect, ou accès non autorisé.",
         variant: "destructive",
       });
     } finally {
