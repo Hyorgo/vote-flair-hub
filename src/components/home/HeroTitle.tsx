@@ -40,7 +40,7 @@ export const HeroTitle = () => {
       >
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-yellow-500/20 blur-xl animate-shimmer rounded-full" />
         <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[12rem] font-extrabold relative">
-          <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent 
+          <span className="bg-gradient-to-r from-[#FFD700] via-[#FFF] to-[#FFD700] bg-clip-text text-transparent 
             animate-shimmer bg-[length:200%_auto] motion-safe:hover:animate-shimmer">
             2025
           </span>
