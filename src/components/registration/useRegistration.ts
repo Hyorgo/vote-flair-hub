@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-
-const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const DISPOSABLE_EMAIL_DOMAINS = ['tempmail.com', 'throwawaymail.com']; // Liste à enrichir
+import { validateEmailFormat, isDisposableEmail } from "@/utils/emailValidation";
+import {
+  checkExistingUser,
+  createUserProfile,
+  validateEmail,
+} from "@/services/registrationService";
 
 export const useRegistration = () => {
   const [firstName, setFirstName] = useState("");
@@ -14,9 +16,8 @@ export const useRegistration = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const validateEmail = (email: string): boolean => {
-    // Vérification du format de l'email
-    if (!EMAIL_REGEX.test(email)) {
+  const validateEmailWithToast = (email: string): boolean => {
+    if (!validateEmailFormat(email)) {
       toast({
         title: "Format d'email invalide",
         description: "Veuillez entrer une adresse email valide.",
@@ -25,9 +26,7 @@ export const useRegistration = () => {
       return false;
     }
 
-    // Vérification des domaines jetables
-    const domain = email.split('@')[1];
-    if (DISPOSABLE_EMAIL_DOMAINS.includes(domain)) {
+    if (isDisposableEmail(email)) {
       toast({
         title: "Email non autorisé",
         description: "Les adresses email temporaires ne sont pas acceptées.",
@@ -42,19 +41,14 @@ export const useRegistration = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateEmail(email)) {
+    if (!validateEmailWithToast(email)) {
       return;
     }
 
     setIsSubmitting(true);
-    console.log("Tentative d'inscription avec l'email:", email);
 
     try {
-      const { data: existingUser } = await supabase
-        .from("user_profiles")
-        .select("email")
-        .eq("email", email)
-        .maybeSingle();
+      const existingUser = await checkExistingUser(email);
 
       if (existingUser) {
         toast({
@@ -65,21 +59,8 @@ export const useRegistration = () => {
         return;
       }
 
-      const { error: profileError } = await supabase.from("user_profiles").insert([
-        {
-          first_name: firstName,
-          last_name: lastName,
-          email: email,
-        },
-      ]);
-
-      if (profileError) throw profileError;
-
-      const { error: emailError } = await supabase.from("validated_emails").insert([
-        { email }
-      ]);
-
-      if (emailError) throw emailError;
+      await createUserProfile(firstName, lastName, email);
+      await validateEmail(email);
 
       toast({
         title: "Inscription réussie !",
@@ -113,16 +94,12 @@ export const useRegistration = () => {
       return;
     }
 
-    if (!validateEmail(email)) {
+    if (!validateEmailWithToast(email)) {
       return;
     }
 
     try {
-      const { data: existingUser } = await supabase
-        .from("user_profiles")
-        .select("email")
-        .eq("email", email)
-        .maybeSingle();
+      const existingUser = await checkExistingUser(email);
 
       if (!existingUser) {
         toast({
