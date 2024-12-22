@@ -4,7 +4,9 @@ import { useCategoryManager } from "@/hooks/useCategories";
 import { useNominees } from "@/hooks/useNominees";
 import { AddCategoryForm } from "./AddCategoryForm";
 import { CategoriesList } from "./CategoriesList";
+import { ImportCategoriesForm } from "./ImportCategoriesForm";
 import { Category, Nominee } from "@/types/airtable";
+import { Separator } from "@/components/ui/separator";
 
 interface CategoryWithNomineeCount extends Omit<Category, 'nominees'> {
   nominees: number;
@@ -33,7 +35,6 @@ export const CategoryManager = () => {
     setSelectedCategory(null);
   };
 
-  // Transform categories to include nominee count
   const categoriesWithCount = categories.map(category => ({
     ...category,
     nominees: category.nominees.length,
@@ -46,7 +47,22 @@ export const CategoryManager = () => {
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 space-y-6">
-      <AddCategoryForm />
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-medium mb-4">Ajouter une catégorie</h3>
+          <AddCategoryForm />
+        </div>
+        
+        <Separator />
+        
+        <div>
+          <h3 className="text-lg font-medium mb-4">Importer des catégories</h3>
+          <ImportCategoriesForm />
+        </div>
+        
+        <Separator />
+      </div>
+
       <CategoriesList
         categories={categoriesWithCount}
         handleDeleteCategory={(id) => deleteCategory.mutate(id)}
