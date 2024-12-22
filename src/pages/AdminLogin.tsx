@@ -57,7 +57,7 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-white shadow-lg">
         <CardHeader className="space-y-2">
           <CardTitle className="text-2xl text-center">Administration</CardTitle>
           <p className="text-center text-muted-foreground">
