@@ -23,7 +23,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       whileHover={{ 
-        scale: 1.03,
+        scale: 1.02,
         transition: { duration: 0.2 }
       }}
       className="relative h-full group"
@@ -36,7 +36,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
       <div 
         className={cn(
           "nominee-card relative bg-white/90 backdrop-blur-sm border-2",
-          "shadow-lg p-3 sm:p-6 rounded-lg flex flex-col h-full",
+          "shadow-lg p-2 sm:p-6 rounded-lg flex flex-col h-full",
           "transform transition-all duration-500 ease-out",
           "group-hover:bg-white/95 group-hover:shadow-xl group-hover:-translate-y-1",
           "group-hover:border-yellow-400/50",
@@ -53,7 +53,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
           isSelected={isSelected}
         />
 
-        <p className="text-sm sm:text-base text-navy/90 mb-4 flex-grow leading-relaxed group-hover:text-navy transition-colors duration-300">
+        <p className="text-xs sm:text-sm text-navy/90 mb-3 sm:mb-4 flex-grow leading-relaxed group-hover:text-navy transition-colors duration-300">
           {nominee.description}
         </p>
 

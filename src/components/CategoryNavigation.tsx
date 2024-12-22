@@ -27,14 +27,14 @@ export const CategoryNavigation = ({
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="space-y-4 mb-6 px-3 sm:px-0"
+      className="space-y-4 mb-4 sm:mb-6 px-2 sm:px-0"
     >
-      <div className="flex items-center justify-between mb-0 pb-1">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-          <span className="text-sm font-medium text-white/90 backdrop-blur-sm px-2 py-1 rounded-md bg-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-3">
+          <span className="text-xs sm:text-sm font-medium text-white/90 backdrop-blur-sm px-2 py-1 rounded-md bg-white/10">
             Progression : {votedCategories} / {totalCategories} catégories
           </span>
-          <span className="text-sm font-medium text-white/80 backdrop-blur-sm px-2 py-1 rounded-md bg-white/10">
+          <span className="text-xs sm:text-sm font-medium text-white/80 backdrop-blur-sm px-2 py-1 rounded-md bg-white/10">
             (Catégorie {currentCategory + 1} sur {totalCategories})
           </span>
         </div>
@@ -42,14 +42,14 @@ export const CategoryNavigation = ({
           key={progressPercentage}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="text-sm font-medium text-white/90 backdrop-blur-sm px-3 py-1 rounded-full bg-white/20"
+          className="text-xs sm:text-sm font-medium text-white/90 backdrop-blur-sm px-3 py-1 rounded-full bg-white/20"
         >
           {Math.round(progressPercentage)}%
         </motion.span>
       </div>
       <Progress 
         value={progressPercentage} 
-        className="h-2.5 bg-white/20 backdrop-blur-sm rounded-lg overflow-hidden transition-all duration-700 ease-in-out"
+        className="h-2 sm:h-2.5 bg-white/20 backdrop-blur-sm rounded-lg overflow-hidden transition-all duration-700 ease-in-out"
         indicatorClassName="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] transition-all duration-700 ease-in-out"
       />
       <Tabs
@@ -58,7 +58,8 @@ export const CategoryNavigation = ({
         className="w-full"
       >
         <TabsList 
-          className="w-full flex-wrap h-auto gap-2 bg-white/30 backdrop-blur-md border border-white/20 shadow-lg p-2 rounded-xl overflow-x-auto"
+          className="w-full flex-nowrap overflow-x-auto gap-1.5 sm:gap-2 bg-white/30 backdrop-blur-md border border-white/20 shadow-lg p-1.5 sm:p-2 rounded-xl scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent"
+          style={{ scrollbarWidth: 'thin' }}
           aria-label="Navigation des catégories"
         >
           {categories.map((cat, index) => (
@@ -66,11 +67,11 @@ export const CategoryNavigation = ({
               key={cat.id}
               value={index.toString()}
               className={cn(
-                "transition-all duration-300 relative whitespace-nowrap min-w-[100px]",
-                "text-sm sm:text-base py-2 px-3 sm:px-4",
+                "transition-all duration-300 relative whitespace-nowrap",
+                "text-xs sm:text-sm py-1.5 sm:py-2 px-2 sm:px-3",
                 "focus-visible:ring-2 focus-visible:ring-focus-outline focus-visible:ring-offset-2",
                 "focus-visible:outline-none focus-visible:z-10",
-                "hover:bg-white/50 active:scale-95",
+                "hover:bg-white/50 active:scale-95 flex-shrink-0",
                 selections[cat.id] 
                   ? "text-primary border-primary bg-white/60 after:content-['✓'] after:ml-1 after:text-green-500" 
                   : "hover:bg-white/50"
