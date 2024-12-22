@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdminLoginForm } from "@/components/admin/auth/AdminLoginForm";
-import { handleAdminLogin, createAdminAccount } from "@/components/admin/auth/AdminAuthHandlers";
+import { handleAdminLogin } from "@/components/admin/auth/AdminAuthHandlers";
 import { supabase } from "@/integrations/supabase/client";
 
 const AdminLogin = () => {
@@ -26,10 +26,6 @@ const AdminLogin = () => {
     await handleAdminLogin(email, password, setIsLoading, navigate);
   };
 
-  const handleSignUp = async () => {
-    await createAdminAccount(setIsLoading);
-  };
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <Card className="w-full max-w-md mx-4">
@@ -44,7 +40,6 @@ const AdminLogin = () => {
             setPassword={setPassword}
             isLoading={isLoading}
             onSubmit={handleSubmit}
-            onSignUp={handleSignUp}
           />
         </CardContent>
       </Card>

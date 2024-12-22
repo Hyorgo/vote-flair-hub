@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Mail, Lock, LogIn, UserPlus } from "lucide-react";
+import { Mail, Lock, LogIn } from "lucide-react";
 
 interface AdminLoginFormProps {
   email: string;
@@ -9,7 +9,6 @@ interface AdminLoginFormProps {
   setPassword: (password: string) => void;
   isLoading: boolean;
   onSubmit: (e: React.FormEvent) => void;
-  onSignUp: () => void;
 }
 
 export const AdminLoginForm = ({
@@ -19,7 +18,6 @@ export const AdminLoginForm = ({
   setPassword,
   isLoading,
   onSubmit,
-  onSignUp,
 }: AdminLoginFormProps) => {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
@@ -63,16 +61,6 @@ export const AdminLoginForm = ({
         <Button type="submit" className="w-full" disabled={isLoading}>
           <LogIn className="h-5 w-5 mr-2" />
           {isLoading ? "Connexion..." : "Se connecter"}
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full"
-          onClick={onSignUp}
-          disabled={isLoading}
-        >
-          <UserPlus className="h-5 w-5 mr-2" />
-          Créer le compte admin
         </Button>
       </div>
     </form>
