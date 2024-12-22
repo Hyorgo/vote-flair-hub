@@ -19,28 +19,23 @@ const AdminLogin = () => {
     setIsLoading(true);
 
     try {
-      // Vérifier si l'utilisateur existe déjà dans auth
-      const { data: authData } = await supabase.auth.signInWithPassword({
+      // Créer l'utilisateur dans auth
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email: "g.sauvat@ideai.fr",
         password: "admin123",
       });
 
-      if (authData.user) {
-        toast({
-          title: "Compte existant",
-          description: "Le compte admin existe déjà, vous pouvez vous connecter",
-        });
-        setIsLoading(false);
-        return;
+      if (signUpError) {
+        if (signUpError.message.includes("User already registered")) {
+          toast({
+            title: "Compte existant",
+            description: "Le compte admin existe déjà, vous pouvez vous connecter",
+          });
+          setIsLoading(false);
+          return;
+        }
+        throw signUpError;
       }
-
-      // Si l'utilisateur n'existe pas, le créer
-      const { data, error } = await supabase.auth.signUp({
-        email: "g.sauvat@ideai.fr",
-        password: "admin123",
-      });
-
-      if (error) throw error;
 
       // Créer l'entrée dans la table admin_users
       const { error: adminError } = await supabase
@@ -82,9 +77,11 @@ const AdminLogin = () => {
           .from('admin_users')
           .select('email')
           .eq('email', email)
-          .single();
+          .maybeSingle();
 
-        if (adminError || !adminData) {
+        if (adminError) throw adminError;
+
+        if (!adminData) {
           throw new Error("Accès non autorisé");
         }
 
@@ -122,9 +119,7 @@ const AdminLogin = () => {
                 Email
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
-                  <Mail className="h-4 w-4" />
-                </span>
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-4 w-4" />
                 <Input
                   id="email"
                   type="email"
@@ -142,9 +137,7 @@ const AdminLogin = () => {
                 Mot de passe
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
-                  <Lock className="h-4 w-4" />
-                </span>
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-4 w-4" />
                 <Input
                   id="password"
                   type="password"
@@ -160,7 +153,7 @@ const AdminLogin = () => {
             <div className="space-y-4 pt-6">
               <Button
                 type="submit"
-                className="w-full h-12 text-base font-medium flex items-center justify-center"
+                className="w-full h-12 text-base font-medium"
                 disabled={isLoading}
               >
                 <span className="flex items-center">
@@ -171,7 +164,7 @@ const AdminLogin = () => {
               <Button
                 type="button"
                 variant="outline"
-                className="w-full h-12 text-base font-medium flex items-center justify-center"
+                className="w-full h-12 text-base font-medium"
                 onClick={handleSignUp}
                 disabled={isLoading}
               >
