@@ -127,7 +127,7 @@ export const ParticipantsTable = () => {
           Exporter CSV
         </Button>
       </div>
-      <div className="rounded-md border">
+      <div className="bg-white rounded-lg overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>

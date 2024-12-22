@@ -36,28 +36,30 @@ export const CategoriesList = ({
   handleAddNominee,
 }: CategoriesListProps) => {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Nom</TableHead>
-          <TableHead>Nominés</TableHead>
-          <TableHead className="w-[100px]">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {categories.map((category) => (
-          <CategoryRow
-            key={category.id}
-            category={category}
-            handleDeleteCategory={handleDeleteCategory}
-            newNomineeName={newNomineeName}
-            setNewNomineeName={setNewNomineeName}
-            newNomineeDescription={newNomineeDescription}
-            setNewNomineeDescription={setNewNomineeDescription}
-            handleAddNominee={handleAddNominee}
-          />
-        ))}
-      </TableBody>
-    </Table>
+    <div className="bg-white rounded-lg overflow-hidden">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Nom</TableHead>
+            <TableHead>Nominés</TableHead>
+            <TableHead className="w-[100px]">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {categories.map((category) => (
+            <CategoryRow
+              key={category.id}
+              category={category}
+              handleDeleteCategory={handleDeleteCategory}
+              newNomineeName={newNomineeName}
+              setNewNomineeName={setNewNomineeName}
+              newNomineeDescription={newNomineeDescription}
+              setNewNomineeDescription={setNewNomineeDescription}
+              handleAddNominee={handleAddNominee}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
