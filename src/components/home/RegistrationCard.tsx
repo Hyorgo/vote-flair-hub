@@ -12,7 +12,7 @@ export const RegistrationCard = () => {
     >
       <div className="bg-white/30 backdrop-blur-md p-4 sm:p-6 rounded-2xl shadow-xl border border-white/20 w-full">
         <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-center font-heading">
-          <span className="bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-accent via-primary to-primary-dark bg-clip-text text-transparent">
             Inscription pour voter
           </span>
         </h2>
