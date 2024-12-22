@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NomineeEditDialog } from "./NomineeEditDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Pencil, Trash2, Search } from "lucide-react";
+import { Pencil, Trash2, Search, ImageOff } from "lucide-react";
 
 interface Nominee {
   id: string;
