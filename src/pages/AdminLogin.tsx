@@ -14,12 +14,10 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSignUp = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleSignUp = async () => {
     setIsLoading(true);
 
     try {
-      // Créer l'utilisateur dans auth
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: "g.sauvat@ideai.fr",
         password: "admin123",
@@ -37,7 +35,6 @@ const AdminLogin = () => {
         throw signUpError;
       }
 
-      // Créer l'entrée dans la table admin_users
       const { error: adminError } = await supabase
         .from('admin_users')
         .insert([{ email: 'g.sauvat@ideai.fr' }]);
@@ -156,10 +153,8 @@ const AdminLogin = () => {
                 className="w-full h-12 text-base font-medium"
                 disabled={isLoading}
               >
-                <span className="flex items-center">
-                  <LogIn className="h-5 w-5 mr-2" />
-                  {isLoading ? "Connexion..." : "Se connecter"}
-                </span>
+                <LogIn className="h-5 w-5 mr-2" />
+                {isLoading ? "Connexion..." : "Se connecter"}
               </Button>
               <Button
                 type="button"
@@ -168,10 +163,8 @@ const AdminLogin = () => {
                 onClick={handleSignUp}
                 disabled={isLoading}
               >
-                <span className="flex items-center">
-                  <UserPlus className="h-5 w-5 mr-2" />
-                  Créer le compte admin
-                </span>
+                <UserPlus className="h-5 w-5 mr-2" />
+                Créer le compte admin
               </Button>
             </div>
           </form>
