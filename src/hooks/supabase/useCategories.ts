@@ -11,6 +11,7 @@ export const useCategories = () => {
         .select(`
           id,
           name,
+          display_order,
           nominees (
             id,
             name,
@@ -18,7 +19,8 @@ export const useCategories = () => {
             image_url,
             category_id
           )
-        `);
+        `)
+        .order('display_order');
 
       if (error) {
         console.error("Error loading categories:", error);
@@ -29,6 +31,7 @@ export const useCategories = () => {
       return (data || []).map((category): Category => ({
         id: category.id,
         name: category.name,
+        display_order: category.display_order,
         nominees: Array.isArray(category.nominees) ? category.nominees : []
       }));
     },
