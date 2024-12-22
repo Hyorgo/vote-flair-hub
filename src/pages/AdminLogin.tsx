@@ -1,14 +1,25 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdminLoginForm } from "@/components/admin/auth/AdminLoginForm";
-import { createAdminAccount, handleAdminLogin } from "@/components/admin/auth/AdminAuthHandlers";
+import { handleAdminLogin, createAdminAccount } from "@/components/admin/auth/AdminAuthHandlers";
+import { supabase } from "@/integrations/supabase/client";
 
 const AdminLogin = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate("/admin");
+      }
+    };
+    checkSession();
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,13 +31,10 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-2">
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <Card className="w-full max-w-md mx-4">
+        <CardHeader>
           <CardTitle className="text-2xl text-center">Administration</CardTitle>
-          <p className="text-center text-muted-foreground">
-            Connectez-vous pour accéder à l'interface d'administration
-          </p>
         </CardHeader>
         <CardContent>
           <AdminLoginForm
