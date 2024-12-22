@@ -15,7 +15,7 @@ const AdminLogin = () => {
   const { toast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent form submission
+    e.preventDefault();
     setIsLoading(true);
 
     try {
@@ -26,32 +26,11 @@ const AdminLogin = () => {
       });
 
       if (authError) {
-        // If login fails, try to sign up
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email,
-          password,
-        });
+        console.error("Auth error:", authError);
+        throw authError;
+      }
 
-        if (signUpError) {
-          throw signUpError;
-        }
-
-        // Check if the email exists in admin_users table
-        const { data: adminData, error: adminError } = await supabase
-          .from('admin_users')
-          .select('email')
-          .eq('email', email)
-          .single();
-
-        if (adminError || !adminData) {
-          throw new Error("Accès non autorisé");
-        }
-
-        toast({
-          title: "Compte créé avec succès",
-          description: "Vous pouvez maintenant vous connecter",
-        });
-      } else if (authData.session) {
+      if (authData.session) {
         // Check if the authenticated user is an admin
         const { data: adminData, error: adminError } = await supabase
           .from('admin_users')
@@ -105,7 +84,8 @@ const AdminLogin = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="pl-10"
+                  className="pl-10 w-full"
+                  autoComplete="email"
                 />
               </div>
             </div>
@@ -122,7 +102,8 @@ const AdminLogin = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="pl-10"
+                  className="pl-10 w-full"
+                  autoComplete="current-password"
                 />
               </div>
             </div>
