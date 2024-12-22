@@ -7,17 +7,28 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "Gregolimano009";
 
   try {
-    // Vérifier si l'utilisateur existe déjà dans auth
-    const { data: authUser, error: authError } = await supabase.auth.signUp({
+    // First try to sign in since the user might already exist
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
       email: adminEmail,
       password: adminPassword,
     });
 
-    if (authError && authError.message !== "User already registered") {
-      throw authError;
+    // If sign in fails with invalid credentials, try to create the user
+    if (signInError && signInError.message === "Invalid login credentials") {
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: adminEmail,
+        password: adminPassword,
+      });
+
+      if (signUpError) {
+        throw signUpError;
+      }
+    } else if (signInError) {
+      // If there's a different error during sign in, throw it
+      throw signInError;
     }
 
-    // Vérifier si l'admin existe dans la table admin_users
+    // Check if admin exists in admin_users table
     const { data: existingAdmin, error: checkError } = await supabase
       .from('admin_users')
       .select('email')
@@ -30,7 +41,7 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
     }
 
     if (!existingAdmin) {
-      // Insérer dans la table admin_users
+      // Insert into admin_users table if not exists
       const { error: insertError } = await supabase
         .from('admin_users')
         .insert([{ email: adminEmail }]);
