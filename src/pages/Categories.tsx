@@ -8,6 +8,7 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { CompleteVotingButton } from "@/components/voting/CompleteVotingButton";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { ErrorDisplay } from "@/components/ui/error-display";
+import { SocialShare } from "@/components/voting/SocialShare";
 
 const Categories = () => {
   const {
@@ -81,6 +82,7 @@ const Categories = () => {
         />
 
         <CompleteVotingButton />
+        <SocialShare />
       </div>
     </Layout>
   );
