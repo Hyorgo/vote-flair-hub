@@ -3,17 +3,17 @@ import confetti from "canvas-confetti";
 
 export const ConfettiEffect = () => {
   const createConfetti = useCallback(() => {
-    const duration = 1500;
+    const duration = 800; // Reduced from 1500 to 800ms
     const animationEnd = Date.now() + duration;
     const defaults = { 
-      startVelocity: 30, // Reduced velocity since we're falling down
+      startVelocity: 30,
       spread: 360,
       ticks: 50,
       zIndex: 0,
       particleCount: 50,
-      origin: { y: 0 }, // Start from top of screen
-      gravity: 1, // Add gravity for natural falling motion
-      scalar: 0.7, // Slightly reduce the size of particles
+      origin: { y: 0 },
+      gravity: 1,
+      scalar: 0.7,
       disableForReducedMotion: true,
       colors: ['#FFD700', '#FEC6A1', '#F97316', '#B8860B', '#FF69B4', '#4B0082']
     };
