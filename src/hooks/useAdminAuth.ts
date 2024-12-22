@@ -25,7 +25,7 @@ export const useAdminAuth = () => {
     };
 
     signIn();
-  }, []);
+  }, [toast]);
 
   return { isLoading };
 };
