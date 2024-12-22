@@ -14,12 +14,42 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const handleSignUp = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: "admin@example.com",
+        password: "admin123",
+      });
+
+      if (error) {
+        console.error("Signup error:", error);
+        throw error;
+      }
+
+      toast({
+        title: "Compte créé",
+        description: "Le compte admin a été créé avec succès",
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la création du compte",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // First, try to sign in
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -31,7 +61,6 @@ const AdminLogin = () => {
       }
 
       if (authData.session) {
-        // Check if the authenticated user is an admin
         const { data: adminData, error: adminError } = await supabase
           .from('admin_users')
           .select('email')
@@ -113,6 +142,16 @@ const AdminLogin = () => {
               disabled={isLoading}
             >
               {isLoading ? "Connexion..." : "Se connecter"}
+            </Button>
+            {/* Bouton temporaire pour créer le compte admin - À RETIRER APRÈS UTILISATION */}
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full mt-2"
+              onClick={handleSignUp}
+              disabled={isLoading}
+            >
+              Créer le compte admin
             </Button>
           </form>
         </CardContent>
