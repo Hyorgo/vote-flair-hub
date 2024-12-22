@@ -9,7 +9,7 @@ export const Copyright = () => {
       transition={{ delay: 0.5 }}
       className="mt-12 pt-6 border-t border-gray-100 text-center text-sm text-white"
     >
-      © {new Date().getFullYear()} Lyon Digital Services. Tous droits réservés.
+      © {new Date().getFullYear()} ideAI. Tous droits réservés.
     </motion.div>
   );
 };
