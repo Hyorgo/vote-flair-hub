@@ -91,7 +91,7 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md bg-white shadow-lg">
+      <Card className="w-full max-w-md">
         <CardHeader className="space-y-2">
           <CardTitle className="text-2xl text-center">Administration</CardTitle>
           <p className="text-center text-muted-foreground">
@@ -113,7 +113,7 @@ const AdminLogin = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="pl-10 w-full"
+                  className="pl-10"
                   autoComplete="email"
                 />
               </div>
@@ -131,28 +131,30 @@ const AdminLogin = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="pl-10 w-full"
+                  className="pl-10"
                   autoComplete="current-password"
                 />
               </div>
             </div>
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
-              {isLoading ? "Connexion..." : "Se connecter"}
-            </Button>
-            {/* Bouton temporaire pour créer le compte admin - À RETIRER APRÈS UTILISATION */}
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full mt-2"
-              onClick={handleSignUp}
-              disabled={isLoading}
-            >
-              Créer le compte admin
-            </Button>
+            <div className="space-y-2">
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isLoading}
+              >
+                {isLoading ? "Connexion..." : "Se connecter"}
+              </Button>
+              {/* Bouton temporaire pour créer le compte admin - À RETIRER APRÈS UTILISATION */}
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full relative z-50"
+                onClick={handleSignUp}
+                disabled={isLoading}
+              >
+                Créer le compte admin
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
