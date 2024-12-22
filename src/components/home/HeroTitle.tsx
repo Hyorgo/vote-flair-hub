@@ -18,19 +18,12 @@ export const HeroTitle = () => {
           repeatType: "reverse",
           ease: "easeInOut"
         }}
-        className="absolute left-1/2 -translate-x-1/2 -top-4 sm:-top-6 md:-top-8"
+        className="relative w-fit mx-auto mb-4"
       >
         <Crown 
-          className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-24 lg:h-24 opacity-90 [&>path]:fill-[url(#crown-gradient)]" 
-          strokeWidth={0}
+          className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-24 lg:h-24" 
+          color="#FFD700"
         />
-        <svg width="0" height="0">
-          <linearGradient id="crown-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#FFD700" />
-            <stop offset="50%" stopColor="#DAA520" />
-            <stop offset="100%" stopColor="#B8860B" />
-          </linearGradient>
-        </svg>
       </motion.div>
       
       <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-bold font-heading">
