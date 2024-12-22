@@ -20,7 +20,7 @@ const AdminLogin = () => {
 
     try {
       const { data, error } = await supabase.auth.signUp({
-        email: "admin@votingapp.com",
+        email: "g.sauvat@ideai.fr",
         password: "admin123",
       });
 
@@ -109,7 +109,7 @@ const AdminLogin = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@votingapp.com"
+                  placeholder="g.sauvat@ideai.fr"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
