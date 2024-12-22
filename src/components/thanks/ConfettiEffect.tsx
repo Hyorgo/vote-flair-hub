@@ -3,16 +3,17 @@ import confetti from "canvas-confetti";
 
 export const ConfettiEffect = () => {
   const createConfetti = useCallback(() => {
-    const duration = 1500; // Réduit de 2000ms à 1500ms
+    const duration = 1500;
     const animationEnd = Date.now() + duration;
     const defaults = { 
-      startVelocity: 20, // Réduit de 25 à 20
-      spread: 200, // Réduit de 300 à 200
-      ticks: 40, // Réduit de 50 à 40
+      startVelocity: 20,
+      spread: 200,
+      ticks: 40,
       zIndex: 0,
-      particleCount: 20, // Réduit de 30 à 20 particules
+      particleCount: 20,
       origin: { y: 0.6 },
-      disableForReducedMotion: true
+      disableForReducedMotion: true,
+      colors: ['#FFD700', '#FEC6A1', '#F97316', '#B8860B']
     };
 
     const randomInRange = (min: number, max: number) => {
@@ -27,7 +28,6 @@ export const ConfettiEffect = () => {
         return;
       }
 
-      // Lance les confettis depuis deux côtés avec une quantité fixe
       confetti({
         ...defaults,
         origin: { x: randomInRange(0.2, 0.3), y: 0.6 }
