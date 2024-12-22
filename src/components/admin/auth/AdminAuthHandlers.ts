@@ -7,36 +7,45 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "admin123";
 
   try {
-    // First, try to sign up the admin user
+    // First, check if the admin user already exists in auth
+    const { data: existingUser, error: signInError } = await supabase.auth.signInWithPassword({
+      email: adminEmail,
+      password: adminPassword,
+    });
+
+    if (existingUser.session) {
+      toast({
+        title: "Compte existant",
+        description: "Le compte admin existe déjà. Vous pouvez vous connecter avec les identifiants fournis.",
+      });
+      return;
+    }
+
+    // If user doesn't exist, create it
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: adminEmail,
       password: adminPassword,
     });
 
     if (signUpError) {
-      // If error is not about existing user, throw it
-      if (!signUpError.message.includes("User already registered")) {
-        console.error("Signup error:", signUpError);
-        throw signUpError;
-      }
+      console.error("Signup error:", signUpError);
+      throw signUpError;
     }
 
-    // Whether signup succeeded or user already exists, try to create admin record
-    const { data: existingAdmin, error: checkError } = await supabase
+    if (!signUpData.user) {
+      throw new Error("Échec de la création du compte admin");
+    }
+
+    // Create admin record in admin_users table
+    const { error: adminError } = await supabase
       .from('admin_users')
-      .select('email')
-      .eq('email', adminEmail)
+      .insert([{ email: adminEmail }])
+      .select()
       .single();
 
-    if (!existingAdmin && (!checkError || checkError.code === 'PGRST116')) {
-      const { error: adminError } = await supabase
-        .from('admin_users')
-        .insert([{ email: adminEmail }]);
-
-      if (adminError) {
-        console.error("Admin creation error:", adminError);
-        throw adminError;
-      }
+    if (adminError && !adminError.message.includes('duplicate key')) {
+      console.error("Admin creation error:", adminError);
+      throw adminError;
     }
 
     toast({
@@ -64,7 +73,7 @@ export const handleAdminLogin = async (
   setIsLoading(true);
 
   try {
-    // First attempt to sign in
+    // Attempt to sign in
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -76,10 +85,10 @@ export const handleAdminLogin = async (
     }
 
     if (!authData.session) {
-      throw new Error("No session created");
+      throw new Error("Aucune session créée");
     }
 
-    // Then verify admin status
+    // Verify admin status
     const { data: adminData, error: adminError } = await supabase
       .from('admin_users')
       .select('email')
