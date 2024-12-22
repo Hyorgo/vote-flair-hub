@@ -7,24 +7,15 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "admin123";
 
   try {
-    // First try to sign in to check if auth user exists
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    // Create the auth user first
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: adminEmail,
       password: adminPassword,
     });
 
-    // If sign in fails, create the auth user
-    if (signInError) {
-      console.log("User doesn't exist, creating new user...");
-      const { error: signUpError } = await supabase.auth.signUp({
-        email: adminEmail,
-        password: adminPassword,
-      });
-
-      if (signUpError) {
-        console.error("Signup error:", signUpError);
-        throw signUpError;
-      }
+    if (signUpError && !signUpError.message.includes("User already registered")) {
+      console.error("Signup error:", signUpError);
+      throw signUpError;
     }
 
     // Check if admin record exists
@@ -72,6 +63,7 @@ export const handleAdminLogin = async (
   console.log("Attempting login with:", { email, password });
 
   try {
+    // Sign in with provided credentials
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
