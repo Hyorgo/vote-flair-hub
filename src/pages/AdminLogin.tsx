@@ -121,7 +121,7 @@ const AdminLogin = () => {
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-4 w-4" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-4 w-4" aria-hidden="true" />
                 <Input
                   id="email"
                   type="email"
@@ -131,6 +131,7 @@ const AdminLogin = () => {
                   required
                   className="pl-10"
                   autoComplete="email"
+                  aria-label="Adresse email"
                 />
               </div>
             </div>
@@ -139,7 +140,7 @@ const AdminLogin = () => {
                 Mot de passe
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-4 w-4" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-4 w-4" aria-hidden="true" />
                 <Input
                   id="password"
                   type="password"
@@ -149,26 +150,29 @@ const AdminLogin = () => {
                   required
                   className="pl-10"
                   autoComplete="current-password"
+                  aria-label="Mot de passe"
                 />
               </div>
             </div>
-            <div className="space-y-2 pt-4">
+            <div className="space-y-4 pt-6">
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full h-12 text-base font-medium"
                 disabled={isLoading}
+                aria-label={isLoading ? "Connexion en cours..." : "Se connecter"}
               >
-                <LogIn className="mr-2 h-4 w-4" />
+                <LogIn className="mr-2 h-5 w-5" aria-hidden="true" />
                 {isLoading ? "Connexion..." : "Se connecter"}
               </Button>
               <Button
                 type="button"
                 variant="outline"
-                className="w-full"
+                className="w-full h-12 text-base font-medium"
                 onClick={handleSignUp}
                 disabled={isLoading}
+                aria-label="Créer le compte administrateur"
               >
-                <UserPlus className="mr-2 h-4 w-4" />
+                <UserPlus className="mr-2 h-5 w-5" aria-hidden="true" />
                 Créer le compte admin
               </Button>
             </div>
