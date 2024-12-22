@@ -34,15 +34,15 @@ const Thanks = () => {
 
   return (
     <Layout>
-      <div className="w-full max-w-4xl mx-auto px-4 py-6 sm:py-8 md:py-12 text-center mt-4 sm:mt-8 md:mt-16 animate-fade-in">
+      <div className="w-full max-w-4xl mx-auto px-2 sm:px-4 py-4 sm:py-6 md:py-8 text-center mt-2 sm:mt-4 md:mt-8 animate-fade-in">
         <ConfettiEffect />
         <ThankYouTitle />
         
-        <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 md:mb-12 text-gray-200 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-6 md:mb-8 text-gray-200 max-w-2xl mx-auto leading-relaxed px-2">
           Votre vote a bien été pris en compte. Partagez votre participation et invitez vos amis à voter !
         </p>
 
-        <div className="space-y-6 sm:space-y-8">
+        <div className="space-y-4 sm:space-y-6">
           <SocialShareButtons 
             shareMessage={SHARE_MESSAGE} 
             shareUrl={shareUrl} 

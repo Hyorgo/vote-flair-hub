@@ -54,13 +54,13 @@ export const SocialShareButtons = memo(({ shareMessage, shareUrl }: SocialShareB
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-3 md:gap-4 mb-8 md:mb-12 px-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mb-6 sm:mb-8 md:mb-12 px-2 sm:px-4">
       {buttons.map(({ platform, label, icon: Icon, delay }) => (
         <Button
           key={platform}
           variant="outline"
           onClick={() => handleShare(platform)}
-          className="w-full sm:w-auto group relative px-4 md:px-6 py-2 border border-[#FEC6A1] rounded-lg shadow-sm transition-all duration-300 hover:shadow-md hover:scale-105 hover:bg-gradient-to-r hover:from-[#FDE1D3] hover:via-[#FEC6A1] hover:to-[#F2FCE2] hover:text-gray-800 animate-fade-in text-sm md:text-base"
+          className="w-full sm:w-auto group relative px-3 sm:px-4 md:px-6 py-2 border border-[#FEC6A1] rounded-lg shadow-sm transition-all duration-300 hover:shadow-md hover:scale-105 hover:bg-gradient-to-r hover:from-[#FDE1D3] hover:via-[#FEC6A1] hover:to-[#F2FCE2] hover:text-gray-800 animate-fade-in text-sm md:text-base"
           style={{ animationDelay: `${delay}ms` }}
           aria-label={`Partager sur ${label}`}
         >
