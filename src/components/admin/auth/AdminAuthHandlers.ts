@@ -7,14 +7,19 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "Gregolimano009";
 
   try {
-    console.log("Tentative de création du compte admin pour:", adminEmail);
+    console.log("Vérification du compte admin pour:", adminEmail);
     
     // 1. Vérifier si l'utilisateur existe déjà dans admin_users
-    const { data: existingAdmin } = await supabase
+    const { data: existingAdmin, error: adminCheckError } = await supabase
       .from('admin_users')
       .select('email')
       .eq('email', adminEmail)
       .maybeSingle();
+
+    if (adminCheckError) {
+      console.error("Erreur lors de la vérification admin:", adminCheckError);
+      throw adminCheckError;
+    }
 
     if (existingAdmin) {
       toast({
@@ -24,17 +29,23 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
       return;
     }
 
-    // 2. Créer le compte dans Auth
-    const { error: signUpError } = await supabase.auth.signUp({
+    // 2. Vérifier si l'utilisateur existe dans Auth
+    const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
       email: adminEmail,
       password: adminPassword,
     });
 
-    if (signUpError) {
-      if (signUpError.message === "User already registered") {
-        // Si l'utilisateur existe déjà dans Auth, on continue pour créer l'entrée dans admin_users
-        console.log("L'utilisateur existe déjà dans Auth, création de l'entrée admin");
-      } else {
+    if (!signInError && user) {
+      // L'utilisateur existe déjà dans Auth, créer juste l'entrée admin_users
+      console.log("L'utilisateur existe dans Auth, création de l'entrée admin");
+    } else {
+      // L'utilisateur n'existe pas dans Auth, le créer
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: adminEmail,
+        password: adminPassword,
+      });
+
+      if (signUpError) {
         throw signUpError;
       }
     }
@@ -77,14 +88,18 @@ export const handleAdminLogin = async (
 
   try {
     // 1. Vérifier si l'email existe dans admin_users
-    const { data: adminData } = await supabase
+    const { data: adminData, error: adminCheckError } = await supabase
       .from('admin_users')
       .select('email')
       .eq('email', email)
       .maybeSingle();
 
+    if (adminCheckError) {
+      throw adminCheckError;
+    }
+
     if (!adminData) {
-      throw new Error("Compte administrateur non trouvé");
+      throw new Error("Ce compte n'a pas les droits administrateur");
     }
 
     // 2. Tenter la connexion
