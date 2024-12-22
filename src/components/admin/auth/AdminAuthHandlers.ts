@@ -9,81 +9,74 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   try {
     console.log("Vérification du compte administrateur pour:", adminEmail);
     
-    // 1. Vérifier si l'utilisateur existe déjà dans Auth
-    const { data: { user }, error: authCheckError } = await supabase.auth.signInWithPassword({
-      email: adminEmail,
-      password: adminPassword,
-    });
+    // 1. Vérifier si l'utilisateur existe déjà dans admin_users
+    const { data: existingAdmin, error: adminCheckError } = await supabase
+      .from('admin_users')
+      .select('email')
+      .eq('email', adminEmail)
+      .maybeSingle();
 
-    if (!authCheckError) {
-      // L'utilisateur existe déjà dans Auth, vérifions s'il est dans admin_users
-      const { data: existingAdmin, error: adminCheckError } = await supabase
+    if (adminCheckError) {
+      throw adminCheckError;
+    }
+
+    // 2. Si l'admin n'existe pas dans admin_users, on le crée
+    if (!existingAdmin) {
+      const { error: insertError } = await supabase
         .from('admin_users')
-        .select('email')
-        .eq('email', adminEmail)
-        .maybeSingle();
+        .insert([{ email: adminEmail }]);
 
-      if (adminCheckError) {
-        throw adminCheckError;
-      }
-
-      if (!existingAdmin) {
-        // L'utilisateur existe dans Auth mais pas dans admin_users, ajoutons-le
-        const { error: insertError } = await supabase
-          .from('admin_users')
-          .insert([{ email: adminEmail }]);
-
-        if (insertError) {
+      if (insertError) {
+        if (insertError.code === "23505") {
+          console.log("L'admin existe déjà dans la table admin_users");
+        } else {
           throw insertError;
         }
       }
-
-      toast({
-        title: "Compte existant",
-        description: "Le compte administrateur est prêt. Vous pouvez vous connecter.",
-      });
-      return;
     }
 
-    // 2. Si l'utilisateur n'existe pas dans Auth, créons-le
-    const { error: signUpError } = await supabase.auth.signUp({
+    // 3. Vérifier/Créer le compte dans Auth
+    const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
       email: adminEmail,
       password: adminPassword,
     });
 
-    if (signUpError) {
-      throw signUpError;
-    }
+    if (signInError) {
+      // Si la connexion échoue, on essaie de créer le compte
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: adminEmail,
+        password: adminPassword,
+      });
 
-    // 3. Créer l'entrée dans admin_users
-    const { error: insertError } = await supabase
-      .from('admin_users')
-      .insert([{ email: adminEmail }]);
-
-    if (insertError) {
-      // Si l'insertion échoue, c'est probablement parce que l'email existe déjà
-      if (insertError.code === "23505") { // Code pour violation de contrainte unique
-        toast({
-          title: "Compte existant",
-          description: "Le compte administrateur existe déjà. Vous pouvez vous connecter.",
-        });
+      if (signUpError) {
+        if (signUpError.message === "User already registered") {
+          toast({
+            title: "Erreur de connexion",
+            description: "Le compte existe mais le mot de passe est incorrect.",
+            variant: "destructive",
+          });
+        } else {
+          throw signUpError;
+        }
         return;
       }
-      throw insertError;
-    }
 
-    toast({
-      title: "Compte créé",
-      description: "Le compte administrateur a été créé avec succès. Vous pouvez maintenant vous connecter.",
-    });
+      toast({
+        title: "Compte créé",
+        description: "Le compte administrateur a été créé avec succès. Vous pouvez maintenant vous connecter.",
+      });
+    } else {
+      toast({
+        title: "Compte vérifié",
+        description: "Le compte administrateur est prêt. Vous pouvez vous connecter.",
+      });
+    }
 
   } catch (error: any) {
     console.error("Erreur de création du compte admin:", error);
     toast({
       title: "Erreur",
-      description: error.message === "User already registered" 
-        ? "Le compte existe déjà. Veuillez vous connecter."
-        : "Erreur lors de la création du compte admin. Veuillez réessayer.",
+      description: "Une erreur est survenue lors de la création du compte admin. Veuillez réessayer.",
       variant: "destructive",
     });
   } finally {
