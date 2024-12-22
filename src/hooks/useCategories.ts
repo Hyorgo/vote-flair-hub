@@ -12,6 +12,7 @@ export const useCategories = () => {
         .select(`
           id,
           name,
+          display_order,
           nominees (
             id,
             name,
@@ -19,7 +20,8 @@ export const useCategories = () => {
             image_url,
             category_id
           )
-        `);
+        `)
+        .order('display_order');
 
       if (error) {
         console.error("Error loading categories:", error);
@@ -29,6 +31,7 @@ export const useCategories = () => {
       return (data || []).map((category): Category => ({
         id: category.id,
         name: category.name,
+        display_order: category.display_order,
         nominees: Array.isArray(category.nominees) ? category.nominees : []
       }));
     },
@@ -42,9 +45,22 @@ export const useCategoryManager = () => {
 
   const addCategory = useMutation({
     mutationFn: async (name: string) => {
+      // Get the highest display_order
+      const { data: categories, error: fetchError } = await supabase
+        .from('categories')
+        .select('display_order')
+        .order('display_order', { ascending: false })
+        .limit(1);
+
+      if (fetchError) throw fetchError;
+
+      const nextOrder = categories && categories.length > 0 
+        ? (categories[0].display_order || 0) + 1 
+        : 1;
+
       const { data, error } = await supabase
         .from('categories')
-        .insert([{ name }])
+        .insert([{ name, display_order: nextOrder }])
         .select()
         .single();
 
@@ -54,8 +70,8 @@ export const useCategoryManager = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
       toast({
-        title: "Catégorie ajoutée",
-        description: "La nouvelle catégorie a été ajoutée avec succès.",
+        title: "Succès",
+        description: "La catégorie a été ajoutée avec succès.",
       });
     },
     onError: (error) => {
@@ -80,7 +96,7 @@ export const useCategoryManager = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
       toast({
-        title: "Catégorie supprimée",
+        title: "Succès",
         description: "La catégorie a été supprimée avec succès.",
       });
     },

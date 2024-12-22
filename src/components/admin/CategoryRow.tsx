@@ -4,11 +4,15 @@ import { CategoryNameCell } from "./CategoryNameCell";
 import { CategoryActions } from "./CategoryActions";
 import { NomineeList } from "./NomineeList";
 import { useNomineeManagement } from "@/hooks/useNomineeManagement";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical } from "lucide-react";
 
 interface Category {
   id: string;
   name: string;
   nominees: number;
+  display_order: number;
 }
 
 interface CategoryRowProps {
@@ -40,6 +44,21 @@ export const CategoryRow = ({
     handleAddNomineeWithImage
   } = useNomineeManagement(category.id);
 
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: category.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
   React.useEffect(() => {
     if (showNominees) {
       loadNominees();
@@ -48,12 +67,21 @@ export const CategoryRow = ({
 
   const handleAddNomineeToCategory = async (name: string, description: string, imageUrl?: string) => {
     await handleAddNomineeWithImage(name, description, imageUrl);
-    loadNominees(); // Recharger la liste après l'ajout
+    loadNominees();
   };
 
   return (
     <>
-      <TableRow>
+      <TableRow ref={setNodeRef} style={style}>
+        <TableCell>
+          <button
+            {...attributes}
+            {...listeners}
+            className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded"
+          >
+            <GripVertical className="h-4 w-4 text-gray-400" />
+          </button>
+        </TableCell>
         <TableCell>
           <CategoryNameCell
             categoryId={category.id}
@@ -81,7 +109,7 @@ export const CategoryRow = ({
       </TableRow>
       {showNominees && (
         <TableRow>
-          <TableCell colSpan={3}>
+          <TableCell colSpan={4}>
             <NomineeList 
               nominees={nominees} 
               categoryId={category.id}
