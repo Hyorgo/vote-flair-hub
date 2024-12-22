@@ -11,7 +11,17 @@ export const handleAdminLogin = async (
   console.log("Tentative de connexion pour:", email);
 
   try {
-    // 1. Vérifier si l'email existe dans admin_users
+    // 1. Tenter d'abord la connexion
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      throw signInError;
+    }
+
+    // 2. Une fois connecté, vérifier si l'email existe dans admin_users
     const { data: adminData, error: adminCheckError } = await supabase
       .from('admin_users')
       .select('email')
@@ -23,17 +33,9 @@ export const handleAdminLogin = async (
     }
 
     if (!adminData) {
+      // Si l'utilisateur n'est pas admin, le déconnecter
+      await supabase.auth.signOut();
       throw new Error("Ce compte n'a pas les droits administrateur");
-    }
-
-    // 2. Tenter la connexion
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (signInError) {
-      throw signInError;
     }
 
     toast({
