@@ -7,37 +7,21 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "admin123";
 
   try {
-    // First check if admin user already exists in auth
-    const { data: authUser } = await supabase.auth.signInWithPassword({
-      email: adminEmail,
-      password: adminPassword,
-    });
-
-    if (authUser.session) {
-      toast({
-        title: "Compte existant",
-        description: "Le compte admin existe déjà. Utilisez les identifiants fournis pour vous connecter.",
-      });
-      setIsLoading(false);
-      return;
-    }
-
-    // Create auth user if it doesn't exist
+    // First, try to sign up the admin user
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: adminEmail,
       password: adminPassword,
     });
 
     if (signUpError) {
-      console.error("Signup error:", signUpError);
-      throw signUpError;
+      // If error is not about existing user, throw it
+      if (!signUpError.message.includes("User already registered")) {
+        console.error("Signup error:", signUpError);
+        throw signUpError;
+      }
     }
 
-    if (!signUpData.user) {
-      throw new Error("Failed to create admin account");
-    }
-
-    // Check if admin record exists
+    // Whether signup succeeded or user already exists, try to create admin record
     const { data: existingAdmin, error: checkError } = await supabase
       .from('admin_users')
       .select('email')
@@ -45,7 +29,6 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
       .single();
 
     if (!existingAdmin && (!checkError || checkError.code === 'PGRST116')) {
-      // Create admin user record only if it doesn't exist
       const { error: adminError } = await supabase
         .from('admin_users')
         .insert([{ email: adminEmail }]);
