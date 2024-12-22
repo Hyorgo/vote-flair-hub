@@ -15,7 +15,7 @@ const AdminLogin = () => {
   const { toast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent form submission
     setIsLoading(true);
 
     try {
@@ -91,7 +91,7 @@ const AdminLogin = () => {
           </p>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4" onSubmit={handleLogin}>
+          <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
                 Email
@@ -105,8 +105,7 @@ const AdminLogin = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  autoComplete="email"
-                  className="pl-10 w-full"
+                  className="pl-10"
                 />
               </div>
             </div>
@@ -123,8 +122,7 @@ const AdminLogin = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  autoComplete="current-password"
-                  className="pl-10 w-full"
+                  className="pl-10"
                 />
               </div>
             </div>
