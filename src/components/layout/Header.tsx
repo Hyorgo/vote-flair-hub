@@ -1,8 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Settings, Keyboard } from "lucide-react";
+import { Settings, Keyboard, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 
 interface HeaderProps {
   isAdmin: boolean;
@@ -10,11 +11,21 @@ interface HeaderProps {
 
 export const Header = ({ isAdmin }: HeaderProps) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const showKeyboardShortcuts = () => {
     toast({
       title: "Raccourcis clavier disponibles",
       description: "Alt + H: Accueil | Alt + C: Catégories | Alt + ←: Retour | ?: Aide",
+    });
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/");
+    toast({
+      title: "Déconnexion réussie",
+      description: "Vous avez été déconnecté avec succès",
     });
   };
 
@@ -53,14 +64,24 @@ export const Header = ({ isAdmin }: HeaderProps) => {
               </Button>
             </Link>
           ) : (
-            <Link to="/">
-              <Button 
-                variant="outline"
-                aria-label="Retourner à la page de vote"
+            <div className="flex items-center gap-2">
+              <Link to="/">
+                <Button 
+                  variant="outline"
+                  aria-label="Retourner à la page de vote"
+                >
+                  Retour au vote
+                </Button>
+              </Link>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleLogout}
+                aria-label="Se déconnecter"
               >
-                Retour au vote
+                <LogOut className="h-5 w-5" />
               </Button>
-            </Link>
+            </div>
           )}
         </div>
       </div>
