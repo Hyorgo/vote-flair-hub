@@ -7,33 +7,27 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "Gregolimano009";
 
   try {
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+    const { error: signUpError } = await supabase.auth.signUp({
       email: adminEmail,
       password: adminPassword,
     });
 
-    if (signUpError) {
-      console.error("Signup error:", signUpError);
-      throw signUpError;
-    }
+    if (signUpError) throw signUpError;
 
-    // Check if admin record exists
-    const { data: existingAdmin } = await supabase
+    const { data: existingAdmin, error: checkError } = await supabase
       .from('admin_users')
       .select('email')
       .eq('email', adminEmail)
       .single();
 
+    if (checkError) throw checkError;
+
     if (!existingAdmin) {
-      // Create admin record
-      const { error: adminError } = await supabase
+      const { error: insertError } = await supabase
         .from('admin_users')
         .insert([{ email: adminEmail }]);
 
-      if (adminError) {
-        console.error("Admin creation error:", adminError);
-        throw adminError;
-      }
+      if (insertError) throw insertError;
 
       toast({
         title: "Compte créé",
@@ -64,24 +58,16 @@ export const handleAdminLogin = async (
   navigate: (path: string) => void
 ) => {
   setIsLoading(true);
-  console.log("Attempting login with:", { email, password });
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error) {
-      console.error("Auth error:", error);
-      throw error;
-    }
+    if (signInError) throw signInError;
+    if (!data.session) throw new Error("Aucune session créée");
 
-    if (!data.session) {
-      throw new Error("Aucune session créée");
-    }
-
-    // Then verify admin status
     const { data: adminData, error: adminError } = await supabase
       .from('admin_users')
       .select('email')
@@ -89,7 +75,6 @@ export const handleAdminLogin = async (
       .single();
 
     if (adminError || !adminData) {
-      // If not an admin, sign out and throw error
       await supabase.auth.signOut();
       throw new Error("Accès non autorisé");
     }
