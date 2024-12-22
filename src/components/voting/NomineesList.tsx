@@ -32,7 +32,7 @@ export const NomineesList = ({ category, selections, onVote }: NomineesListProps
       variants={container}
       initial="hidden"
       animate="show"
-      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 sm:gap-12 px-8 sm:px-12 max-w-7xl mx-auto"
+      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 sm:gap-12 px-8 sm:px-12 max-w-7xl mx-auto mt-12"
     >
       {nominees.map((nominee) => (
         <motion.div
