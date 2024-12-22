@@ -7,19 +7,13 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "admin123";
 
   try {
-    // First check if admin user already exists
-    const { data: existingAdmin, error: checkError } = await supabase
-      .from('admin_users')
-      .select('email')
-      .eq('email', adminEmail)
-      .single();
+    // First check if admin user already exists in auth
+    const { data: authUser } = await supabase.auth.signInWithPassword({
+      email: adminEmail,
+      password: adminPassword,
+    });
 
-    if (checkError && checkError.code !== 'PGRST116') { // PGRST116 means no rows returned
-      console.error("Error checking admin existence:", checkError);
-      throw checkError;
-    }
-
-    if (existingAdmin) {
+    if (authUser.session) {
       toast({
         title: "Compte existant",
         description: "Le compte admin existe déjà. Utilisez les identifiants fournis pour vous connecter.",
@@ -28,7 +22,7 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
       return;
     }
 
-    // Create auth user if admin doesn't exist
+    // Create auth user if it doesn't exist
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: adminEmail,
       password: adminPassword,
@@ -43,14 +37,23 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
       throw new Error("Failed to create admin account");
     }
 
-    // Create admin user record
-    const { error: adminError } = await supabase
+    // Check if admin record exists
+    const { data: existingAdmin, error: checkError } = await supabase
       .from('admin_users')
-      .insert([{ email: adminEmail }]);
+      .select('email')
+      .eq('email', adminEmail)
+      .single();
 
-    if (adminError) {
-      console.error("Admin creation error:", adminError);
-      throw adminError;
+    if (!existingAdmin && (!checkError || checkError.code === 'PGRST116')) {
+      // Create admin user record only if it doesn't exist
+      const { error: adminError } = await supabase
+        .from('admin_users')
+        .insert([{ email: adminEmail }]);
+
+      if (adminError) {
+        console.error("Admin creation error:", adminError);
+        throw adminError;
+      }
     }
 
     toast({
