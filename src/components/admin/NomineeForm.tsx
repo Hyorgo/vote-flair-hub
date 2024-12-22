@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { ImageOff } from "lucide-react";
 
 interface NomineeFormProps {
   newNomineeName: string;
@@ -21,13 +22,14 @@ export const NomineeForm = ({
   handleAddNominee,
 }: NomineeFormProps) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      if (file.size > 5 * 1024 * 1024) { // 5MB
+      if (file.size > 5 * 1024 * 1024) {
         toast({
           title: "Erreur",
           description: "L'image ne doit pas dépasser 5MB",
@@ -36,6 +38,8 @@ export const NomineeForm = ({
         return;
       }
       setImageFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
     }
   };
 
@@ -50,7 +54,6 @@ export const NomineeForm = ({
         const fileExt = imageFile.name.split('.').pop();
         const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
 
-        // Convertir le File en ArrayBuffer
         const arrayBuffer = await imageFile.arrayBuffer();
         const uint8Array = new Uint8Array(arrayBuffer);
 
@@ -76,6 +79,7 @@ export const NomineeForm = ({
 
       await handleAddNominee(newNomineeName, newNomineeDescription, imageUrl);
       setImageFile(null);
+      setPreviewUrl(null);
       setNewNomineeName("");
       setNewNomineeDescription("");
     } catch (error) {
@@ -106,13 +110,38 @@ export const NomineeForm = ({
           onChange={(e) => setNewNomineeDescription(e.target.value)}
         />
       </div>
-      <div>
+      <div className="space-y-4">
         <Input
           type="file"
           accept="image/*"
           onChange={handleImageChange}
           className="mb-4"
         />
+        {previewUrl ? (
+          <div className="relative w-32 h-32 rounded-lg overflow-hidden">
+            <img
+              src={previewUrl}
+              alt="Prévisualisation"
+              className="w-full h-full object-cover"
+            />
+            <Button
+              type="button"
+              variant="destructive"
+              size="sm"
+              className="absolute top-2 right-2"
+              onClick={() => {
+                setPreviewUrl(null);
+                setImageFile(null);
+              }}
+            >
+              ×
+            </Button>
+          </div>
+        ) : (
+          <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
+            <ImageOff className="w-8 h-8 text-gray-400" />
+          </div>
+        )}
       </div>
       <Button 
         type="submit"
