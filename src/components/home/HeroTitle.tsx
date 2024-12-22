@@ -32,6 +32,21 @@ export const HeroTitle = () => {
         </span>
       </h1>
 
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+        className="relative"
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-yellow-500/20 blur-xl animate-shimmer rounded-full" />
+        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-9xl font-extrabold relative">
+          <span className="bg-gradient-to-r from-[#FFD700] via-[#FFF] to-[#FFD700] bg-clip-text text-transparent 
+            animate-shimmer bg-[length:200%_auto] motion-safe:hover:animate-shimmer">
+            2025
+          </span>
+        </h2>
+      </motion.div>
+
       <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-white mx-auto leading-relaxed font-medium">
         Célébrez l'excellence et participez à la reconnaissance des talents exceptionnels
       </p>
