@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { BackgroundForm } from "./backgrounds/BackgroundForm";
 import { BackgroundList } from "./backgrounds/BackgroundList";
 import { PageBackground } from "@/integrations/supabase/types/background";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useCategories } from "./supabase/useCategories";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 export const useVoting = () => {
   const [currentCategory, setCurrentCategory] = useState(0);

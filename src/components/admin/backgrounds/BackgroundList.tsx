@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Check, X, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { PageBackground } from "@/integrations/supabase/types/background";
 
 interface BackgroundListProps {
