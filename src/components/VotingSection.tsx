@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion, useAnimation, PanInfo } from "framer-motion";
 import { NomineesList } from "@/components/voting/NomineesList";
 import { NavigationButtons } from "@/components/voting/NavigationButtons";
@@ -6,6 +6,7 @@ import { CategoryTitle } from "@/components/voting/CategoryTitle";
 import { Category } from "@/types/airtable";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface VotingSectionProps {
   category: Category;
@@ -27,6 +28,26 @@ export const VotingSection = ({
   const controls = useAnimation();
   const isMobile = useIsMobile();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (isMobile) {
+      const hasSeenSwipeHint = localStorage.getItem("hasSeenSwipeHint");
+      if (!hasSeenSwipeHint) {
+        toast({
+          title: "Astuce de navigation",
+          description: (
+            <div className="flex items-center gap-2">
+              <ChevronLeft className="h-5 w-5" />
+              Swipez pour naviguer entre les catégories
+              <ChevronRight className="h-5 w-5" />
+            </div>
+          ),
+          duration: 5000,
+        });
+        localStorage.setItem("hasSeenSwipeHint", "true");
+      }
+    }
+  }, [isMobile, toast]);
 
   const handleDragEnd = async (event: any, info: PanInfo) => {
     const offset = info.offset.x;
