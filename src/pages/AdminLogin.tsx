@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, LogIn, UserPlus } from "lucide-react";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -152,12 +152,13 @@ const AdminLogin = () => {
                 />
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 pt-4">
               <Button
                 type="submit"
                 className="w-full"
                 disabled={isLoading}
               >
+                <LogIn className="mr-2 h-4 w-4" />
                 {isLoading ? "Connexion..." : "Se connecter"}
               </Button>
               <Button
@@ -167,6 +168,7 @@ const AdminLogin = () => {
                 onClick={handleSignUp}
                 disabled={isLoading}
               >
+                <UserPlus className="mr-2 h-4 w-4" />
                 Créer le compte admin
               </Button>
             </div>
