@@ -10,4 +10,5 @@ export interface Category {
   id: string;
   name: string;
   nominees: Nominee[];
+  display_order: number;
 }

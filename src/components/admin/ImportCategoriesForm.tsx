@@ -31,6 +31,15 @@ export const ImportCategoriesForm = () => {
         complete: async (results) => {
           const categories = new Map();
 
+          // Get the highest current display_order
+          const { data: existingCategories } = await supabase
+            .from('categories')
+            .select('display_order')
+            .order('display_order', { ascending: false })
+            .limit(1);
+
+          let nextOrder = (existingCategories?.[0]?.display_order || 0) + 1;
+
           // Première passe : créer les catégories
           for (const row of results.data as any[]) {
             if (!row.category || !row.nominee || !row.description) continue;
@@ -38,12 +47,16 @@ export const ImportCategoriesForm = () => {
             if (!categories.has(row.category)) {
               const { data: categoryData, error: categoryError } = await supabase
                 .from('categories')
-                .insert([{ name: row.category }])
+                .insert([{ 
+                  name: row.category,
+                  display_order: nextOrder
+                }])
                 .select()
                 .single();
 
               if (categoryError) throw categoryError;
               categories.set(row.category, categoryData.id);
+              nextOrder++;
             }
           }
 
