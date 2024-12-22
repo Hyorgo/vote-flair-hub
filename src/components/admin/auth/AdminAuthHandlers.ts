@@ -7,14 +7,20 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "Gregolimano009";
 
   try {
-    // First, try to create the auth user
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+    // First, check if admin exists in auth
+    const { data: { user: existingUser }, error: signInError } = await supabase.auth.signInWithPassword({
       email: adminEmail,
       password: adminPassword,
     });
 
-    if (signUpError && signUpError.message !== "User already registered") {
-      throw signUpError;
+    if (!existingUser && (!signInError || signInError.message === "Invalid login credentials")) {
+      // User doesn't exist, create them
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: adminEmail,
+        password: adminPassword,
+      });
+
+      if (signUpError) throw signUpError;
     }
 
     // Check if admin exists in admin_users table
@@ -64,13 +70,13 @@ export const handleAdminLogin = async (
   setIsLoading(true);
 
   try {
-    const { data, error: signInError } = await supabase.auth.signInWithPassword({
+    const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (signInError) throw signInError;
-    if (!data.user) throw new Error("Aucune session créée");
+    if (!user) throw new Error("Aucune session créée");
 
     const { data: adminData, error: adminError } = await supabase
       .from('admin_users')
