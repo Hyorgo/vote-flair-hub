@@ -43,7 +43,7 @@ export const VotingSection = ({
                 <ChevronRight className="h-5 w-5" />
               </div>
               <img 
-                src="/lovable-uploads/00aed11f-877a-4ced-8498-a3a4b88a732d.png" 
+                src="/lovable-uploads/1994ce01-1680-423f-b265-20f815b07ab2.png" 
                 alt="Geste de swipe"
                 className="w-24 h-24 object-contain"
               />
