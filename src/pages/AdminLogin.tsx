@@ -20,29 +20,39 @@ const AdminLogin = () => {
     const adminPassword = "admin123";
 
     try {
-      // First, create the auth user
+      // First check if the user already exists in auth
+      const { data: { user: existingUser }, error: checkError } = await supabase.auth.signInWithPassword({
+        email: adminEmail,
+        password: adminPassword,
+      });
+
+      if (existingUser) {
+        toast({
+          title: "Compte existant",
+          description: "Le compte admin existe déjà. Utilisez les identifiants fournis pour vous connecter.",
+        });
+        return;
+      }
+
+      // If user doesn't exist, create them
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: adminEmail,
         password: adminPassword,
       });
 
-      if (signUpError) {
-        if (signUpError.message.includes("User already registered")) {
-          toast({
-            title: "Compte existant",
-            description: "Le compte admin existe déjà. Utilisez les identifiants fournis pour vous connecter.",
-          });
-          return;
-        }
-        throw signUpError;
+      if (signUpError) throw signUpError;
+
+      if (!signUpData.user) {
+        throw new Error("Échec de la création du compte");
       }
 
-      // Then, create the admin user record
+      // Create the admin user record
       const { error: adminError } = await supabase
         .from('admin_users')
         .insert([{ email: adminEmail }]);
 
       if (adminError) {
+        console.error("Admin creation error:", adminError);
         if (adminError.code === '23505') { // Unique violation
           toast({
             title: "Compte existant",
@@ -58,7 +68,7 @@ const AdminLogin = () => {
         description: "Le compte admin a été créé avec succès. Vous pouvez maintenant vous connecter.",
       });
     } catch (error: any) {
-      console.error("Error:", error);
+      console.error("Signup error:", error);
       toast({
         title: "Erreur",
         description: error.message || "Erreur lors de la création du compte admin",
@@ -74,12 +84,17 @@ const AdminLogin = () => {
     setIsLoading(true);
 
     try {
+      console.log("Attempting login with:", { email, password });
+      
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        console.error("Auth error:", authError);
+        throw authError;
+      }
 
       if (authData.session) {
         const { data: adminData, error: adminError } = await supabase
@@ -88,7 +103,10 @@ const AdminLogin = () => {
           .eq('email', email)
           .maybeSingle();
 
-        if (adminError) throw adminError;
+        if (adminError) {
+          console.error("Admin check error:", adminError);
+          throw adminError;
+        }
 
         if (!adminData) {
           throw new Error("Accès non autorisé");
