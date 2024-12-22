@@ -8,7 +8,7 @@ export const HeroTitle = () => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="text-center space-y-4 sm:space-y-6 md:space-y-8 w-full max-w-4xl mx-auto px-4"
+      className="text-center space-y-2 sm:space-y-3 md:space-y-4 w-full max-w-4xl mx-auto px-4"
     >
       <motion.div
         animate={{ rotate: [-5, 5] }}
@@ -18,7 +18,7 @@ export const HeroTitle = () => {
           repeatType: "reverse",
           ease: "easeInOut"
         }}
-        className="relative w-fit mx-auto mb-4"
+        className="relative w-fit mx-auto mb-2"
       >
         <Crown 
           className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-24 lg:h-24" 
