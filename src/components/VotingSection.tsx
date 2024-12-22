@@ -36,13 +36,20 @@ export const VotingSection = ({
         toast({
           title: "Astuce de navigation",
           description: (
-            <div className="flex items-center gap-2">
-              <ChevronLeft className="h-5 w-5" />
-              Swipez pour naviguer entre les catégories
-              <ChevronRight className="h-5 w-5" />
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex items-center gap-2">
+                <ChevronLeft className="h-5 w-5" />
+                Swipez pour naviguer entre les catégories
+                <ChevronRight className="h-5 w-5" />
+              </div>
+              <img 
+                src="/lovable-uploads/00aed11f-877a-4ced-8498-a3a4b88a732d.png" 
+                alt="Geste de swipe"
+                className="w-24 h-24 object-contain"
+              />
             </div>
           ),
-          duration: 5000,
+          duration: 7000,
         });
         localStorage.setItem("hasSeenSwipeHint", "true");
       }
