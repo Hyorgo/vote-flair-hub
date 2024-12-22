@@ -38,47 +38,77 @@ export const HeroTitle = () => {
         transition={{ delay: 0.3, duration: 0.5 }}
         className="relative py-8"
       >
-        {/* Effet de bokeh/brillance en arrière-plan */}
+        {/* Particules festives */}
         <div className="absolute inset-0 overflow-hidden">
-          {[...Array(5)].map((_, i) => (
-            <div
+          {[...Array(12)].map((_, i) => (
+            <motion.div
               key={i}
-              className={`absolute w-24 h-24 rounded-full bg-gradient-to-r 
-                from-purple-500/30 via-pink-500/30 to-yellow-500/30 
-                blur-xl animate-float`}
+              className="absolute w-3 h-3 rounded-full bg-gradient-to-r from-yellow-300 via-pink-500 to-purple-500"
+              animate={{
+                scale: [1, 1.5, 1],
+                opacity: [0.7, 1, 0.7],
+                x: [0, Math.sin(i) * 100, 0],
+                y: [0, Math.cos(i) * 100, 0],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                delay: i * 0.2,
+                ease: "easeInOut",
+              }}
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${i * 0.5}s`
+                left: `${50 + Math.cos(i) * 30}%`,
+                top: `${50 + Math.sin(i) * 30}%`,
               }}
             />
           ))}
         </div>
 
-        {/* Effet de halo lumineux */}
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-yellow-500/10 blur-2xl rounded-full" />
+        {/* Halo lumineux pulsant */}
+        <motion.div 
+          className="absolute inset-0 bg-gradient-to-r from-yellow-500/20 via-pink-500/20 to-purple-500/20 rounded-full blur-2xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.7, 0.3],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
         
-        {/* Le chiffre 2025 */}
+        {/* Le chiffre 2025 avec animation de battement */}
         <motion.h2 
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-9xl font-extrabold relative"
           animate={{ 
-            scale: [1, 1.02, 1],
-            rotate: [-1, 1, -1]
+            scale: [1, 1.1, 1],
+            y: [0, -10, 0],
           }}
           transition={{ 
-            duration: 4, 
+            duration: 1.5, 
             repeat: Infinity,
             ease: "easeInOut"
           }}
         >
           <span className="relative inline-block">
-            {/* Effet de reflet/brillance */}
-            <span className="absolute inset-0 bg-gradient-to-tr from-white/40 to-transparent blur-sm" />
+            {/* Effet de brillance */}
+            <motion.span 
+              className="absolute inset-0 bg-gradient-to-tr from-white/60 to-transparent blur-sm"
+              animate={{
+                opacity: [0.4, 0.8, 0.4],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
             
             {/* Texte principal avec dégradé animé */}
             <span className="relative bg-gradient-to-r from-[#FFD700] via-[#FFF] to-[#FFD700] 
               bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto]
-              motion-safe:hover:animate-party">
+              motion-safe:hover:animate-heart-beat">
               2025
             </span>
           </span>
