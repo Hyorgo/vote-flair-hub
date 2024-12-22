@@ -9,68 +9,53 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   try {
     console.log("Vérification du compte administrateur pour:", adminEmail);
     
-    // 1. Vérifier si l'utilisateur existe déjà dans admin_users
-    const { data: existingAdmin, error: adminCheckError } = await supabase
+    // 1. Tenter d'insérer directement dans admin_users
+    const { error: insertError } = await supabase
       .from('admin_users')
-      .select('email')
-      .eq('email', adminEmail)
-      .maybeSingle();
+      .insert([{ email: adminEmail }]);
 
-    if (adminCheckError) {
-      throw adminCheckError;
+    // Si l'erreur n'est pas un doublon, c'est une vraie erreur
+    if (insertError && insertError.code !== '23505') {
+      throw insertError;
     }
 
-    // 2. Si l'admin n'existe pas dans admin_users, on le crée
-    if (!existingAdmin) {
-      const { error: insertError } = await supabase
-        .from('admin_users')
-        .insert([{ email: adminEmail }]);
-
-      if (insertError) {
-        if (insertError.code === "23505") {
-          console.log("L'admin existe déjà dans la table admin_users");
-        } else {
-          throw insertError;
-        }
-      }
-    }
-
-    // 3. Vérifier/Créer le compte dans Auth
-    const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
+    // 2. Tenter de se connecter d'abord (au cas où le compte existe déjà)
+    const { error: signInError } = await supabase.auth.signInWithPassword({
       email: adminEmail,
       password: adminPassword,
     });
 
-    if (signInError) {
-      // Si la connexion échoue, on essaie de créer le compte
-      const { error: signUpError } = await supabase.auth.signUp({
-        email: adminEmail,
-        password: adminPassword,
-      });
-
-      if (signUpError) {
-        if (signUpError.message === "User already registered") {
-          toast({
-            title: "Erreur de connexion",
-            description: "Le compte existe mais le mot de passe est incorrect.",
-            variant: "destructive",
-          });
-        } else {
-          throw signUpError;
-        }
-        return;
-      }
-
-      toast({
-        title: "Compte créé",
-        description: "Le compte administrateur a été créé avec succès. Vous pouvez maintenant vous connecter.",
-      });
-    } else {
+    if (!signInError) {
       toast({
         title: "Compte vérifié",
         description: "Le compte administrateur est prêt. Vous pouvez vous connecter.",
       });
+      return;
     }
+
+    // 3. Si la connexion échoue, essayer de créer le compte
+    const { error: signUpError } = await supabase.auth.signUp({
+      email: adminEmail,
+      password: adminPassword,
+    });
+
+    if (signUpError) {
+      if (signUpError.message === "User already registered") {
+        toast({
+          title: "Erreur de connexion",
+          description: "Le compte existe mais le mot de passe est incorrect.",
+          variant: "destructive",
+        });
+      } else {
+        throw signUpError;
+      }
+      return;
+    }
+
+    toast({
+      title: "Compte créé",
+      description: "Le compte administrateur a été créé avec succès. Vous pouvez maintenant vous connecter.",
+    });
 
   } catch (error: any) {
     console.error("Erreur de création du compte admin:", error);
