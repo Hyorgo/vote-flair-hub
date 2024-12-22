@@ -7,7 +7,7 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "Gregolimano009";
 
   try {
-    console.log("Vérification du compte admin pour:", adminEmail);
+    console.log("Vérification du compte administrateur pour:", adminEmail);
     
     // 1. Vérifier si l'utilisateur existe déjà dans admin_users
     const { data: existingAdmin, error: adminCheckError } = await supabase
@@ -29,28 +29,7 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
       return;
     }
 
-    // 2. Vérifier si l'utilisateur existe dans Auth
-    const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
-      email: adminEmail,
-      password: adminPassword,
-    });
-
-    if (!signInError && user) {
-      // L'utilisateur existe déjà dans Auth, créer juste l'entrée admin_users
-      console.log("L'utilisateur existe dans Auth, création de l'entrée admin");
-    } else {
-      // L'utilisateur n'existe pas dans Auth, le créer
-      const { error: signUpError } = await supabase.auth.signUp({
-        email: adminEmail,
-        password: adminPassword,
-      });
-
-      if (signUpError) {
-        throw signUpError;
-      }
-    }
-
-    // 3. Créer l'entrée dans admin_users
+    // 2. Créer l'entrée dans admin_users d'abord
     const { error: insertError } = await supabase
       .from('admin_users')
       .insert([{ email: adminEmail }]);
@@ -60,6 +39,25 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
       throw insertError;
     }
 
+    // 3. Vérifier si l'utilisateur existe déjà dans Auth
+    const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
+      email: adminEmail,
+      password: adminPassword,
+    });
+
+    if (signInError) {
+      // Si l'utilisateur n'existe pas dans Auth, le créer
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: adminEmail,
+        password: adminPassword,
+      });
+
+      if (signUpError) {
+        console.error("Erreur lors de la création du compte:", signUpError);
+        throw signUpError;
+      }
+    }
+
     toast({
       title: "Compte créé",
       description: "Le compte administrateur a été créé avec succès. Vous pouvez maintenant vous connecter.",
@@ -67,9 +65,20 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
 
   } catch (error: any) {
     console.error("Erreur de création du compte admin:", error);
+    
+    // Supprimer l'entrée admin_users si la création du compte auth a échoué
+    if (error.message !== "User already registered") {
+      await supabase
+        .from('admin_users')
+        .delete()
+        .eq('email', adminEmail);
+    }
+    
     toast({
       title: "Erreur",
-      description: error.message || "Erreur lors de la création du compte admin",
+      description: error.message === "User already registered" 
+        ? "Le compte existe déjà. Veuillez vous connecter."
+        : "Erreur lors de la création du compte admin. Veuillez réessayer.",
       variant: "destructive",
     });
   } finally {
