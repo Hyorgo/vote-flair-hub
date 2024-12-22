@@ -1,17 +1,13 @@
 import React from "react";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CategoryRow } from "./CategoryRow";
+import { Nominee } from "@/types/airtable";
 
 interface Category {
   id: string;
   name: string;
   nominees: number;
-  nomineesList?: Array<{
-    id: string;
-    name: string;
-    description: string;
-    imageUrl?: string;
-  }>;
+  nomineesList?: Nominee[];
 }
 
 interface CategoriesListProps {
