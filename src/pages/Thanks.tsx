@@ -17,16 +17,13 @@ const Thanks = () => {
   const shareUrl = encodeURIComponent(window.location.origin);
 
   useEffect(() => {
-    // Afficher le toast de confirmation
     toast({
       title: "Vote enregistré !",
       description: "Merci de votre participation aux Lyon d'Or.",
       duration: 5000,
     });
 
-    // Mettre à jour le titre de la page
     document.title = PAGE_TITLE;
-
     return () => {
       document.title = DEFAULT_TITLE;
     };
@@ -34,11 +31,11 @@ const Thanks = () => {
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 text-center mt-16 md:mt-24 animate-fade-in">
+      <div className="max-w-4xl mx-auto px-4 py-6 md:py-12 text-center mt-8 md:mt-24 animate-fade-in">
         <ConfettiEffect />
         <ThankYouTitle />
         
-        <p className="text-xl mb-12 text-gray-200 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-lg md:text-xl mb-8 md:mb-12 text-gray-200 max-w-2xl mx-auto leading-relaxed px-4">
           Votre vote a bien été pris en compte. Partagez votre participation et invitez vos amis à voter !
         </p>
 
@@ -49,7 +46,7 @@ const Thanks = () => {
 
         <Button
           onClick={() => navigate("/")}
-          className="group relative px-6 py-3 rounded-lg shadow-sm transition-all duration-300 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white hover:shadow-lg hover:scale-102 focus:ring-2 focus:ring-offset-2 focus:ring-[#DAA520] focus:outline-none"
+          className="w-full sm:w-auto group relative px-6 py-3 rounded-lg shadow-sm transition-all duration-300 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white hover:shadow-lg hover:scale-102 focus:ring-2 focus:ring-offset-2 focus:ring-[#DAA520] focus:outline-none"
           aria-label="Retourner à la page d'accueil"
         >
           Retour à l'accueil
