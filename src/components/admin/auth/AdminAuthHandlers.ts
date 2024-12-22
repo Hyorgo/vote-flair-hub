@@ -9,7 +9,33 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   try {
     console.log("Attempting to create admin account for:", adminEmail);
     
-    // Check if admin exists in admin_users table first
+    // First check if user exists in auth
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+      email: adminEmail,
+      password: adminPassword,
+    });
+
+    // If sign in succeeds, user exists and password is correct
+    if (!signInError) {
+      console.log("User exists and credentials are valid");
+    } else {
+      console.log("Sign in failed, checking if user exists:", signInError);
+      
+      // Try to sign up only if user doesn't exist
+      if (signInError.message === "Invalid login credentials") {
+        const { error: signUpError } = await supabase.auth.signUp({
+          email: adminEmail,
+          password: adminPassword,
+        });
+
+        if (signUpError && signUpError.message !== "User already registered") {
+          console.error("Sign up error:", signUpError);
+          throw signUpError;
+        }
+      }
+    }
+
+    // Now handle admin_users table
     const { data: existingAdmin, error: checkError } = await supabase
       .from('admin_users')
       .select('email')
@@ -22,20 +48,6 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
     }
 
     if (!existingAdmin) {
-      // Try to sign up since admin doesn't exist in our table
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: adminEmail,
-        password: adminPassword,
-      });
-
-      if (signUpError) {
-        // If user exists in auth but not in admin_users, that's okay
-        if (signUpError.message !== "User already registered") {
-          console.error("Sign up error:", signUpError);
-          throw signUpError;
-        }
-      }
-
       // Insert into admin_users table
       const { error: insertError } = await supabase
         .from('admin_users')
