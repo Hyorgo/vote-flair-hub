@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -7,7 +8,14 @@ interface SocialShareButtonsProps {
   shareUrl: string;
 }
 
-export const SocialShareButtons = ({ shareMessage, shareUrl }: SocialShareButtonsProps) => {
+interface SocialButton {
+  platform: string;
+  label: string;
+  icon: typeof Facebook;
+  delay: string;
+}
+
+export const SocialShareButtons = memo(({ shareMessage, shareUrl }: SocialShareButtonsProps) => {
   const { toast } = useToast();
 
   const handleShare = (platform: string) => {
@@ -38,7 +46,7 @@ export const SocialShareButtons = ({ shareMessage, shareUrl }: SocialShareButton
     }
   };
 
-  const buttons = [
+  const buttons: SocialButton[] = [
     { platform: "facebook", label: "Facebook", icon: Facebook, delay: "0" },
     { platform: "twitter", label: "Twitter", icon: Twitter, delay: "100" },
     { platform: "linkedin", label: "LinkedIn", icon: Linkedin, delay: "200" },
@@ -62,4 +70,6 @@ export const SocialShareButtons = ({ shareMessage, shareUrl }: SocialShareButton
       ))}
     </div>
   );
-};
+});
+
+SocialShareButtons.displayName = "SocialShareButtons";

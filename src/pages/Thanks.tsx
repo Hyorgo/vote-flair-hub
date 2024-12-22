@@ -1,20 +1,23 @@
-import { Layout } from "@/components/Layout";
-import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { Layout } from "@/components/Layout";
 import { SocialShareButtons } from "@/components/thanks/SocialShareButtons";
 import { ThankYouTitle } from "@/components/thanks/ThankYouTitle";
 import { ConfettiEffect } from "@/components/thanks/ConfettiEffect";
-import { useEffect } from "react";
-import { useToast } from "@/components/ui/use-toast";
+
+const SHARE_MESSAGE = encodeURIComponent("Je viens de voter pour les Lyon d'Or ! 🏆 Votez vous aussi pour vos nominés préférés !");
+const PAGE_TITLE = "Merci de votre vote ! | Lyon d'Or";
+const DEFAULT_TITLE = "Lyon d'Or";
 
 const Thanks = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const shareMessage = encodeURIComponent("Je viens de voter pour les Lyon d'Or ! 🏆 Votez vous aussi pour vos nominés préférés !");
   const shareUrl = encodeURIComponent(window.location.origin);
 
   useEffect(() => {
-    // Afficher un toast de confirmation
+    // Afficher le toast de confirmation
     toast({
       title: "Vote enregistré !",
       description: "Merci de votre participation aux Lyon d'Or.",
@@ -22,11 +25,10 @@ const Thanks = () => {
     });
 
     // Mettre à jour le titre de la page
-    document.title = "Merci de votre vote ! | Lyon d'Or";
+    document.title = PAGE_TITLE;
 
-    // Nettoyer lors du démontage
     return () => {
-      document.title = "Lyon d'Or";
+      document.title = DEFAULT_TITLE;
     };
   }, [toast]);
 
@@ -40,7 +42,10 @@ const Thanks = () => {
           Votre vote a bien été pris en compte. Partagez votre participation et invitez vos amis à voter !
         </p>
 
-        <SocialShareButtons shareMessage={shareMessage} shareUrl={shareUrl} />
+        <SocialShareButtons 
+          shareMessage={SHARE_MESSAGE} 
+          shareUrl={shareUrl} 
+        />
 
         <Button
           onClick={() => navigate("/")}

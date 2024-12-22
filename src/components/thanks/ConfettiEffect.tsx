@@ -1,11 +1,25 @@
 import { useEffect, useCallback } from "react";
 import confetti from "canvas-confetti";
 
+interface ConfettiDefaults {
+  startVelocity: number;
+  spread: number;
+  ticks: number;
+  zIndex: number;
+  particleCount: number;
+  origin: { y: number };
+  gravity: number;
+  scalar: number;
+  disableForReducedMotion: boolean;
+  colors: string[];
+}
+
 export const ConfettiEffect = () => {
   const createConfetti = useCallback(() => {
-    const duration = 600; // Reduced from 800 to 600ms
+    const duration = 600;
     const animationEnd = Date.now() + duration;
-    const defaults = { 
+    
+    const defaults: ConfettiDefaults = { 
       startVelocity: 30,
       spread: 360,
       ticks: 50,
@@ -18,31 +32,27 @@ export const ConfettiEffect = () => {
       colors: ['#FFD700', '#FEC6A1', '#F97316', '#B8860B', '#FF69B4', '#4B0082']
     };
 
-    const randomInRange = (min: number, max: number) => {
+    const randomInRange = (min: number, max: number): number => {
       return Math.random() * (max - min) + min;
+    };
+
+    const launchConfettiFromPosition = (x: number) => {
+      confetti({
+        ...defaults,
+        origin: { x, y: 0 }
+      });
     };
 
     let frame: number;
     const animate = () => {
       const timeLeft = animationEnd - Date.now();
 
-      if (timeLeft <= 0) {
-        return;
-      }
+      if (timeLeft <= 0) return;
 
-      // Launch confetti from multiple points across the top of the screen
-      confetti({
-        ...defaults,
-        origin: { x: randomInRange(0.1, 0.3), y: 0 }
-      });
-      confetti({
-        ...defaults,
-        origin: { x: randomInRange(0.4, 0.6), y: 0 }
-      });
-      confetti({
-        ...defaults,
-        origin: { x: randomInRange(0.7, 0.9), y: 0 }
-      });
+      // Launch confetti from three positions across the top
+      launchConfettiFromPosition(randomInRange(0.1, 0.3));
+      launchConfettiFromPosition(randomInRange(0.4, 0.6));
+      launchConfettiFromPosition(randomInRange(0.7, 0.9));
 
       frame = requestAnimationFrame(animate);
     };

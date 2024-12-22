@@ -1,6 +1,7 @@
 import { Heart } from "lucide-react";
+import { memo } from "react";
 
-export const ThankYouTitle = () => {
+export const ThankYouTitle = memo(() => {
   return (
     <div className="flex flex-col items-center gap-6 mb-12">
       <Heart 
@@ -14,4 +15,6 @@ export const ThankYouTitle = () => {
       </h1>
     </div>
   );
-};
+});
+
+ThankYouTitle.displayName = "ThankYouTitle";
