@@ -34,28 +34,52 @@ export const VotingSection = ({
       const hasSeenSwipeHint = localStorage.getItem("hasSeenSwipeHint");
       if (!hasSeenSwipeHint) {
         toast({
-          title: "Astuce de navigation",
+          title: "Navigation intuitive",
           description: (
-            <div className="flex flex-col items-center gap-4">
-              <div className="flex items-center gap-2">
-                <ChevronLeft className="h-5 w-5 animate-bounce-light" />
-                Swipez pour naviguer
-                <ChevronRight className="h-5 w-5 animate-bounce-light" />
+            <div className="relative flex flex-col items-center gap-6 py-2">
+              {/* Fond décoratif avec effet de flou */}
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 blur-xl" />
+              
+              {/* Contenu principal */}
+              <div className="relative flex flex-col items-center gap-4">
+                {/* Texte avec animation de fade */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-center font-medium text-gray-800"
+                >
+                  Swipez pour découvrir les catégories
+                </motion.div>
+                
+                {/* Conteneur des flèches et de la barre de swipe */}
+                <div className="flex items-center gap-4">
+                  <ChevronLeft className="h-6 w-6 text-primary animate-pulse" />
+                  
+                  {/* Barre de swipe avec animation */}
+                  <motion.div
+                    className="relative w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden"
+                  >
+                    <motion.div
+                      className="absolute inset-y-0 w-8 bg-primary rounded-full"
+                      animate={{
+                        x: [-48, 48, -48],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  </motion.div>
+                  
+                  <ChevronRight className="h-6 w-6 text-primary animate-pulse" />
+                </div>
               </div>
-              <motion.div
-                animate={{
-                  x: [0, 50, -50, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: 2,
-                  ease: "easeInOut",
-                }}
-                className="w-16 h-1 bg-primary rounded-full"
-              />
             </div>
           ),
           duration: 5000,
+          className: "bg-white/95 backdrop-blur-sm border border-gray-100 shadow-xl",
         });
         localStorage.setItem("hasSeenSwipeHint", "true");
       }
