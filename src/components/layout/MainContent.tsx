@@ -6,7 +6,7 @@ interface MainContentProps {
 
 export const MainContent = ({ children }: MainContentProps) => {
   return (
-    <main className="flex-1 overflow-auto">
+    <main className="flex-1 w-full overflow-auto">
       {children}
     </main>
   );
