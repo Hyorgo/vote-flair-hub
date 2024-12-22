@@ -13,7 +13,7 @@ export const CategoryCharts = ({ votesByCategory }: CategoryChartsProps) => (
         <CardHeader>
           <CardTitle>{category}</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="bg-white rounded-lg">
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={nominees}>
