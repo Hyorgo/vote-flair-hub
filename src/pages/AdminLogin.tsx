@@ -14,7 +14,8 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // Empêcher la soumission du formulaire
     setIsLoading(true);
 
     try {
