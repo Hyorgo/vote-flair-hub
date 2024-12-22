@@ -10,7 +10,7 @@ export const ServicesSection = () => {
           { label: "Création de site web", href: "https://ideai.fr/creation-de-site-internet" },
           { label: "Référencement naturel", href: "https://ideai.fr/referencement-naturel" },
           { label: "Intelligence artificielle", href: "#" },
-          { label: "Applications mobiles", href: "#" },
+          { label: "SEO Local", href: "https://ideai.fr/seo-local" },
         ].map((service, index) => (
           <motion.li key={index} whileHover={{ x: 5 }}>
             <a
