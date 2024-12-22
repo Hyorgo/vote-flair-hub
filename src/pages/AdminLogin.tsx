@@ -121,7 +121,9 @@ const AdminLogin = () => {
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-4 w-4" aria-hidden="true" />
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                  <Mail className="h-4 w-4" />
+                </span>
                 <Input
                   id="email"
                   type="email"
@@ -131,7 +133,6 @@ const AdminLogin = () => {
                   required
                   className="pl-10"
                   autoComplete="email"
-                  aria-label="Adresse email"
                 />
               </div>
             </div>
@@ -140,7 +141,9 @@ const AdminLogin = () => {
                 Mot de passe
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-4 w-4" aria-hidden="true" />
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                  <Lock className="h-4 w-4" />
+                </span>
                 <Input
                   id="password"
                   type="password"
@@ -150,30 +153,31 @@ const AdminLogin = () => {
                   required
                   className="pl-10"
                   autoComplete="current-password"
-                  aria-label="Mot de passe"
                 />
               </div>
             </div>
             <div className="space-y-4 pt-6">
               <Button
                 type="submit"
-                className="w-full h-12 text-base font-medium"
+                className="w-full h-12 text-base font-medium flex items-center justify-center"
                 disabled={isLoading}
-                aria-label={isLoading ? "Connexion en cours..." : "Se connecter"}
               >
-                <LogIn className="mr-2 h-5 w-5" aria-hidden="true" />
-                {isLoading ? "Connexion..." : "Se connecter"}
+                <span className="flex items-center">
+                  <LogIn className="h-5 w-5 mr-2" />
+                  {isLoading ? "Connexion..." : "Se connecter"}
+                </span>
               </Button>
               <Button
                 type="button"
                 variant="outline"
-                className="w-full h-12 text-base font-medium"
+                className="w-full h-12 text-base font-medium flex items-center justify-center"
                 onClick={handleSignUp}
                 disabled={isLoading}
-                aria-label="Créer le compte administrateur"
               >
-                <UserPlus className="mr-2 h-5 w-5" aria-hidden="true" />
-                Créer le compte admin
+                <span className="flex items-center">
+                  <UserPlus className="h-5 w-5 mr-2" />
+                  Créer le compte admin
+                </span>
               </Button>
             </div>
           </form>
