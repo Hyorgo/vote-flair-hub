@@ -18,25 +18,44 @@ const AdminLogin = () => {
     setIsLoading(true);
 
     try {
+      const { data: existingUser, error: checkError } = await supabase
+        .from('admin_users')
+        .select('email')
+        .eq('email', 'g.sauvat@ideai.fr')
+        .single();
+
+      if (existingUser) {
+        toast({
+          title: "Compte existant",
+          description: "Le compte admin existe déjà, vous pouvez vous connecter",
+        });
+        setIsLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase.auth.signUp({
         email: "g.sauvat@ideai.fr",
         password: "admin123",
       });
 
-      if (error) {
-        console.error("Signup error:", error);
-        throw error;
-      }
+      if (error) throw error;
+
+      // Créer l'entrée dans la table admin_users
+      const { error: adminError } = await supabase
+        .from('admin_users')
+        .insert([{ email: 'g.sauvat@ideai.fr' }]);
+
+      if (adminError) throw adminError;
 
       toast({
         title: "Compte créé",
-        description: "Le compte admin a été créé avec succès",
+        description: "Le compte admin a été créé avec succès. Vous pouvez maintenant vous connecter.",
       });
     } catch (error) {
       console.error("Error:", error);
       toast({
         title: "Erreur",
-        description: "Erreur lors de la création du compte",
+        description: "Erreur lors de la création du compte admin",
         variant: "destructive",
       });
     } finally {
@@ -54,10 +73,7 @@ const AdminLogin = () => {
         password,
       });
 
-      if (authError) {
-        console.error("Auth error:", authError);
-        throw authError;
-      }
+      if (authError) throw authError;
 
       if (authData.session) {
         const { data: adminData, error: adminError } = await supabase
