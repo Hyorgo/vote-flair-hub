@@ -7,7 +7,28 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "admin123";
 
   try {
-    // First create the auth user
+    // First check if admin user already exists
+    const { data: existingAdmin, error: checkError } = await supabase
+      .from('admin_users')
+      .select('email')
+      .eq('email', adminEmail)
+      .single();
+
+    if (checkError && checkError.code !== 'PGRST116') { // PGRST116 means no rows returned
+      console.error("Error checking admin existence:", checkError);
+      throw checkError;
+    }
+
+    if (existingAdmin) {
+      toast({
+        title: "Compte existant",
+        description: "Le compte admin existe déjà. Utilisez les identifiants fournis pour vous connecter.",
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    // Create auth user if admin doesn't exist
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: adminEmail,
       password: adminPassword,
@@ -22,20 +43,13 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
       throw new Error("Failed to create admin account");
     }
 
-    // Then create the admin user record
+    // Create admin user record
     const { error: adminError } = await supabase
       .from('admin_users')
       .insert([{ email: adminEmail }]);
 
     if (adminError) {
       console.error("Admin creation error:", adminError);
-      if (adminError.code === '23505') { // Unique violation
-        toast({
-          title: "Compte existant",
-          description: "Le compte admin existe déjà. Utilisez les identifiants fournis pour vous connecter.",
-        });
-        return;
-      }
       throw adminError;
     }
 
@@ -84,7 +98,7 @@ export const handleAdminLogin = async (
       .from('admin_users')
       .select('email')
       .eq('email', email)
-      .maybeSingle();
+      .single();
 
     if (adminError) {
       console.error("Admin check error:", adminError);
