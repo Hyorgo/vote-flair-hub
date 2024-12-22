@@ -16,36 +16,42 @@ const AdminLogin = () => {
 
   const handleSignUp = async () => {
     setIsLoading(true);
+    const adminEmail = "g.sauvat@ideai.fr";
+    const adminPassword = "admin123";
 
     try {
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email: "g.sauvat@ideai.fr",
-        password: "admin123",
+      // First, try to sign up the admin user
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: adminEmail,
+        password: adminPassword,
       });
 
       if (signUpError) {
+        // If user already exists, that's fine, we'll just show a message
         if (signUpError.message.includes("User already registered")) {
           toast({
             title: "Compte existant",
-            description: "Le compte admin existe déjà, vous pouvez vous connecter",
+            description: "Le compte admin existe déjà. Utilisez les identifiants fournis pour vous connecter.",
           });
-          setIsLoading(false);
           return;
         }
         throw signUpError;
       }
 
-      const { error: adminError } = await supabase
-        .from('admin_users')
-        .insert([{ email: 'g.sauvat@ideai.fr' }]);
+      // If signup was successful, create the admin user record
+      if (signUpData.user) {
+        const { error: adminError } = await supabase
+          .from('admin_users')
+          .insert([{ email: adminEmail }]);
 
-      if (adminError) throw adminError;
+        if (adminError) throw adminError;
 
-      toast({
-        title: "Compte créé",
-        description: "Le compte admin a été créé avec succès. Vous pouvez maintenant vous connecter.",
-      });
-    } catch (error) {
+        toast({
+          title: "Compte créé",
+          description: "Le compte admin a été créé avec succès. Vous pouvez maintenant vous connecter.",
+        });
+      }
+    } catch (error: any) {
       console.error("Error:", error);
       toast({
         title: "Erreur",
@@ -88,7 +94,7 @@ const AdminLogin = () => {
         });
         navigate("/admin");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login error:", error);
       toast({
         title: "Erreur de connexion",
@@ -150,7 +156,7 @@ const AdminLogin = () => {
             <div className="space-y-4 pt-6">
               <Button
                 type="submit"
-                className="w-full h-12 text-base font-medium"
+                className="w-full"
                 disabled={isLoading}
               >
                 <LogIn className="h-5 w-5 mr-2" />
@@ -159,7 +165,7 @@ const AdminLogin = () => {
               <Button
                 type="button"
                 variant="outline"
-                className="w-full h-12 text-base font-medium"
+                className="w-full"
                 onClick={handleSignUp}
                 disabled={isLoading}
               >
