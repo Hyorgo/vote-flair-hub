@@ -10,6 +10,19 @@ import { Separator } from "@/components/ui/separator";
 import { DragEndEvent } from "@dnd-kit/core";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface CategoryWithNomineeCount extends Omit<Category, 'nominees'> {
   nominees: number;
@@ -25,6 +38,41 @@ export const CategoryManager = () => {
   const [newNomineeName, setNewNomineeName] = useState("");
   const [newNomineeDescription, setNewNomineeDescription] = useState("");
   const { toast } = useToast();
+
+  const handleDeleteAllCategories = async () => {
+    try {
+      // Supprimer d'abord tous les nominés (la suppression en cascade s'occupera des votes)
+      const { error: nomineesError } = await supabase
+        .from('nominees')
+        .delete()
+        .neq('id', ''); // Condition pour supprimer tous les enregistrements
+
+      if (nomineesError) throw nomineesError;
+
+      // Ensuite, supprimer toutes les catégories
+      const { error: categoriesError } = await supabase
+        .from('categories')
+        .delete()
+        .neq('id', ''); // Condition pour supprimer tous les enregistrements
+
+      if (categoriesError) throw categoriesError;
+
+      toast({
+        title: "Succès",
+        description: "Toutes les catégories et nominés ont été supprimés",
+      });
+
+      // Recharger la page pour mettre à jour l'interface
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting all categories:', error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la suppression",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleAddNominee = (categoryId: string) => {
     if (!newNomineeName.trim() || !newNomineeDescription.trim()) return;
@@ -62,7 +110,6 @@ export const CategoryManager = () => {
 
       if (error) throw error;
 
-      // Update the display order of the category that was moved over
       const { error: error2 } = await supabase
         .from('categories')
         .update({ display_order: activeCategory.display_order })
@@ -75,7 +122,6 @@ export const CategoryManager = () => {
         description: "L'ordre des catégories a été mis à jour",
       });
 
-      // Refresh the categories list
       window.location.reload();
     } catch (error) {
       console.error('Error updating category order:', error);
@@ -102,6 +148,33 @@ export const CategoryManager = () => {
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Gestion des catégories</h2>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive" className="flex items-center gap-2">
+              <Trash2 className="h-4 w-4" />
+              Tout supprimer
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Cette action supprimera définitivement toutes les catégories et leurs nominés associés.
+                Cette action est irréversible.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteAllCategories} className="bg-red-500 hover:bg-red-600">
+                Supprimer tout
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-medium mb-4">Ajouter une catégorie</h3>
