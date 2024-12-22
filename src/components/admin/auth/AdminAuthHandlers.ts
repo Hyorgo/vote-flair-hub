@@ -9,65 +9,76 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   try {
     console.log("Tentative de création du compte admin pour:", adminEmail);
     
-    // Vérifier d'abord si l'utilisateur existe dans la table admin_users
+    // 1. Vérifier d'abord si l'utilisateur existe dans admin_users
     const { data: existingAdmin, error: checkError } = await supabase
       .from('admin_users')
       .select('email')
       .eq('email', adminEmail)
-      .maybeSingle();
+      .single();
 
-    if (checkError) {
+    if (checkError && checkError.code !== 'PGRST116') {
       console.error("Erreur lors de la vérification admin:", checkError);
       throw checkError;
     }
 
-    if (!existingAdmin) {
-      // Tenter de se connecter d'abord
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: adminEmail,
-        password: adminPassword,
-      });
-
-      // Si la connexion échoue, tenter l'inscription
-      if (signInError) {
-        console.log("Échec de la connexion, tentative d'inscription:", signInError);
-        const { error: signUpError } = await supabase.auth.signUp({
-          email: adminEmail,
-          password: adminPassword,
-        });
-
-        // Gérer l'erreur d'inscription sauf si l'utilisateur existe déjà
-        if (signUpError && signUpError.message !== "User already registered") {
-          console.error("Erreur d'inscription:", signUpError);
-          throw signUpError;
-        }
-      }
-
-      // Insérer dans la table admin_users
-      const { error: insertError } = await supabase
-        .from('admin_users')
-        .insert([{ email: adminEmail }]);
-
-      if (insertError) {
-        console.error("Erreur lors de l'insertion admin:", insertError);
-        throw insertError;
-      }
-
-      toast({
-        title: "Compte créé",
-        description: "Le compte administrateur a été créé avec succès. Vous pouvez maintenant vous connecter.",
-      });
-    } else {
+    if (existingAdmin) {
       toast({
         title: "Compte existant",
         description: "Le compte administrateur existe déjà. Vous pouvez vous connecter.",
       });
+      return;
     }
+
+    // 2. Vérifier si l'utilisateur existe dans Auth
+    const { data: authUser, error: signInError } = await supabase.auth.signInWithPassword({
+      email: adminEmail,
+      password: adminPassword,
+    });
+
+    if (signInError && signInError.message !== "Invalid login credentials") {
+      console.error("Erreur de connexion inattendue:", signInError);
+      throw signInError;
+    }
+
+    if (!authUser?.user) {
+      // 3. Si l'utilisateur n'existe pas dans Auth, le créer
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: adminEmail,
+        password: adminPassword,
+      });
+
+      if (signUpError) {
+        console.error("Erreur d'inscription:", signUpError);
+        throw signUpError;
+      }
+
+      if (!signUpData.user) {
+        throw new Error("Échec de la création du compte");
+      }
+    }
+
+    // 4. Créer l'entrée dans admin_users
+    const { error: insertError } = await supabase
+      .from('admin_users')
+      .insert([{ email: adminEmail }]);
+
+    if (insertError) {
+      console.error("Erreur lors de l'insertion admin:", insertError);
+      throw insertError;
+    }
+
+    toast({
+      title: "Compte créé",
+      description: "Le compte administrateur a été créé avec succès. Vous pouvez maintenant vous connecter.",
+    });
+
   } catch (error: any) {
     console.error("Erreur de création du compte admin:", error);
     toast({
       title: "Erreur",
-      description: error.message || "Erreur lors de la création du compte admin",
+      description: error.message === "User already registered" 
+        ? "Le compte existe déjà dans le système d'authentification"
+        : error.message || "Erreur lors de la création du compte admin",
       variant: "destructive",
     });
   } finally {
@@ -82,18 +93,18 @@ export const handleAdminLogin = async (
   navigate: (path: string) => void
 ) => {
   setIsLoading(true);
-  console.log("Attempting login for:", email);
+  console.log("Tentative de connexion pour:", email);
 
   try {
-    // First check if the email exists in admin_users
+    // 1. Vérifier si l'email existe dans admin_users
     const { data: adminData, error: adminError } = await supabase
       .from('admin_users')
       .select('email')
       .eq('email', email)
-      .maybeSingle();
+      .single();
 
-    if (adminError) {
-      console.error("Admin check error:", adminError);
+    if (adminError && adminError.code !== 'PGRST116') {
+      console.error("Erreur de vérification admin:", adminError);
       throw adminError;
     }
 
@@ -101,14 +112,14 @@ export const handleAdminLogin = async (
       throw new Error("Compte administrateur non trouvé");
     }
 
-    // Attempt login
+    // 2. Tenter la connexion
     const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (signInError) {
-      console.error("Login error:", signInError);
+      console.error("Erreur de connexion:", signInError);
       throw signInError;
     }
 
@@ -122,7 +133,7 @@ export const handleAdminLogin = async (
     });
     navigate("/admin");
   } catch (error: any) {
-    console.error("Login error:", error);
+    console.error("Erreur de connexion:", error);
     toast({
       title: "Erreur de connexion",
       description: error.message === "Invalid login credentials" 
