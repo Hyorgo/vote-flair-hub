@@ -7,25 +7,30 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "Gregolimano009";
 
   try {
-    // First try to sign in since the user might already exist
-    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+    console.log("Attempting to create admin account for:", adminEmail);
+    
+    // Try to sign up first
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: adminEmail,
       password: adminPassword,
     });
 
-    // If sign in fails with invalid credentials, try to create the user
-    if (signInError && signInError.message === "Invalid login credentials") {
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: adminEmail,
-        password: adminPassword,
-      });
+    if (signUpError) {
+      console.error("Sign up error:", signUpError);
+      // If user already exists, try to sign in
+      if (signUpError.message === "User already registered") {
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email: adminEmail,
+          password: adminPassword,
+        });
 
-      if (signUpError) {
+        if (signInError) {
+          console.error("Sign in error:", signInError);
+          throw signInError;
+        }
+      } else {
         throw signUpError;
       }
-    } else if (signInError) {
-      // If there's a different error during sign in, throw it
-      throw signInError;
     }
 
     // Check if admin exists in admin_users table
@@ -36,7 +41,7 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
       .maybeSingle();
 
     if (checkError) {
-      console.error("Erreur lors de la vérification admin:", checkError);
+      console.error("Error checking admin:", checkError);
       throw checkError;
     }
 
@@ -47,7 +52,7 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
         .insert([{ email: adminEmail }]);
 
       if (insertError) {
-        console.error("Erreur lors de l'insertion admin:", insertError);
+        console.error("Error inserting admin:", insertError);
         throw insertError;
       }
 
@@ -62,7 +67,7 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
       });
     }
   } catch (error: any) {
-    console.error("Erreur création compte admin:", error);
+    console.error("Admin account creation error:", error);
     toast({
       title: "Erreur",
       description: error.message || "Erreur lors de la création du compte admin",
@@ -80,10 +85,10 @@ export const handleAdminLogin = async (
   navigate: (path: string) => void
 ) => {
   setIsLoading(true);
-  console.log("Tentative de connexion avec:", { email });
+  console.log("Attempting login for:", email);
 
   try {
-    // Vérifier si l'utilisateur est un admin
+    // First check if the email exists in admin_users
     const { data: adminData, error: adminError } = await supabase
       .from('admin_users')
       .select('email')
@@ -91,7 +96,7 @@ export const handleAdminLogin = async (
       .maybeSingle();
 
     if (adminError) {
-      console.error("Erreur vérification admin:", adminError);
+      console.error("Admin check error:", adminError);
       throw adminError;
     }
 
@@ -99,14 +104,14 @@ export const handleAdminLogin = async (
       throw new Error("Compte administrateur non trouvé");
     }
 
-    // Tentative de connexion
+    // Attempt login
     const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (signInError) {
-      console.error("Erreur connexion:", signInError);
+      console.error("Login error:", signInError);
       throw signInError;
     }
 
@@ -120,7 +125,7 @@ export const handleAdminLogin = async (
     });
     navigate("/admin");
   } catch (error: any) {
-    console.error("Erreur de connexion:", error);
+    console.error("Login error:", error);
     toast({
       title: "Erreur de connexion",
       description: error.message === "Invalid login credentials" 
