@@ -23,9 +23,13 @@ export const useAdminAuth = () => {
           .from('admin_users')
           .select('email')
           .eq('email', session.user.email)
-          .single();
+          .maybeSingle();
 
-        if (error || !data) {
+        if (error) {
+          throw error;
+        }
+
+        if (!data) {
           toast({
             title: "Accès refusé",
             description: "Vous n'avez pas les droits d'administration nécessaires.",
