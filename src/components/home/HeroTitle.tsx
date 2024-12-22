@@ -8,7 +8,7 @@ export const HeroTitle = () => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="text-center space-y-4 sm:space-y-6 md:space-y-8 px-4 md:px-0 relative"
+      className="text-center space-y-4 sm:space-y-6 md:space-y-8 w-full max-w-4xl mx-auto px-4"
     >
       <motion.div
         animate={{ rotate: [-5, 5] }}
@@ -39,7 +39,7 @@ export const HeroTitle = () => {
         </span>
       </h1>
 
-      <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-white max-w-2xl mx-auto leading-relaxed font-medium px-4 sm:px-6">
+      <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-white mx-auto leading-relaxed font-medium">
         Célébrez l'excellence et participez à la reconnaissance des talents exceptionnels
       </p>
     </motion.div>

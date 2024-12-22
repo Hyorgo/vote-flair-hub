@@ -12,7 +12,7 @@ export const FeatureCard = ({ icon: Icon, title, description }: FeatureCardProps
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className="bg-white/80 backdrop-blur-sm p-4 sm:p-5 lg:p-6 rounded-2xl shadow-xl text-center transform transition-all duration-300 hover:shadow-2xl border border-primary/10 h-full"
+      className="bg-white/80 backdrop-blur-sm p-4 sm:p-5 lg:p-6 rounded-2xl shadow-xl text-center transform transition-all duration-300 hover:shadow-2xl border border-primary/10 h-full w-full"
     >
       <div className="relative mb-3 sm:mb-4">
         <div className="absolute inset-0 bg-primary/10 rounded-full blur-xl"></div>

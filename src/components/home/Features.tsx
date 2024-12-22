@@ -27,7 +27,7 @@ export const Features = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.3 }}
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 w-full px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl mx-auto px-4"
     >
       {features.map((feature, index) => (
         <motion.div 
@@ -35,6 +35,7 @@ export const Features = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: index * 0.2 }}
+          className="w-full"
         >
           <FeatureCard {...feature} />
         </motion.div>
