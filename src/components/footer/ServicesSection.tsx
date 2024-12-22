@@ -8,7 +8,7 @@ export const ServicesSection = () => {
       <ul className="space-y-3">
         {[
           { label: "Création de site web", href: "https://ideai.fr/creation-de-site-internet" },
-          { label: "Référencement naturel", href: "#" },
+          { label: "Référencement naturel", href: "https://ideai.fr/referencement-naturel" },
           { label: "Intelligence artificielle", href: "#" },
           { label: "Applications mobiles", href: "#" },
         ].map((service, index) => (
