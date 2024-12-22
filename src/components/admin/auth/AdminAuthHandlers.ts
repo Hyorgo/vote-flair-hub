@@ -7,6 +7,21 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "admin123";
 
   try {
+    // First check if admin record exists
+    const { data: existingAdmin } = await supabase
+      .from('admin_users')
+      .select('email')
+      .eq('email', adminEmail)
+      .single();
+
+    if (existingAdmin) {
+      toast({
+        title: "Compte existant",
+        description: "Le compte admin existe déjà. Vous pouvez vous connecter avec les identifiants fournis.",
+      });
+      return;
+    }
+
     // Try to create the auth user
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: adminEmail,
@@ -21,15 +36,12 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
       }
     }
 
-    // Try to create admin record
+    // Create admin record
     const { error: adminError } = await supabase
       .from('admin_users')
-      .insert([{ email: adminEmail }])
-      .select()
-      .single();
+      .insert([{ email: adminEmail }]);
 
-    // If error is not about duplicate entry, it's a real error
-    if (adminError && !adminError.message.includes('duplicate key')) {
+    if (adminError) {
       console.error("Admin creation error:", adminError);
       throw adminError;
     }
