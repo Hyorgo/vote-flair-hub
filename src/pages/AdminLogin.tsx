@@ -20,7 +20,7 @@ const AdminLogin = () => {
 
     try {
       const { data, error } = await supabase.auth.signUp({
-        email: "admin@example.com",
+        email: "admin@votingapp.com",
         password: "admin123",
       });
 
@@ -109,7 +109,7 @@ const AdminLogin = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@example.com"
+                  placeholder="admin@votingapp.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -144,11 +144,10 @@ const AdminLogin = () => {
               >
                 {isLoading ? "Connexion..." : "Se connecter"}
               </Button>
-              {/* Bouton temporaire pour créer le compte admin - À RETIRER APRÈS UTILISATION */}
               <Button
                 type="button"
                 variant="outline"
-                className="w-full relative z-50"
+                className="w-full"
                 onClick={handleSignUp}
                 disabled={isLoading}
               >
