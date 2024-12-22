@@ -7,43 +7,43 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "admin123";
 
   try {
-    // First check if admin record exists
+    // First try to sign in to check if auth user exists
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: adminEmail,
+      password: adminPassword,
+    });
+
+    // If sign in fails, create the auth user
+    if (signInError) {
+      console.log("User doesn't exist, creating new user...");
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: adminEmail,
+        password: adminPassword,
+      });
+
+      if (signUpError) {
+        console.error("Signup error:", signUpError);
+        throw signUpError;
+      }
+    }
+
+    // Check if admin record exists
     const { data: existingAdmin } = await supabase
       .from('admin_users')
       .select('email')
       .eq('email', adminEmail)
       .single();
 
-    if (existingAdmin) {
-      toast({
-        title: "Compte existant",
-        description: "Le compte admin existe déjà. Vous pouvez vous connecter avec les identifiants fournis.",
-      });
-      return;
-    }
+    if (!existingAdmin) {
+      // Create admin record if it doesn't exist
+      const { error: adminError } = await supabase
+        .from('admin_users')
+        .insert([{ email: adminEmail }]);
 
-    // Try to create the auth user
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email: adminEmail,
-      password: adminPassword,
-    });
-
-    if (signUpError) {
-      // If the error is not about existing user, it's a real error
-      if (!signUpError.message.includes("User already registered")) {
-        console.error("Signup error:", signUpError);
-        throw signUpError;
+      if (adminError) {
+        console.error("Admin creation error:", adminError);
+        throw adminError;
       }
-    }
-
-    // Create admin record
-    const { error: adminError } = await supabase
-      .from('admin_users')
-      .insert([{ email: adminEmail }]);
-
-    if (adminError) {
-      console.error("Admin creation error:", adminError);
-      throw adminError;
     }
 
     toast({
