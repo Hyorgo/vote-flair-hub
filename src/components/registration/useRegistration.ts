@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const DISPOSABLE_EMAIL_DOMAINS = ['tempmail.com', 'throwawaymail.com']; // Liste à enrichir
+
 export const useRegistration = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -11,9 +14,40 @@ export const useRegistration = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const validateEmail = (email: string): boolean => {
+    // Vérification du format de l'email
+    if (!EMAIL_REGEX.test(email)) {
+      toast({
+        title: "Format d'email invalide",
+        description: "Veuillez entrer une adresse email valide.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    // Vérification des domaines jetables
+    const domain = email.split('@')[1];
+    if (DISPOSABLE_EMAIL_DOMAINS.includes(domain)) {
+      toast({
+        title: "Email non autorisé",
+        description: "Les adresses email temporaires ne sont pas acceptées.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateEmail(email)) {
+      return;
+    }
+
     setIsSubmitting(true);
+    console.log("Tentative d'inscription avec l'email:", email);
 
     try {
       const { data: existingUser } = await supabase
@@ -31,7 +65,7 @@ export const useRegistration = () => {
         return;
       }
 
-      const { error } = await supabase.from("user_profiles").insert([
+      const { error: profileError } = await supabase.from("user_profiles").insert([
         {
           first_name: firstName,
           last_name: lastName,
@@ -39,14 +73,20 @@ export const useRegistration = () => {
         },
       ]);
 
-      if (error) throw error;
+      if (profileError) throw profileError;
 
-      await supabase.from("validated_emails").insert([{ email }]);
+      const { error: emailError } = await supabase.from("validated_emails").insert([
+        { email }
+      ]);
+
+      if (emailError) throw emailError;
 
       toast({
         title: "Inscription réussie !",
         description: "Vous allez être redirigé vers les catégories.",
       });
+
+      localStorage.setItem("userEmail", email);
 
       setTimeout(() => {
         navigate("/categories");
@@ -70,6 +110,10 @@ export const useRegistration = () => {
         description: "Veuillez entrer votre email pour continuer.",
         variant: "destructive",
       });
+      return;
+    }
+
+    if (!validateEmail(email)) {
       return;
     }
 
