@@ -31,26 +31,31 @@ const Thanks = () => {
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto px-4 py-6 md:py-12 text-center mt-8 md:mt-24 animate-fade-in">
+      <div className="w-full max-w-4xl mx-auto px-4 py-6 sm:py-8 md:py-12 text-center mt-4 sm:mt-8 md:mt-16 animate-fade-in">
         <ConfettiEffect />
         <ThankYouTitle />
         
-        <p className="text-lg md:text-xl mb-8 md:mb-12 text-gray-200 max-w-2xl mx-auto leading-relaxed px-4">
+        <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 md:mb-12 text-gray-200 max-w-2xl mx-auto leading-relaxed">
           Votre vote a bien été pris en compte. Partagez votre participation et invitez vos amis à voter !
         </p>
 
-        <SocialShareButtons 
-          shareMessage={SHARE_MESSAGE} 
-          shareUrl={shareUrl} 
-        />
+        <div className="space-y-6 sm:space-y-8">
+          <SocialShareButtons 
+            shareMessage={SHARE_MESSAGE} 
+            shareUrl={shareUrl} 
+          />
 
-        <Button
-          onClick={() => navigate("/")}
-          className="w-full sm:w-auto group relative px-6 py-3 rounded-lg shadow-sm transition-all duration-300 bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white hover:shadow-lg hover:scale-102 focus:ring-2 focus:ring-offset-2 focus:ring-[#DAA520] focus:outline-none"
-          aria-label="Retourner à la page d'accueil"
-        >
-          Retour à l'accueil
-        </Button>
+          <Button
+            onClick={() => navigate("/")}
+            className="w-full sm:w-auto group relative px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-sm transition-all duration-300 
+              bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] text-white 
+              hover:shadow-lg hover:scale-102 
+              focus:ring-2 focus:ring-offset-2 focus:ring-[#DAA520] focus:outline-none"
+            aria-label="Retourner à la page d'accueil"
+          >
+            Retour à l'accueil
+          </Button>
+        </div>
       </div>
     </Layout>
   );

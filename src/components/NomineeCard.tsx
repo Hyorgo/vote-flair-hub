@@ -26,7 +26,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
         scale: 1.03,
         transition: { duration: 0.2 }
       }}
-      className="relative h-full group"
+      className="relative h-full w-full group"
       role="article"
       aria-label={`Nominé : ${nominee.name}`}
     >
