@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -29,7 +30,7 @@ const AdminLogin = () => {
           .from('admin_users')
           .select('email')
           .eq('email', data.session.user.email)
-          .single();
+          .maybeSingle();
 
         if (adminError || !adminData) {
           throw new Error("Accès non autorisé");
@@ -54,45 +55,56 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
-        <div>
-          <h2 className="text-center text-3xl font-bold">Administration</h2>
-          <p className="mt-2 text-center text-gray-600">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-2">
+          <CardTitle className="text-2xl text-center">Administration</CardTitle>
+          <p className="text-center text-muted-foreground">
             Connectez-vous pour accéder à l'interface d'administration
           </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-          <div className="space-y-4">
-            <div>
+        </CardHeader>
+        <CardContent>
+          <form className="space-y-4" onSubmit={handleLogin}>
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-sm font-medium">
+                Email
+              </label>
               <Input
+                id="email"
                 type="email"
-                required
-                placeholder="Email"
+                placeholder="admin@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+                className="w-full"
               />
             </div>
-            <div>
+            <div className="space-y-2">
+              <label htmlFor="password" className="text-sm font-medium">
+                Mot de passe
+              </label>
               <Input
+                id="password"
                 type="password"
-                required
-                placeholder="Mot de passe"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+                className="w-full"
               />
             </div>
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isLoading}
-          >
-            {isLoading ? "Connexion..." : "Se connecter"}
-          </Button>
-        </form>
-      </div>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? "Connexion..." : "Se connecter"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };
