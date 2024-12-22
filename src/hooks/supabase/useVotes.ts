@@ -1,26 +1,31 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+
+interface Vote {
+  nominee_id: string;
+  category_id: string;
+  email: string;
+}
 
 export const useVotes = () => {
   const queryClient = useQueryClient();
 
-  const createVote = useMutation({
-    mutationFn: async (nomineeId: string) => {
+  const addVotes = useMutation({
+    mutationFn: async (votes: Vote[]) => {
       const { data, error } = await supabase
-        .from("votes")
-        .insert([{ nominee_id: nomineeId }])
-        .select()
-        .single();
+        .from('votes')
+        .insert(votes)
+        .select();
 
       if (error) throw error;
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      queryClient.invalidateQueries({ queryKey: ['votes'] });
     },
   });
 
   return {
-    createVote,
+    addVotes,
   };
 };
