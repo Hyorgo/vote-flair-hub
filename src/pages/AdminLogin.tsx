@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Mail, Lock } from "lucide-react";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -69,31 +70,37 @@ const AdminLogin = () => {
               <label htmlFor="email" className="text-sm font-medium">
                 Email
               </label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="admin@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-                className="w-full"
-              />
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-4 w-4" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="admin@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                  className="pl-10 w-full"
+                />
+              </div>
             </div>
             <div className="space-y-2">
               <label htmlFor="password" className="text-sm font-medium">
                 Mot de passe
               </label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="current-password"
-                className="w-full"
-              />
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-4 w-4" />
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                  className="pl-10 w-full"
+                />
+              </div>
             </div>
             <Button
               type="submit"
