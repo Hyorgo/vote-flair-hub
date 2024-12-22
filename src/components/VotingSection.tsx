@@ -1,11 +1,11 @@
 import React from "react";
+import { motion, useAnimation, PanInfo } from "framer-motion";
+import { NomineesList } from "@/components/voting/NomineesList";
+import { NavigationButtons } from "@/components/voting/NavigationButtons";
+import { CategoryTitle } from "@/components/voting/CategoryTitle";
 import { Category } from "@/types/airtable";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
-import { NavigationButtons } from "./voting/NavigationButtons";
-import { CategoryTitle } from "./voting/CategoryTitle";
-import { NomineesList } from "./voting/NomineesList";
-import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface VotingSectionProps {
   category: Category;
@@ -24,55 +24,69 @@ export const VotingSection = ({
   isFirstCategory,
   isLastCategory,
 }: VotingSectionProps) => {
+  const controls = useAnimation();
+  const isMobile = useIsMobile();
   const { toast } = useToast();
 
-  useKeyboardNavigation({
-    onNavigation,
-    isFirstCategory,
-    isLastCategory,
-  });
+  const handleDragEnd = async (event: any, info: PanInfo) => {
+    const offset = info.offset.x;
+    const velocity = info.velocity.x;
 
-  const handleVote = (nomineeId: string) => {
-    const isModifying = selections[category?.id || ""] === nomineeId;
-    const nominee = category?.nominees?.find((n) => n.id === nomineeId);
-    
-    onVote(nomineeId);
-    
-    toast({
-      title: isModifying ? "Vote annulé !" : "Vote enregistré !",
-      description: isModifying 
-        ? `Vous pouvez maintenant choisir un autre nominé dans la catégorie "${category.name}"`
-        : `Vous avez voté pour "${nominee?.name}" dans la catégorie "${category.name}". Cliquez à nouveau sur le même nominé pour modifier votre vote.`,
-      variant: "default",
-      duration: 5000,
-    });
+    if (Math.abs(velocity) >= 500 || Math.abs(offset) >= 50) {
+      if (offset > 0 && !isFirstCategory) {
+        await controls.start({ x: "100%", opacity: 0 });
+        onNavigation("prev");
+        controls.set({ x: "-100%" });
+        await controls.start({ x: 0, opacity: 1 });
+      } else if (offset < 0 && !isLastCategory) {
+        await controls.start({ x: "-100%", opacity: 0 });
+        onNavigation("next");
+        controls.set({ x: "100%" });
+        await controls.start({ x: 0, opacity: 1 });
+      } else {
+        // Rebond élastique si on ne peut pas naviguer plus loin
+        controls.start({ x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } });
+        
+        // Feedback visuel
+        toast({
+          title: offset > 0 ? "Première catégorie" : "Dernière catégorie",
+          description: "Vous ne pouvez pas aller plus loin",
+          duration: 1500,
+        });
+      }
+    } else {
+      // Retour à la position initiale si le swipe n'est pas assez fort
+      controls.start({ x: 0, opacity: 1 });
+    }
   };
 
   return (
-    <AnimatePresence mode="wait">
+    <div className="w-full">
+      <CategoryTitle category={category} />
+      
       <motion.div
-        key={category?.id}
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -20 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="space-y-6 sm:space-y-8"
+        drag={isMobile ? "x" : false}
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.2}
+        onDragEnd={handleDragEnd}
+        animate={controls}
+        initial={{ x: 0, opacity: 1 }}
+        className="w-full touch-pan-y"
       >
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-3 sm:px-0 transition-all duration-300">
-          <NavigationButtons
-            onNavigation={onNavigation}
-            isFirstCategory={isFirstCategory}
-            isLastCategory={isLastCategory}
-          />
-          <CategoryTitle categoryName={category?.name || ""} />
-        </div>
-
         <NomineesList
           category={category}
           selections={selections}
-          onVote={handleVote}
+          onVote={onVote}
         />
       </motion.div>
-    </AnimatePresence>
+
+      <div className="mt-8 px-4 sm:px-0">
+        <NavigationButtons
+          onNavigation={onNavigation}
+          isFirstCategory={isFirstCategory}
+          isLastCategory={isLastCategory}
+        />
+      </div>
+    </div>
   );
 };
