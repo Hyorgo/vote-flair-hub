@@ -36,10 +36,23 @@ export const VotingSection = ({
         toast({
           title: "Astuce de navigation",
           description: (
-            <div className="flex items-center gap-2">
-              <ChevronLeft className="h-5 w-5" />
-              Swipez pour naviguer entre les catégories
-              <ChevronRight className="h-5 w-5" />
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex items-center gap-2">
+                <ChevronLeft className="h-5 w-5 animate-bounce-light" />
+                Swipez pour naviguer
+                <ChevronRight className="h-5 w-5 animate-bounce-light" />
+              </div>
+              <motion.div
+                animate={{
+                  x: [0, 50, -50, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: 2,
+                  ease: "easeInOut",
+                }}
+                className="w-16 h-1 bg-primary rounded-full"
+              />
             </div>
           ),
           duration: 5000,
