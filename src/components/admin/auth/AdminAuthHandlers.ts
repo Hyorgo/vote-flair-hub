@@ -9,61 +9,67 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   try {
     console.log("Vérification du compte administrateur pour:", adminEmail);
     
-    // 1. Vérifier si l'utilisateur existe déjà dans admin_users
-    const { data: existingAdmin, error: adminCheckError } = await supabase
-      .from('admin_users')
-      .select('email')
-      .eq('email', adminEmail)
-      .maybeSingle();
+    // 1. Vérifier si l'utilisateur existe déjà dans Auth
+    const { data: { user }, error: authCheckError } = await supabase.auth.signInWithPassword({
+      email: adminEmail,
+      password: adminPassword,
+    });
 
-    if (adminCheckError) {
-      console.error("Erreur lors de la vérification admin:", adminCheckError);
-      throw adminCheckError;
-    }
+    if (!authCheckError) {
+      // L'utilisateur existe déjà dans Auth, vérifions s'il est dans admin_users
+      const { data: existingAdmin, error: adminCheckError } = await supabase
+        .from('admin_users')
+        .select('email')
+        .eq('email', adminEmail)
+        .maybeSingle();
 
-    // Si l'admin existe déjà, on vérifie juste l'authentification
-    if (existingAdmin) {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: adminEmail,
-        password: adminPassword,
-      });
-
-      if (!signInError) {
-        toast({
-          title: "Compte existant",
-          description: "Le compte administrateur existe déjà. Vous pouvez vous connecter.",
-        });
-      } else {
-        throw signInError;
+      if (adminCheckError) {
+        throw adminCheckError;
       }
+
+      if (!existingAdmin) {
+        // L'utilisateur existe dans Auth mais pas dans admin_users, ajoutons-le
+        const { error: insertError } = await supabase
+          .from('admin_users')
+          .insert([{ email: adminEmail }]);
+
+        if (insertError) {
+          throw insertError;
+        }
+      }
+
+      toast({
+        title: "Compte existant",
+        description: "Le compte administrateur est prêt. Vous pouvez vous connecter.",
+      });
       return;
     }
 
-    // 2. Si l'admin n'existe pas, on le crée dans admin_users
-    const { error: insertError } = await supabase
-      .from('admin_users')
-      .insert([{ email: adminEmail }]);
-
-    if (insertError) {
-      console.error("Erreur lors de l'insertion admin:", insertError);
-      throw insertError;
-    }
-
-    // 3. Créer ou vérifier le compte dans Auth
+    // 2. Si l'utilisateur n'existe pas dans Auth, créons-le
     const { error: signUpError } = await supabase.auth.signUp({
       email: adminEmail,
       password: adminPassword,
     });
 
-    if (signUpError && signUpError.message !== "User already registered") {
-      // Si l'erreur n'est pas "User already registered", on la traite comme une vraie erreur
-      console.error("Erreur lors de la création du compte:", signUpError);
-      // On supprime l'entrée admin_users car la création du compte a échoué
-      await supabase
-        .from('admin_users')
-        .delete()
-        .eq('email', adminEmail);
+    if (signUpError) {
       throw signUpError;
+    }
+
+    // 3. Créer l'entrée dans admin_users
+    const { error: insertError } = await supabase
+      .from('admin_users')
+      .insert([{ email: adminEmail }]);
+
+    if (insertError) {
+      // Si l'insertion échoue, c'est probablement parce que l'email existe déjà
+      if (insertError.code === "23505") { // Code pour violation de contrainte unique
+        toast({
+          title: "Compte existant",
+          description: "Le compte administrateur existe déjà. Vous pouvez vous connecter.",
+        });
+        return;
+      }
+      throw insertError;
     }
 
     toast({
