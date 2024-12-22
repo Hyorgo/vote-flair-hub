@@ -14,9 +14,9 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
       .from('admin_users')
       .select('email')
       .eq('email', adminEmail)
-      .single();
+      .maybeSingle();
 
-    if (checkError && checkError.code !== 'PGRST116') {
+    if (checkError) {
       console.error("Erreur lors de la vérification admin:", checkError);
       throw checkError;
     }
@@ -101,9 +101,9 @@ export const handleAdminLogin = async (
       .from('admin_users')
       .select('email')
       .eq('email', email)
-      .single();
+      .maybeSingle();
 
-    if (adminError && adminError.code !== 'PGRST116') {
+    if (adminError) {
       console.error("Erreur de vérification admin:", adminError);
       throw adminError;
     }
