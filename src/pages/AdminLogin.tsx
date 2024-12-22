@@ -14,8 +14,7 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSignUp = async (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleSignUp = async () => {
     setIsLoading(true);
 
     try {
