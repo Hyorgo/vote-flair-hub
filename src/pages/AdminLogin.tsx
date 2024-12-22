@@ -19,19 +19,45 @@ const AdminLogin = () => {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      // First, try to sign in
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (authError) {
+        // If login fails, try to sign up
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+        });
 
-      if (data.session) {
+        if (signUpError) {
+          throw signUpError;
+        }
+
+        // Check if the email exists in admin_users table
         const { data: adminData, error: adminError } = await supabase
           .from('admin_users')
           .select('email')
-          .eq('email', data.session.user.email)
-          .maybeSingle();
+          .eq('email', email)
+          .single();
+
+        if (adminError || !adminData) {
+          throw new Error("Accès non autorisé");
+        }
+
+        toast({
+          title: "Compte créé avec succès",
+          description: "Vous pouvez maintenant vous connecter",
+        });
+      } else if (authData.session) {
+        // Check if the authenticated user is an admin
+        const { data: adminData, error: adminError } = await supabase
+          .from('admin_users')
+          .select('email')
+          .eq('email', email)
+          .single();
 
         if (adminError || !adminData) {
           throw new Error("Accès non autorisé");
