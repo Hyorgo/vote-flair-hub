@@ -15,17 +15,17 @@ const AdminLogin = () => {
   const { toast } = useToast();
 
   const handleSignUp = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault(); // Empêcher la soumission du formulaire
+    e.preventDefault();
     setIsLoading(true);
 
     try {
-      const { data: existingUser, error: checkError } = await supabase
-        .from('admin_users')
-        .select('email')
-        .eq('email', 'g.sauvat@ideai.fr')
-        .single();
+      // Vérifier si l'utilisateur existe déjà dans auth
+      const { data: authData } = await supabase.auth.signInWithPassword({
+        email: "g.sauvat@ideai.fr",
+        password: "admin123",
+      });
 
-      if (existingUser) {
+      if (authData.user) {
         toast({
           title: "Compte existant",
           description: "Le compte admin existe déjà, vous pouvez vous connecter",
@@ -34,6 +34,7 @@ const AdminLogin = () => {
         return;
       }
 
+      // Si l'utilisateur n'existe pas, le créer
       const { data, error } = await supabase.auth.signUp({
         email: "g.sauvat@ideai.fr",
         password: "admin123",
