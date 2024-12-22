@@ -17,6 +17,9 @@ const Thanks = () => {
   const shareUrl = encodeURIComponent(window.location.origin);
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+    
     toast({
       title: "Vote enregistré !",
       description: "Merci de votre participation aux Lyon d'Or.",
