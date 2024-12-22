@@ -7,42 +7,28 @@ export const createAdminAccount = async (setIsLoading: (loading: boolean) => voi
   const adminPassword = "admin123";
 
   try {
-    // First, check if the admin user already exists in auth
-    const { data: existingUser, error: signInError } = await supabase.auth.signInWithPassword({
-      email: adminEmail,
-      password: adminPassword,
-    });
-
-    if (existingUser.session) {
-      toast({
-        title: "Compte existant",
-        description: "Le compte admin existe déjà. Vous pouvez vous connecter avec les identifiants fournis.",
-      });
-      return;
-    }
-
-    // If user doesn't exist, create it
+    // Try to create the auth user
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: adminEmail,
       password: adminPassword,
     });
 
     if (signUpError) {
-      console.error("Signup error:", signUpError);
-      throw signUpError;
+      // If the error is not about existing user, it's a real error
+      if (!signUpError.message.includes("User already registered")) {
+        console.error("Signup error:", signUpError);
+        throw signUpError;
+      }
     }
 
-    if (!signUpData.user) {
-      throw new Error("Échec de la création du compte admin");
-    }
-
-    // Create admin record in admin_users table
+    // Try to create admin record
     const { error: adminError } = await supabase
       .from('admin_users')
       .insert([{ email: adminEmail }])
       .select()
       .single();
 
+    // If error is not about duplicate entry, it's a real error
     if (adminError && !adminError.message.includes('duplicate key')) {
       console.error("Admin creation error:", adminError);
       throw adminError;
@@ -71,9 +57,9 @@ export const handleAdminLogin = async (
   navigate: (path: string) => void
 ) => {
   setIsLoading(true);
+  console.log("Attempting login with:", { email, password });
 
   try {
-    // Attempt to sign in
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
