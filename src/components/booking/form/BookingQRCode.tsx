@@ -4,6 +4,18 @@ import { fr } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { jsPDF } from "jspdf";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
+const fetchEventInformation = async () => {
+  const { data, error } = await supabase
+    .from("event_information")
+    .select("*")
+    .single();
+
+  if (error) throw error;
+  return data;
+};
 
 interface BookingQRCodeProps {
   isOpen: boolean;
@@ -13,14 +25,18 @@ interface BookingQRCodeProps {
     lastName: string;
     email: string;
     numberOfTickets: number;
-    eventDate: Date;
-    eventLocation: string;
-    eventAddress: string;
   };
 }
 
 export const BookingQRCode = ({ isOpen, onClose, bookingDetails }: BookingQRCodeProps) => {
-  const formattedDate = format(new Date(bookingDetails.eventDate), "EEEE d MMMM yyyy", { locale: fr });
+  const { data: eventInfo } = useQuery({
+    queryKey: ["eventInformation"],
+    queryFn: fetchEventInformation,
+  });
+
+  const formattedDate = eventInfo 
+    ? format(new Date(eventInfo.event_date), "EEEE d MMMM yyyy", { locale: fr })
+    : "";
   
   const qrData = JSON.stringify({
     firstName: bookingDetails.firstName,
@@ -28,8 +44,8 @@ export const BookingQRCode = ({ isOpen, onClose, bookingDetails }: BookingQRCode
     email: bookingDetails.email,
     numberOfTickets: bookingDetails.numberOfTickets,
     eventDate: formattedDate,
-    eventLocation: bookingDetails.eventLocation,
-    eventAddress: bookingDetails.eventAddress,
+    eventLocation: eventInfo?.location,
+    eventAddress: eventInfo?.address,
   });
 
   const handleDownloadPDF = () => {
@@ -56,7 +72,7 @@ export const BookingQRCode = ({ isOpen, onClose, bookingDetails }: BookingQRCode
 
       // Ajouter le logo
       const logoImg = new Image();
-      logoImg.src = "/og-image.png";
+      logoImg.src = "/lovable-uploads/23c9d707-c3dd-4f44-b20d-a5947339639f.png";
       logoImg.onload = () => {
         const aspectRatio = logoImg.width / logoImg.height;
         const logoWidth = 60;
@@ -86,9 +102,11 @@ export const BookingQRCode = ({ isOpen, onClose, bookingDetails }: BookingQRCode
         pdf.setFont("helvetica", "normal");
         pdf.setFontSize(12);
         const eventY = 250;
-        pdf.text(`Date: ${formattedDate}`, 20, eventY);
-        pdf.text(`Lieu: ${bookingDetails.eventLocation}`, 20, eventY + 8);
-        pdf.text(`Adresse: ${bookingDetails.eventAddress}`, 20, eventY + 16);
+        if (eventInfo) {
+          pdf.text(`Date: ${formattedDate}`, 20, eventY);
+          pdf.text(`Lieu: ${eventInfo.location}`, 20, eventY + 8);
+          pdf.text(`Adresse: ${eventInfo.address}`, 20, eventY + 16);
+        }
 
         // Sauvegarder le PDF
         pdf.save(`reservation-${bookingDetails.lastName}-${bookingDetails.firstName}.pdf`);
