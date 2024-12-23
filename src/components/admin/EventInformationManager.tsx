@@ -30,6 +30,8 @@ export const EventInformationManager = () => {
     event_date: "",
     location: "",
     address: "",
+    total_tickets: "",
+    remaining_tickets: "",
   });
 
   const updateMutation = useMutation({
@@ -38,6 +40,8 @@ export const EventInformationManager = () => {
         .from("event_information")
         .update({
           ...data,
+          total_tickets: parseInt(data.total_tickets),
+          remaining_tickets: parseInt(data.remaining_tickets),
           updated_at: new Date().toISOString(),
         })
         .eq("id", eventInfo?.id);
@@ -73,6 +77,8 @@ export const EventInformationManager = () => {
       event_date: format(new Date(eventInfo.event_date), "yyyy-MM-dd'T'HH:mm"),
       location: eventInfo.location,
       address: eventInfo.address,
+      total_tickets: eventInfo.total_tickets.toString(),
+      remaining_tickets: eventInfo.remaining_tickets.toString(),
     });
     setIsEditing(true);
   };
@@ -113,6 +119,29 @@ export const EventInformationManager = () => {
           />
         </div>
 
+        <div className="space-y-2">
+          <label className="block text-sm font-medium">Nombre total de billets</label>
+          <Input
+            type="number"
+            min="0"
+            value={formData.total_tickets}
+            onChange={(e) => setFormData({ ...formData, total_tickets: e.target.value })}
+            required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="block text-sm font-medium">Billets restants</label>
+          <Input
+            type="number"
+            min="0"
+            max={formData.total_tickets}
+            value={formData.remaining_tickets}
+            onChange={(e) => setFormData({ ...formData, remaining_tickets: e.target.value })}
+            required
+          />
+        </div>
+
         <div className="flex gap-2">
           <Button type="submit" disabled={updateMutation.isPending}>
             {updateMutation.isPending ? "Mise à jour..." : "Enregistrer"}
@@ -146,6 +175,16 @@ export const EventInformationManager = () => {
         <div>
           <p className="font-medium">Adresse</p>
           <p>{eventInfo.address}</p>
+        </div>
+
+        <div>
+          <p className="font-medium">Nombre total de billets</p>
+          <p>{eventInfo.total_tickets}</p>
+        </div>
+
+        <div>
+          <p className="font-medium">Billets restants</p>
+          <p>{eventInfo.remaining_tickets}</p>
         </div>
       </div>
     </div>
