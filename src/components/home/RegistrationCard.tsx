@@ -1,8 +1,21 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { RegistrationForm } from "@/components/RegistrationForm";
+import { useVotingConfig } from "@/hooks/supabase/useVotingConfig";
+import { VotingEndedMessage } from "./VotingEndedMessage";
 
 export const RegistrationCard = () => {
+  const { config } = useVotingConfig();
+
+  // Vérifier si la date de fin est passée
+  const isVotingEnded = config?.end_date 
+    ? new Date(config.end_date) < new Date() 
+    : false;
+
+  if (isVotingEnded) {
+    return <VotingEndedMessage />;
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
