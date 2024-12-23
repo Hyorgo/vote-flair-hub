@@ -24,9 +24,10 @@ serve(async (req) => {
 
     const stripe = new Stripe(stripeKey, {
       apiVersion: '2023-10-16',
+      httpClient: Stripe.createFetchHttpClient(), // Ajout explicite du client HTTP
     })
 
-    // Créer la session de paiement
+    // Créer la session de paiement avec des paramètres optimisés
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -59,10 +60,16 @@ serve(async (req) => {
           numberOfTickets,
         },
       },
-      locale: 'fr', // Ajouter la locale française
+      locale: 'fr',
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
       submit_type: 'pay',
+      payment_method_options: {
+        card: {
+          setup_future_usage: 'off',
+        },
+      },
+      expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // Session expire après 30 minutes
     })
 
     console.log('Checkout session created:', session.id)
