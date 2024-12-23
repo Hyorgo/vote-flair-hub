@@ -3,6 +3,7 @@ import { NomineeCard } from "@/components/NomineeCard";
 import { Category } from "@/types/airtable";
 import { motion } from "framer-motion";
 import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface NomineesListProps {
   category: Category;
