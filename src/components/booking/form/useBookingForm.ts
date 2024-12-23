@@ -69,38 +69,38 @@ export const useBookingForm = () => {
     }
   };
 
-  const onSubmit = async (values: BookingFormValues) => {
+  const createStripeSession = async (values: BookingFormValues) => {
     try {
-      const { error: bookingError } = await supabase
-        .from('bookings')
-        .insert({
-          first_name: values.firstName,
-          last_name: values.lastName,
+      const response = await supabase.functions.invoke('create-checkout-session', {
+        body: {
+          firstName: values.firstName,
+          lastName: values.lastName,
           email: values.email,
-          number_of_tickets: parseInt(values.numberOfTickets),
-        });
-
-      if (bookingError) throw bookingError;
-
-      await sendConfirmationEmail(values);
-
-      if (eventInfo) {
-        setCurrentBooking({
-          ...values,
-          numberOfTickets: parseInt(values.numberOfTickets),
-          eventDate: eventInfo.event_date,
-          eventLocation: eventInfo.location,
-          eventAddress: eventInfo.address,
-        });
-        setShowQRCode(true);
-      }
-
-      toast({
-        title: "Réservation confirmée",
-        description: "Nous vous avons envoyé un email de confirmation.",
+          numberOfTickets: values.numberOfTickets,
+        },
       });
 
-      form.reset();
+      if (response.error) throw new Error(response.error.message);
+      
+      const { url } = response.data;
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      throw error;
+    }
+  };
+
+  const onSubmit = async (values: BookingFormValues) => {
+    try {
+      // Rediriger vers Stripe pour le paiement
+      await createStripeSession(values);
+      
+      // Note: Le reste du processus (enregistrement en base, envoi d'email, etc.)
+      // sera géré après le retour du paiement Stripe
     } catch (error) {
       console.error('Erreur lors de la réservation:', error);
       toast({
