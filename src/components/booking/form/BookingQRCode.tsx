@@ -46,6 +46,7 @@ export const BookingQRCode = ({ isOpen, onClose, bookingDetails }: BookingQRCode
     eventDate: formattedDate,
     eventLocation: eventInfo?.location,
     eventAddress: eventInfo?.address,
+    paymentStatus: "confirmed", // Ajout du statut de paiement
   });
 
   const handleDownloadPDF = () => {
@@ -93,6 +94,7 @@ export const BookingQRCode = ({ isOpen, onClose, bookingDetails }: BookingQRCode
         pdf.text(`Nom: ${bookingDetails.lastName} ${bookingDetails.firstName}`, 20, detailsY);
         pdf.text(`Email: ${bookingDetails.email}`, 20, detailsY + 8);
         pdf.text(`Nombre de places: ${bookingDetails.numberOfTickets}`, 20, detailsY + 16);
+        pdf.text("Statut du paiement: Confirmé", 20, detailsY + 24);
 
         // Ajouter les informations sur l'événement
         pdf.setFont("helvetica", "bold");
