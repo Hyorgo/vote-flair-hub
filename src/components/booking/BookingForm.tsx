@@ -8,9 +8,10 @@ import { BookingQRCode } from "./form/BookingQRCode";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 
 export const BookingForm = () => {
-  const { form, onSubmit, showQRCode, setShowQRCode, currentBooking } = useBookingForm();
+  const { form, onSubmit, showQRCode, setShowQRCode, currentBooking, isLoading } = useBookingForm();
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
 
@@ -41,8 +42,19 @@ export const BookingForm = () => {
           <EmailField form={form} />
           <TicketSelection form={form} />
           
-          <Button type="submit" className="w-full h-11 text-base">
-            Réserver
+          <Button 
+            type="submit" 
+            className="w-full h-11 text-base"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Chargement...
+              </>
+            ) : (
+              "Réserver"
+            )}
           </Button>
         </form>
       </Form>

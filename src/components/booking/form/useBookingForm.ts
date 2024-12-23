@@ -3,8 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { bookingFormSchema, type BookingFormValues } from "./BookingFormSchema";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -22,6 +20,7 @@ export const useBookingForm = () => {
   const { toast } = useToast();
   const [showQRCode, setShowQRCode] = useState(false);
   const [currentBooking, setCurrentBooking] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
   
   const { data: eventInfo } = useQuery({
     queryKey: ["eventInformation"],
@@ -39,37 +38,40 @@ export const useBookingForm = () => {
   });
 
   const createStripeSession = async (values: BookingFormValues) => {
-    try {
-      const response = await supabase.functions.invoke('create-checkout-session', {
-        body: {
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
-          numberOfTickets: values.numberOfTickets,
-        },
-      });
+    console.log('Creating Stripe session with values:', values);
+    
+    const response = await supabase.functions.invoke('create-checkout-session', {
+      body: {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        numberOfTickets: values.numberOfTickets,
+      },
+    });
 
-      if (response.error) {
-        console.error('Error response from Stripe session creation:', response.error);
-        throw new Error(response.error.message);
-      }
-      
-      const { url } = response.data;
-      if (url) {
-        window.location.href = url;
-      } else {
-        console.error('No checkout URL received:', response.data);
-        throw new Error('Erreur lors de la création de la session de paiement');
-      }
-    } catch (error) {
-      console.error('Error creating checkout session:', error);
-      throw error;
+    console.log('Stripe session response:', response);
+
+    if (response.error) {
+      console.error('Error response from Stripe session creation:', response.error);
+      throw new Error(response.error.message);
     }
+    
+    const { url } = response.data;
+    if (!url) {
+      console.error('No checkout URL received:', response.data);
+      throw new Error('Erreur lors de la création de la session de paiement');
+    }
+
+    return url;
   };
 
   const onSubmit = async (values: BookingFormValues) => {
     try {
-      await createStripeSession(values);
+      setIsLoading(true);
+      const checkoutUrl = await createStripeSession(values);
+      
+      // Utiliser window.location.assign au lieu de href pour une redirection plus fiable
+      window.location.assign(checkoutUrl);
     } catch (error) {
       console.error('Erreur lors de la réservation:', error);
       toast({
@@ -77,6 +79,8 @@ export const useBookingForm = () => {
         description: "Une erreur est survenue lors de la création du paiement. Veuillez réessayer.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -86,5 +90,6 @@ export const useBookingForm = () => {
     showQRCode,
     setShowQRCode,
     currentBooking,
+    isLoading,
   };
 };
