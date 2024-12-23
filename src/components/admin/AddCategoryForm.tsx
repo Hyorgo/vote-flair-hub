@@ -25,10 +25,10 @@ export const AddCategoryForm = () => {
   };
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
       <Input 
         placeholder="Nom de la nouvelle catégorie" 
-        className="max-w-sm"
+        className="w-full sm:max-w-sm"
         value={newCategoryName}
         onChange={(e) => setNewCategoryName(e.target.value)}
         onKeyPress={(e) => {
@@ -37,7 +37,10 @@ export const AddCategoryForm = () => {
           }
         }}
       />
-      <Button onClick={handleAddCategory}>
+      <Button 
+        onClick={handleAddCategory}
+        className="w-full sm:w-auto"
+      >
         <Plus className="h-4 w-4 mr-2" />
         Ajouter
       </Button>

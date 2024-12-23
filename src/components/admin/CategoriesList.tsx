@@ -53,41 +53,43 @@ export const CategoriesList = ({
 
   return (
     <div className="bg-white rounded-lg overflow-hidden">
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={onReorder}
-      >
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead></TableHead>
-              <TableHead>Nom</TableHead>
-              <TableHead>Nominés</TableHead>
-              <TableHead className="w-[100px]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <SortableContext
-            items={categories.map(cat => cat.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            <TableBody>
-              {categories.map((category) => (
-                <CategoryRow
-                  key={category.id}
-                  category={category}
-                  handleDeleteCategory={handleDeleteCategory}
-                  newNomineeName={newNomineeName}
-                  setNewNomineeName={setNewNomineeName}
-                  newNomineeDescription={newNomineeDescription}
-                  setNewNomineeDescription={setNewNomineeDescription}
-                  handleAddNominee={handleAddNominee}
-                />
-              ))}
-            </TableBody>
-          </SortableContext>
-        </Table>
-      </DndContext>
+      <div className="overflow-x-auto">
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={onReorder}
+        >
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-10"></TableHead>
+                <TableHead>Nom</TableHead>
+                <TableHead className="w-24 text-center">Nominés</TableHead>
+                <TableHead className="w-32 text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <SortableContext
+              items={categories.map(cat => cat.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <TableBody>
+                {categories.map((category) => (
+                  <CategoryRow
+                    key={category.id}
+                    category={category}
+                    handleDeleteCategory={handleDeleteCategory}
+                    newNomineeName={newNomineeName}
+                    setNewNomineeName={setNewNomineeName}
+                    newNomineeDescription={newNomineeDescription}
+                    setNewNomineeDescription={setNewNomineeDescription}
+                    handleAddNominee={handleAddNominee}
+                  />
+                ))}
+              </TableBody>
+            </SortableContext>
+          </Table>
+        </DndContext>
+      </div>
     </div>
   );
 };

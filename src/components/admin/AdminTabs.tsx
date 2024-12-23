@@ -21,18 +21,20 @@ export const AdminTabs = () => {
   }
 
   return (
-    <Tabs defaultValue="categories" className="space-y-4">
-      <TabsList className="bg-white/50 backdrop-blur-sm">
-        <TabsTrigger value="categories">Catégories</TabsTrigger>
-        <TabsTrigger value="statistics">Statistiques</TabsTrigger>
-        <TabsTrigger value="backgrounds">Fonds</TabsTrigger>
-        <TabsTrigger value="participants">Participants</TabsTrigger>
-        <TabsTrigger value="event">Événement</TabsTrigger>
-        <TabsTrigger value="revenue">CA</TabsTrigger>
-        <TabsTrigger value="pricing">Prix</TabsTrigger>
-      </TabsList>
+    <Tabs defaultValue="categories" className="space-y-6">
+      <div className="overflow-x-auto pb-2">
+        <TabsList className="bg-white/50 backdrop-blur-sm w-full sm:w-auto flex flex-nowrap">
+          <TabsTrigger value="categories" className="whitespace-nowrap">Catégories</TabsTrigger>
+          <TabsTrigger value="statistics" className="whitespace-nowrap">Statistiques</TabsTrigger>
+          <TabsTrigger value="backgrounds" className="whitespace-nowrap">Fonds</TabsTrigger>
+          <TabsTrigger value="participants" className="whitespace-nowrap">Participants</TabsTrigger>
+          <TabsTrigger value="event" className="whitespace-nowrap">Événement</TabsTrigger>
+          <TabsTrigger value="revenue" className="whitespace-nowrap">CA</TabsTrigger>
+          <TabsTrigger value="pricing" className="whitespace-nowrap">Prix</TabsTrigger>
+        </TabsList>
+      </div>
 
-      <TabsContent value="categories" className="space-y-4">
+      <TabsContent value="categories" className="space-y-6">
         <CategoryManager />
       </TabsContent>
 

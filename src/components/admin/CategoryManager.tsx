@@ -53,9 +53,9 @@ export const CategoryManager = () => {
   }
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Gestion des catégories</h2>
+    <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 sm:p-6 space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-xl sm:text-2xl font-bold">Gestion des catégories</h2>
         <DeleteAllCategoriesButton />
       </div>
 
@@ -75,18 +75,20 @@ export const CategoryManager = () => {
         <Separator />
       </div>
 
-      <CategoriesList
-        categories={categoriesWithCount}
-        handleDeleteCategory={(id) => deleteCategory.mutate(id)}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        newNomineeName={newNomineeName}
-        setNewNomineeName={setNewNomineeName}
-        newNomineeDescription={newNomineeDescription}
-        setNewNomineeDescription={setNewNomineeDescription}
-        handleAddNominee={handleAddNominee}
-        onReorder={(event) => handleDragEnd(event, categories)}
-      />
+      <div className="overflow-x-auto">
+        <CategoriesList
+          categories={categoriesWithCount}
+          handleDeleteCategory={(id) => deleteCategory.mutate(id)}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          newNomineeName={newNomineeName}
+          setNewNomineeName={setNewNomineeName}
+          newNomineeDescription={newNomineeDescription}
+          setNewNomineeDescription={setNewNomineeDescription}
+          handleAddNominee={handleAddNominee}
+          onReorder={(event) => handleDragEnd(event, categories)}
+        />
+      </div>
     </div>
   );
 };
