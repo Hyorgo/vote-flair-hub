@@ -47,8 +47,8 @@ const handler = async (req: Request): Promise<Response> => {
       Messages: [
         {
           From: {
-            Email: "contact@ideai.fr",
-            Name: "Lyon d'Or Contact"
+            Email: "noreply@ideai.fr",
+            Name: "Lyon d'Or - Formulaire de Contact"
           },
           To: [
             {
@@ -60,20 +60,19 @@ const handler = async (req: Request): Promise<Response> => {
             Email: email,
             Name: name
           },
-          Subject: `Nouveau message de contact de ${name}`,
+          Subject: `[Lyon d'Or] Nouveau message de contact de ${name}`,
           HTMLPart: `
             <h2>Nouveau message de contact</h2>
             <p><strong>Nom:</strong> ${name}</p>
             <p><strong>Email:</strong> ${email}</p>
             <p><strong>Message:</strong></p>
-            <p>${message}</p>
+            <p style="white-space: pre-wrap;">${message}</p>
           `
         }
       ]
     };
 
     console.log("Sending email via Mailjet with payload:", JSON.stringify(mailjetPayload, null, 2));
-    console.log("Using Mailjet API URL:", "https://api.mailjet.com/v3.1/send");
     
     const res = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
@@ -86,10 +85,8 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     console.log("Mailjet API response status:", res.status);
-    console.log("Mailjet API response headers:", Object.fromEntries(res.headers.entries()));
-    
     const responseData = await res.json();
-    console.log("Mailjet API response body:", JSON.stringify(responseData, null, 2));
+    console.log("Mailjet API response:", JSON.stringify(responseData, null, 2));
 
     if (!res.ok) {
       console.error("Mailjet API error:", responseData);
