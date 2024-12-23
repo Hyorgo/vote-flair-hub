@@ -2,10 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { StatCard } from "../stats/StatCard";
 
-const TICKET_PRICE_HT = 160; // Prix HT en euros
-const TVA_RATE = 0.20; // Taux de TVA de 20%
-export const TICKET_PRICE_TTC = TICKET_PRICE_HT * (1 + TVA_RATE); // Prix TTC pour Stripe
-
 const fetchBookingsCount = async () => {
   const { data, error } = await supabase
     .from("bookings")
@@ -18,17 +14,28 @@ const fetchBookingsCount = async () => {
   return totalTickets;
 };
 
+const fetchPricing = async () => {
+  const { data, error } = await supabase
+    .from("ticket_pricing")
+    .select("*")
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
 export const RevenueStats = () => {
-  const { data: totalTickets = 0, isLoading } = useQuery({
+  const { data: totalTickets = 0, isLoading: isLoadingTickets } = useQuery({
     queryKey: ["bookings-count"],
     queryFn: fetchBookingsCount,
   });
 
-  const revenueHT = totalTickets * TICKET_PRICE_HT;
-  const formattedRevenueHT = new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-  }).format(revenueHT);
+  const { data: pricing, isLoading: isLoadingPricing } = useQuery({
+    queryKey: ["ticket-pricing"],
+    queryFn: fetchPricing,
+  });
+
+  const isLoading = isLoadingTickets || isLoadingPricing;
 
   if (isLoading) {
     return (
@@ -37,6 +44,14 @@ export const RevenueStats = () => {
       </div>
     );
   }
+
+  if (!pricing) return null;
+
+  const revenueHT = totalTickets * pricing.price_ht;
+  const formattedRevenueHT = new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+  }).format(revenueHT);
 
   return (
     <div className="space-y-8">
@@ -51,7 +66,7 @@ export const RevenueStats = () => {
         />
         <StatCard
           title="Prix unitaire HT"
-          value={`${TICKET_PRICE_HT} €`}
+          value={`${pricing.price_ht} €`}
         />
       </div>
     </div>

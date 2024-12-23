@@ -6,7 +6,6 @@ import { bookingFormSchema, type BookingFormValues } from "./BookingFormSchema";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { BookingDetails, EventInfo } from "./types";
-import { TICKET_PRICE_TTC } from "@/components/admin/revenue/RevenueStats";
 
 const fetchEventInformation = async () => {
   const { data, error } = await supabase
@@ -18,6 +17,16 @@ const fetchEventInformation = async () => {
   return data as EventInfo;
 };
 
+const fetchPricing = async () => {
+  const { data, error } = await supabase
+    .from("ticket_pricing")
+    .select("*")
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
 export const useBookingForm = () => {
   const { toast } = useToast();
   const [showQRCode, setShowQRCode] = useState(false);
@@ -27,6 +36,11 @@ export const useBookingForm = () => {
   const { data: eventInfo } = useQuery({
     queryKey: ["eventInformation"],
     queryFn: fetchEventInformation,
+  });
+
+  const { data: pricing } = useQuery({
+    queryKey: ["ticket-pricing"],
+    queryFn: fetchPricing,
   });
   
   const form = useForm<BookingFormValues>({
@@ -40,8 +54,10 @@ export const useBookingForm = () => {
   });
 
   const createStripeSession = async (values: BookingFormValues) => {
-    console.log('Creating Stripe session with values:', values);
-    
+    if (!pricing) {
+      throw new Error('Prix non disponible');
+    }
+
     const { data: availabilityCheck, error: availabilityError } = await supabase.rpc(
       'check_tickets_availability',
       { requested_tickets: parseInt(values.numberOfTickets) }
@@ -52,13 +68,15 @@ export const useBookingForm = () => {
       throw new Error('Les billets demandés ne sont plus disponibles ou l\'événement est passé');
     }
     
+    const priceTTC = pricing.price_ht * (1 + pricing.tva_rate / 100);
+    
     const response = await supabase.functions.invoke('create-checkout-session', {
       body: {
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
         numberOfTickets: values.numberOfTickets,
-        unitPriceTTC: TICKET_PRICE_TTC,
+        unitPriceTTC: priceTTC,
       },
     });
 

@@ -215,6 +215,30 @@ export type Database = {
         }
         Relationships: []
       }
+      ticket_pricing: {
+        Row: {
+          created_at: string | null
+          id: string
+          price_ht: number
+          tva_rate: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          price_ht?: number
+          tva_rate?: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          price_ht?: number
+          tva_rate?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       user_profiles: {
         Row: {
           created_at: string | null

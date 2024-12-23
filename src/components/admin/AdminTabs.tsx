@@ -6,6 +6,7 @@ import { BackgroundManager } from "./BackgroundManager";
 import { ParticipantsTable } from "./participants/ParticipantsTable";
 import { EventInformationManager } from "./EventInformationManager";
 import { RevenueStats } from "./revenue/RevenueStats";
+import { PriceManager } from "./pricing/PriceManager";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 export const AdminTabs = () => {
@@ -28,6 +29,7 @@ export const AdminTabs = () => {
         <TabsTrigger value="participants">Participants</TabsTrigger>
         <TabsTrigger value="event">Événement</TabsTrigger>
         <TabsTrigger value="revenue">CA</TabsTrigger>
+        <TabsTrigger value="pricing">Prix</TabsTrigger>
       </TabsList>
 
       <TabsContent value="categories" className="space-y-4">
@@ -52,6 +54,10 @@ export const AdminTabs = () => {
 
       <TabsContent value="revenue">
         <RevenueStats />
+      </TabsContent>
+
+      <TabsContent value="pricing">
+        <PriceManager />
       </TabsContent>
     </Tabs>
   );
