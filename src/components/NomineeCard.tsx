@@ -37,7 +37,7 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
         className={cn(
           "nominee-card relative bg-white/90 backdrop-blur-sm border-2",
           "shadow-lg p-3 sm:p-6 rounded-lg flex flex-col h-full",
-          "transform transition-all duration-500 ease-out",
+          "transform transition-all duration-500 ease-out will-change-transform",
           "group-hover:bg-white/95 group-hover:shadow-xl group-hover:-translate-y-1",
           "group-hover:border-yellow-400/50",
           isSelected ? "border-yellow-400 ring-2 ring-yellow-400" : "border-white/40",
@@ -46,6 +46,8 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
         <NomineeImage 
           imageUrl={nominee.image_url} 
           altText={`Photo de ${nominee.name}`}
+          loading="lazy"
+          decoding="async"
         />
         
         <NomineeTitle 
