@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { jsPDF } from "jspdf";
 
 interface BookingQRCodeProps {
   isOpen: boolean;
@@ -31,7 +32,7 @@ export const BookingQRCode = ({ isOpen, onClose, bookingDetails }: BookingQRCode
     eventAddress: bookingDetails.eventAddress,
   });
 
-  const handleDownload = () => {
+  const handleDownloadPDF = () => {
     const svg = document.querySelector("#booking-qr-code svg") as SVGElement;
     if (!svg) return;
 
@@ -44,12 +45,54 @@ export const BookingQRCode = ({ isOpen, onClose, bookingDetails }: BookingQRCode
       canvas.width = img.width;
       canvas.height = img.height;
       ctx?.drawImage(img, 0, 0);
-      const pngFile = canvas.toDataURL("image/png");
+      const qrCodeImage = canvas.toDataURL("image/png");
       
-      const downloadLink = document.createElement("a");
-      downloadLink.download = `reservation-${bookingDetails.lastName}-${bookingDetails.firstName}.png`;
-      downloadLink.href = pngFile;
-      downloadLink.click();
+      // Créer le PDF
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
+      });
+
+      // Ajouter le logo
+      const logoImg = new Image();
+      logoImg.src = "/og-image.png";
+      logoImg.onload = () => {
+        const aspectRatio = logoImg.width / logoImg.height;
+        const logoWidth = 60;
+        const logoHeight = logoWidth / aspectRatio;
+        pdf.addImage(logoImg, "PNG", (210 - logoWidth) / 2, 20, logoWidth, logoHeight);
+
+        // Ajouter le QR code
+        pdf.addImage(qrCodeImage, "PNG", (210 - 80) / 2, 80, 80, 80);
+
+        // Ajouter les détails de la réservation
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(16);
+        pdf.text("Détails de votre réservation", 105, 180, { align: "center" });
+
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(12);
+        const detailsY = 190;
+        pdf.text(`Nom: ${bookingDetails.lastName} ${bookingDetails.firstName}`, 20, detailsY);
+        pdf.text(`Email: ${bookingDetails.email}`, 20, detailsY + 8);
+        pdf.text(`Nombre de places: ${bookingDetails.numberOfTickets}`, 20, detailsY + 16);
+
+        // Ajouter les informations sur l'événement
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(14);
+        pdf.text("Informations sur l'événement", 105, 240, { align: "center" });
+
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(12);
+        const eventY = 250;
+        pdf.text(`Date: ${formattedDate}`, 20, eventY);
+        pdf.text(`Lieu: ${bookingDetails.eventLocation}`, 20, eventY + 8);
+        pdf.text(`Adresse: ${bookingDetails.eventAddress}`, 20, eventY + 16);
+
+        // Sauvegarder le PDF
+        pdf.save(`reservation-${bookingDetails.lastName}-${bookingDetails.firstName}.pdf`);
+      };
     };
 
     img.src = "data:image/svg+xml;base64," + btoa(svgData);
@@ -70,8 +113,8 @@ export const BookingQRCode = ({ isOpen, onClose, bookingDetails }: BookingQRCode
               includeMargin
             />
           </div>
-          <Button onClick={handleDownload} className="w-full">
-            Télécharger le QR Code
+          <Button onClick={handleDownloadPDF} className="w-full">
+            Télécharger le PDF
           </Button>
         </div>
       </DialogContent>
