@@ -70,8 +70,21 @@ export const useBookingForm = () => {
       setIsLoading(true);
       const checkoutUrl = await createStripeSession(values);
       
-      // Utiliser window.location.assign au lieu de href pour une redirection plus fiable
-      window.location.assign(checkoutUrl);
+      // Créer un nouvel élément <a> et simuler un clic
+      const link = document.createElement('a');
+      link.href = checkoutUrl;
+      link.target = '_blank'; // Ouvrir dans un nouvel onglet
+      link.rel = 'noopener noreferrer';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Afficher un message de confirmation
+      toast({
+        title: "Redirection vers la page de paiement",
+        description: "Une nouvelle fenêtre va s'ouvrir pour finaliser votre paiement.",
+        variant: "default",
+      });
     } catch (error) {
       console.error('Erreur lors de la réservation:', error);
       toast({
