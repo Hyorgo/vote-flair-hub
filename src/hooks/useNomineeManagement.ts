@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Nominee {
   id: string;
@@ -10,63 +11,66 @@ interface Nominee {
 }
 
 export const useNomineeManagement = (categoryId: string) => {
-  const [nominees, setNominees] = useState<Nominee[]>([]);
   const [showNominees, setShowNominees] = useState(false);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  const loadNominees = useCallback(async () => {
-    console.log("Loading nominees for category:", categoryId);
-    const { data, error } = await supabase
-      .from('nominees')
-      .select('*')
-      .eq('category_id', categoryId);
+  const { data: nominees = [], isLoading, error } = useQuery({
+    queryKey: ['nominees', categoryId],
+    queryFn: async () => {
+      console.log("Loading nominees for category:", categoryId);
+      const { data, error } = await supabase
+        .from('nominees')
+        .select('*')
+        .eq('category_id', categoryId);
 
-    if (error) {
-      console.error("Error loading nominees:", error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de charger les nominés",
-        variant: "destructive",
-      });
-      return;
-    }
+      if (error) {
+        console.error("Error loading nominees:", error);
+        throw new Error(`Impossible de charger les nominés: ${error.message}`);
+      }
 
-    console.log("Nominees loaded:", data);
-    setNominees(data || []);
-  }, [categoryId, toast]);
+      return data || [];
+    },
+    enabled: showNominees, // Ne charge que si showNominees est true
+    staleTime: 5 * 60 * 1000, // Cache pendant 5 minutes
+    retry: 3,
+  });
 
-  const handleDeleteNominee = async (nomineeId: string) => {
-    try {
+  const deleteMutation = useMutation({
+    mutationFn: async (nomineeId: string) => {
       const { error } = await supabase
         .from('nominees')
         .delete()
         .eq('id', nomineeId);
 
-      if (error) throw error;
-
+      if (error) throw new Error(`Impossible de supprimer le nominé: ${error.message}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['nominees', categoryId] });
       toast({
         title: "Succès",
         description: "Le nominé a été supprimé",
       });
-
-      loadNominees();
-    } catch (error) {
-      console.error("Error deleting nominee:", error);
+    },
+    onError: (error: Error) => {
       toast({
         title: "Erreur",
-        description: "Impossible de supprimer le nominé",
+        description: error.message,
         variant: "destructive",
       });
-    }
-  };
+    },
+  });
 
-  const handleAddNomineeWithImage = async (
-    name: string,
-    description: string,
-    imageUrl?: string
-  ) => {
-    try {
-      console.log("Adding nominee with image:", { name, description, imageUrl, categoryId });
+  const addNomineeMutation = useMutation({
+    mutationFn: async ({
+      name,
+      description,
+      imageUrl
+    }: {
+      name: string;
+      description: string;
+      imageUrl?: string;
+    }) => {
       const { error, data } = await supabase
         .from('nominees')
         .insert([{
@@ -77,34 +81,33 @@ export const useNomineeManagement = (categoryId: string) => {
         }])
         .select();
 
-      if (error) {
-        console.error("Error adding nominee:", error);
-        throw error;
-      }
-
-      console.log("Nominee added successfully:", data);
+      if (error) throw new Error(`Impossible d'ajouter le nominé: ${error.message}`);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['nominees', categoryId] });
       toast({
         title: "Succès",
         description: "Le nominé a été ajouté",
       });
-
-      await loadNominees();
-    } catch (error) {
-      console.error("Error adding nominee:", error);
+    },
+    onError: (error: Error) => {
       toast({
         title: "Erreur",
-        description: "Impossible d'ajouter le nominé",
+        description: error.message,
         variant: "destructive",
       });
-    }
-  };
+    },
+  });
 
   return {
     nominees,
+    isLoading,
+    error,
     showNominees,
     setShowNominees,
-    loadNominees,
-    handleDeleteNominee,
-    handleAddNomineeWithImage
+    handleDeleteNominee: deleteMutation.mutate,
+    handleAddNomineeWithImage: (name: string, description: string, imageUrl?: string) =>
+      addNomineeMutation.mutate({ name, description, imageUrl })
   };
 };

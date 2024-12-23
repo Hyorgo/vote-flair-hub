@@ -12,6 +12,8 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface Category {
   id: string;
@@ -32,6 +34,7 @@ interface CategoriesListProps {
   setNewNomineeDescription: (description: string) => void;
   handleAddNominee: (categoryId: string) => void;
   onReorder: (event: DragEndEvent) => void;
+  error?: Error;
 }
 
 export const CategoriesList = ({
@@ -43,6 +46,7 @@ export const CategoriesList = ({
   setNewNomineeDescription,
   handleAddNominee,
   onReorder,
+  error,
 }: CategoriesListProps) => {
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -50,6 +54,18 @@ export const CategoriesList = ({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Erreur</AlertTitle>
+        <AlertDescription>
+          Une erreur est survenue lors du chargement des catégories : {error.message}
+        </AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <div className="bg-white rounded-lg overflow-hidden">
