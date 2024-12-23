@@ -33,9 +33,10 @@ export const ContactForm = () => {
     try {
       setIsSubmitting(true);
 
-      // Vérifier d'abord la limite de taux avec l'IP
-      const { data: ipData } = await fetch('https://api.ipify.org?format=json')
-        .then(res => res.json());
+      // Récupérer l'IP via notre Edge Function
+      const { data: ipData, error: ipError } = await supabase.functions.invoke('get-ip');
+      
+      if (ipError) throw ipError;
       
       const { data: rateCheck, error: rateError } = await supabase
         .rpc('check_contact_rate_limit', { 
