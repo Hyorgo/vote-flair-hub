@@ -49,7 +49,7 @@ export const BookingForm = () => {
           
           <Button 
             type="submit" 
-            className="w-full h-11 text-base"
+            className="w-full h-11 text-base bg-white text-navy hover:bg-white/90"
             disabled={isLoading}
           >
             {isLoading ? (
