@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 const MAILJET_API_KEY = Deno.env.get("MAILJET_API_KEY");
 const MAILJET_SECRET_KEY = Deno.env.get("MAILJET_SECRET_KEY");
-const TO_EMAIL = "contact@sixtynine-events.fr"; // Mise à jour de l'adresse email
+const TO_EMAIL = "contact@ideai.fr"; // Mise à jour de l'adresse email
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -37,7 +37,7 @@ const handler = async (req: Request): Promise<Response> => {
       Messages: [
         {
           From: {
-            Email: "contact@sixtynine-events.fr",
+            Email: "contact@ideai.fr",
             Name: "Lyon d'Or Contact"
           },
           To: [
