@@ -23,15 +23,19 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    console.log("Starting contact email function...");
+    
     if (!MAILJET_API_KEY || !MAILJET_SECRET_KEY) {
-      console.error("Mailjet API keys are not configured");
-      throw new Error("Configuration des clés API Mailjet manquante");
+      const error = "Mailjet API keys are not configured";
+      console.error(error);
+      throw new Error(error);
     }
 
     const { name, email, message }: ContactRequest = await req.json();
     console.log("Received contact form submission:", { name, email });
 
     const auth = btoa(`${MAILJET_API_KEY}:${MAILJET_SECRET_KEY}`);
+    console.log("Auth token generated successfully");
 
     const mailjetPayload = {
       Messages: [
@@ -63,6 +67,8 @@ const handler = async (req: Request): Promise<Response> => {
     };
 
     console.log("Sending email via Mailjet with payload:", JSON.stringify(mailjetPayload, null, 2));
+    console.log("Using Mailjet API URL:", "https://api.mailjet.com/v3.1/send");
+    
     const res = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
@@ -74,7 +80,9 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     const responseData = await res.json();
-    console.log("Mailjet API response:", JSON.stringify(responseData, null, 2));
+    console.log("Mailjet API response status:", res.status);
+    console.log("Mailjet API response headers:", Object.fromEntries(res.headers.entries()));
+    console.log("Mailjet API response body:", JSON.stringify(responseData, null, 2));
 
     if (!res.ok) {
       console.error("Mailjet API error:", responseData);
