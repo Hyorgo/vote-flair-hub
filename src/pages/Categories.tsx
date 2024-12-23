@@ -108,7 +108,7 @@ const WelcomeMessage = ({ name }: { name: string }) => (
       Bienvenue {name} ! 🎉
     </h2>
     <p className="text-white/90 text-base sm:text-lg text-center sm:text-left animate-fade-in">
-      C'est le moment de faire entendre votre voix ! Parcourez les catégories et votez pour vos nominés préférés. Chaque vote compte pour célébrer l'excellence ! ✨
+      Votez pour vos nominés préférés et célébrez l'excellence ! ✨
     </p>
   </div>
 );
