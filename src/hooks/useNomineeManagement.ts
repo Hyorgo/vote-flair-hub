@@ -15,7 +15,7 @@ export const useNomineeManagement = (categoryId: string) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: nominees = [], isLoading, error } = useQuery({
+  const { data: nominees = [], isLoading, error, refetch: loadNominees } = useQuery({
     queryKey: ['nominees', categoryId],
     queryFn: async () => {
       console.log("Loading nominees for category:", categoryId);
@@ -31,8 +31,8 @@ export const useNomineeManagement = (categoryId: string) => {
 
       return data || [];
     },
-    enabled: showNominees, // Ne charge que si showNominees est true
-    staleTime: 5 * 60 * 1000, // Cache pendant 5 minutes
+    enabled: showNominees,
+    staleTime: 5 * 60 * 1000,
     retry: 3,
   });
 
@@ -108,6 +108,7 @@ export const useNomineeManagement = (categoryId: string) => {
     setShowNominees,
     handleDeleteNominee: deleteMutation.mutate,
     handleAddNomineeWithImage: (name: string, description: string, imageUrl?: string) =>
-      addNomineeMutation.mutate({ name, description, imageUrl })
+      addNomineeMutation.mutate({ name, description, imageUrl }),
+    loadNominees: loadNominees
   };
 };
