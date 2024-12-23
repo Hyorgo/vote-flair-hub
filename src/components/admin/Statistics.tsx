@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatCard } from './stats/StatCard';
-import { VotingEndDate } from './stats/VotingEndDate';
+import { VotingDateConfig } from './stats/VotingDateConfig';
 import { CategoryStatsTable } from './stats/CategoryStatsTable';
 import { CategoryCharts } from './stats/CategoryCharts';
 import { VoteStatistic, CategoryStats } from './types';
@@ -58,7 +58,7 @@ export const Statistics = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatCard title="Total des votes" value={totalVotes?.toString() || "0"} />
         <StatCard title="Catégories" value={categoriesCount?.toString() || "0"} />
-        <VotingEndDate />
+        <VotingDateConfig />
       </div>
 
       <Tabs defaultValue="table" className="w-full">
