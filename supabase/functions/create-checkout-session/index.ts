@@ -51,6 +51,18 @@ serve(async (req) => {
         lastName,
         numberOfTickets,
       },
+      payment_intent_data: {
+        metadata: {
+          firstName,
+          lastName,
+          email,
+          numberOfTickets,
+        },
+      },
+      locale: 'fr', // Ajouter la locale française
+      allow_promotion_codes: true,
+      billing_address_collection: 'auto',
+      submit_type: 'pay',
     })
 
     console.log('Checkout session created:', session.id)
