@@ -38,37 +38,6 @@ export const useBookingForm = () => {
     },
   });
 
-  const sendConfirmationEmail = async (values: BookingFormValues) => {
-    if (!eventInfo) return;
-
-    const formattedDate = format(new Date(eventInfo.event_date), "EEEE d MMMM yyyy", { locale: fr });
-
-    try {
-      const response = await fetch("/functions/v1/send-booking-confirmation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
-          numberOfTickets: parseInt(values.numberOfTickets),
-          eventDate: formattedDate,
-          eventLocation: eventInfo.location,
-          eventAddress: eventInfo.address,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to send confirmation email");
-      }
-    } catch (error) {
-      console.error("Error sending confirmation email:", error);
-      throw error;
-    }
-  };
-
   const createStripeSession = async (values: BookingFormValues) => {
     try {
       const response = await supabase.functions.invoke('create-checkout-session', {
@@ -80,13 +49,17 @@ export const useBookingForm = () => {
         },
       });
 
-      if (response.error) throw new Error(response.error.message);
+      if (response.error) {
+        console.error('Error response from Stripe session creation:', response.error);
+        throw new Error(response.error.message);
+      }
       
       const { url } = response.data;
       if (url) {
         window.location.href = url;
       } else {
-        throw new Error('No checkout URL received');
+        console.error('No checkout URL received:', response.data);
+        throw new Error('Erreur lors de la création de la session de paiement');
       }
     } catch (error) {
       console.error('Error creating checkout session:', error);
@@ -96,16 +69,12 @@ export const useBookingForm = () => {
 
   const onSubmit = async (values: BookingFormValues) => {
     try {
-      // Rediriger vers Stripe pour le paiement
       await createStripeSession(values);
-      
-      // Note: Le reste du processus (enregistrement en base, envoi d'email, etc.)
-      // sera géré après le retour du paiement Stripe
     } catch (error) {
       console.error('Erreur lors de la réservation:', error);
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors de la réservation. Veuillez réessayer.",
+        description: "Une erreur est survenue lors de la création du paiement. Veuillez réessayer.",
         variant: "destructive",
       });
     }

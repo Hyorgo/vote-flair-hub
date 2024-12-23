@@ -7,6 +7,7 @@ const corsHeaders = {
 }
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
   }
@@ -15,7 +16,13 @@ serve(async (req) => {
     const { firstName, lastName, email, numberOfTickets } = await req.json()
     console.log('Creating checkout session for:', { firstName, lastName, email, numberOfTickets })
 
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
+    // Vérifier que la clé Stripe est présente
+    const stripeKey = Deno.env.get('STRIPE_SECRET_KEY')
+    if (!stripeKey) {
+      throw new Error('Stripe secret key is not configured')
+    }
+
+    const stripe = new Stripe(stripeKey, {
       apiVersion: '2023-10-16',
     })
 
@@ -27,8 +34,8 @@ serve(async (req) => {
           price_data: {
             currency: 'eur',
             product_data: {
-              name: 'Billet',
-              description: 'Billet pour l\'événement',
+              name: 'Billet Lyon d\'Or',
+              description: `Réservation pour ${numberOfTickets} ${numberOfTickets > 1 ? 'places' : 'place'}`,
             },
             unit_amount: 1000, // 10€ en centimes
           },
