@@ -86,11 +86,8 @@ export const VotingNotStartedMessage = ({ startDate }: VotingNotStartedMessagePr
             <Timer className="h-16 w-16 text-primary relative animate-pulse" />
           </div>
           
-          <h2 className="text-2xl sm:text-3xl font-bold font-heading">
-            <span className="bg-gradient-to-r from-accent via-primary to-primary-dark bg-clip-text text-transparent 
-              drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.3)]">
-              Les votes ne sont pas encore ouverts
-            </span>
+          <h2 className="text-2xl sm:text-3xl font-bold font-heading text-white">
+            Les votes ne sont pas encore ouverts
           </h2>
           
           <p className="text-lg text-navy/80 leading-relaxed max-w-sm">
