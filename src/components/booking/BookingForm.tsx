@@ -4,9 +4,10 @@ import { PersonalInfoFields } from "./form/PersonalInfoFields";
 import { EmailField } from "./form/EmailField";
 import { TicketSelection } from "./form/TicketSelection";
 import { useBookingForm } from "./form/useBookingForm";
+import { BookingQRCode } from "./form/BookingQRCode";
 
 export const BookingForm = () => {
-  const { form, onSubmit } = useBookingForm();
+  const { form, onSubmit, showQRCode, setShowQRCode, currentBooking } = useBookingForm();
 
   return (
     <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 sm:p-8 border border-white/20">
@@ -21,6 +22,14 @@ export const BookingForm = () => {
           </Button>
         </form>
       </Form>
+
+      {currentBooking && (
+        <BookingQRCode
+          isOpen={showQRCode}
+          onClose={() => setShowQRCode(false)}
+          bookingDetails={currentBooking}
+        />
+      )}
     </div>
   );
 };

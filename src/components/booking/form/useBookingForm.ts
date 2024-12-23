@@ -6,6 +6,7 @@ import { bookingFormSchema, type BookingFormValues } from "./BookingFormSchema";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 const fetchEventInformation = async () => {
   const { data, error } = await supabase
@@ -19,6 +20,9 @@ const fetchEventInformation = async () => {
 
 export const useBookingForm = () => {
   const { toast } = useToast();
+  const [showQRCode, setShowQRCode] = useState(false);
+  const [currentBooking, setCurrentBooking] = useState<any>(null);
+  
   const { data: eventInfo } = useQuery({
     queryKey: ["eventInformation"],
     queryFn: fetchEventInformation,
@@ -80,6 +84,17 @@ export const useBookingForm = () => {
 
       await sendConfirmationEmail(values);
 
+      if (eventInfo) {
+        setCurrentBooking({
+          ...values,
+          numberOfTickets: parseInt(values.numberOfTickets),
+          eventDate: eventInfo.event_date,
+          eventLocation: eventInfo.location,
+          eventAddress: eventInfo.address,
+        });
+        setShowQRCode(true);
+      }
+
       toast({
         title: "Réservation confirmée",
         description: "Nous vous avons envoyé un email de confirmation.",
@@ -99,5 +114,8 @@ export const useBookingForm = () => {
   return {
     form,
     onSubmit: form.handleSubmit(onSubmit),
+    showQRCode,
+    setShowQRCode,
+    currentBooking,
   };
 };
