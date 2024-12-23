@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { CategoryNameCell } from "./CategoryNameCell";
-import { CategoryActions } from "./CategoryActions";
-import { NomineeList } from "./NomineeList";
 import { useNomineeManagement } from "@/hooks/useNomineeManagement";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical } from "lucide-react";
+import { DragHandle } from "./category-row/DragHandle";
+import { CategoryRowContent } from "./category-row/CategoryRowContent";
+import { NomineesExpansion } from "./category-row/NomineesExpansion";
 
 interface Category {
   id: string;
@@ -39,9 +38,9 @@ export const CategoryRow = ({
     nominees,
     showNominees,
     setShowNominees,
-    loadNominees,
     handleDeleteNominee,
-    handleAddNomineeWithImage
+    handleAddNomineeWithImage,
+    loadNominees
   } = useNomineeManagement(category.id);
 
   const {
@@ -53,17 +52,17 @@ export const CategoryRow = ({
     isDragging,
   } = useSortable({ id: category.id });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
-
   React.useEffect(() => {
     if (showNominees) {
       loadNominees();
     }
   }, [showNominees, loadNominees]);
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
 
   const handleAddNomineeToCategory = async (name: string, description: string, imageUrl?: string) => {
     await handleAddNomineeWithImage(name, description, imageUrl);
@@ -74,50 +73,28 @@ export const CategoryRow = ({
     <>
       <TableRow ref={setNodeRef} style={style}>
         <TableCell>
-          <button
-            {...attributes}
-            {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded"
-          >
-            <GripVertical className="h-4 w-4 text-gray-400" />
-          </button>
+          <DragHandle attributes={attributes} listeners={listeners} />
         </TableCell>
-        <TableCell>
-          <CategoryNameCell
-            categoryId={category.id}
-            categoryName={category.name}
-            isEditing={isEditing}
-            setIsEditing={setIsEditing}
-            showNominees={showNominees}
-            setShowNominees={setShowNominees}
-          />
-        </TableCell>
-        <TableCell>{category.nominees}</TableCell>
-        <TableCell>
-          <CategoryActions
-            categoryId={category.id}
-            categoryName={category.name}
-            onEdit={() => setIsEditing(true)}
-            onDelete={() => handleDeleteCategory(category.id)}
-            newNomineeName={newNomineeName}
-            setNewNomineeName={setNewNomineeName}
-            newNomineeDescription={newNomineeDescription}
-            setNewNomineeDescription={setNewNomineeDescription}
-            handleAddNominee={handleAddNomineeToCategory}
-          />
-        </TableCell>
+        <CategoryRowContent
+          category={category}
+          isEditing={isEditing}
+          setIsEditing={setIsEditing}
+          showNominees={showNominees}
+          setShowNominees={setShowNominees}
+          handleDeleteCategory={handleDeleteCategory}
+          newNomineeName={newNomineeName}
+          setNewNomineeName={setNewNomineeName}
+          newNomineeDescription={newNomineeDescription}
+          setNewNomineeDescription={setNewNomineeDescription}
+          handleAddNomineeToCategory={handleAddNomineeToCategory}
+        />
       </TableRow>
-      {showNominees && (
-        <TableRow>
-          <TableCell colSpan={4}>
-            <NomineeList 
-              nominees={nominees} 
-              categoryId={category.id}
-              onDeleteNominee={handleDeleteNominee}
-            />
-          </TableCell>
-        </TableRow>
-      )}
+      <NomineesExpansion
+        showNominees={showNominees}
+        nominees={nominees}
+        categoryId={category.id}
+        onDeleteNominee={handleDeleteNominee}
+      />
     </>
   );
 };
