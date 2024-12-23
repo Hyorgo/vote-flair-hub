@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { bookingFormSchema, type BookingFormValues } from "./BookingFormSchema";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { BookingDetails, EventInfo } from "./types";
 
 const fetchEventInformation = async () => {
   const { data, error } = await supabase
@@ -13,13 +14,13 @@ const fetchEventInformation = async () => {
     .single();
 
   if (error) throw error;
-  return data;
+  return data as EventInfo;
 };
 
 export const useBookingForm = () => {
   const { toast } = useToast();
   const [showQRCode, setShowQRCode] = useState(false);
-  const [currentBooking, setCurrentBooking] = useState<any>(null);
+  const [currentBooking, setCurrentBooking] = useState<BookingDetails | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   
   const { data: eventInfo } = useQuery({
@@ -49,8 +50,6 @@ export const useBookingForm = () => {
       },
     });
 
-    console.log('Stripe session response:', response);
-
     if (response.error) {
       console.error('Error response from Stripe session creation:', response.error);
       throw new Error(response.error.message);
@@ -70,16 +69,14 @@ export const useBookingForm = () => {
       setIsLoading(true);
       const checkoutUrl = await createStripeSession(values);
       
-      // Créer un nouvel élément <a> et simuler un clic
       const link = document.createElement('a');
       link.href = checkoutUrl;
-      link.target = '_blank'; // Ouvrir dans un nouvel onglet
+      link.target = '_blank';
       link.rel = 'noopener noreferrer';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       
-      // Afficher un message de confirmation
       toast({
         title: "Redirection vers la page de paiement",
         description: "Une nouvelle fenêtre va s'ouvrir pour finaliser votre paiement.",
