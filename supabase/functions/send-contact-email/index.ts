@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 const MAILJET_API_KEY = Deno.env.get("MAILJET_API_KEY");
 const MAILJET_SECRET_KEY = Deno.env.get("MAILJET_SECRET_KEY");
-const TO_EMAIL = "g.sauvat@ideai.fr"; // Mise à jour de l'adresse email
+const TO_EMAIL = "g.sauvat@ideai.fr";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
