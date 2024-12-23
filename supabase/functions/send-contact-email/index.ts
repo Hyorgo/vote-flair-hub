@@ -62,7 +62,7 @@ const handler = async (req: Request): Promise<Response> => {
       ]
     };
 
-    console.log("Sending email via Mailjet...");
+    console.log("Sending email via Mailjet with payload:", JSON.stringify(mailjetPayload, null, 2));
     const res = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
@@ -74,7 +74,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     const responseData = await res.json();
-    console.log("Mailjet API response:", responseData);
+    console.log("Mailjet API response:", JSON.stringify(responseData, null, 2));
 
     if (!res.ok) {
       console.error("Mailjet API error:", responseData);
