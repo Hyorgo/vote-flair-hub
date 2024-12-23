@@ -5,9 +5,33 @@ import { EmailField } from "./form/EmailField";
 import { TicketSelection } from "./form/TicketSelection";
 import { useBookingForm } from "./form/useBookingForm";
 import { BookingQRCode } from "./form/BookingQRCode";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 export const BookingForm = () => {
   const { form, onSubmit, showQRCode, setShowQRCode, currentBooking } = useBookingForm();
+  const [searchParams] = useSearchParams();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const success = searchParams.get("success");
+    const canceled = searchParams.get("canceled");
+
+    if (success === "true") {
+      toast({
+        title: "Réservation confirmée !",
+        description: "Vous recevrez bientôt un email de confirmation avec les détails de votre réservation.",
+        variant: "default",
+      });
+    } else if (canceled === "true") {
+      toast({
+        title: "Réservation annulée",
+        description: "Le paiement a été annulé. Vous pouvez réessayer quand vous le souhaitez.",
+        variant: "destructive",
+      });
+    }
+  }, [searchParams, toast]);
 
   return (
     <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 sm:p-8 border border-white/20">
