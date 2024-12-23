@@ -2,6 +2,7 @@ import React from "react";
 import { NomineeCard } from "@/components/NomineeCard";
 import { Category } from "@/types/airtable";
 import { motion } from "framer-motion";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface NomineesListProps {
   category: Category;
@@ -10,14 +11,44 @@ interface NomineesListProps {
 }
 
 export const NomineesList = ({ category, selections, onVote }: NomineesListProps) => {
+  const queryClient = useQueryClient();
   const nominees = Array.isArray(category?.nominees) ? category.nominees : [];
+
+  // Préchargement des données de la catégorie suivante
+  React.useEffect(() => {
+    if (category?.id) {
+      queryClient.prefetchQuery({
+        queryKey: ['categories', category.id],
+        queryFn: async () => {
+          const { data, error } = await supabase
+            .from('categories')
+            .select(`
+              id,
+              name,
+              nominees (
+                id,
+                name,
+                description,
+                image_url
+              )
+            `)
+            .eq('id', category.id)
+            .single();
+
+          if (error) throw error;
+          return data;
+        },
+      });
+    }
+  }, [category?.id, queryClient]);
 
   const container = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
+        staggerChildren: 0.1,
+        delayChildren: 0.2
       }
     }
   };
@@ -41,6 +72,7 @@ export const NomineesList = ({ category, selections, onVote }: NomineesListProps
           className="w-full"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
+          layoutId={`nominee-${nominee.id}`}
         >
           <NomineeCard
             nominee={nominee}

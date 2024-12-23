@@ -250,6 +250,12 @@ export type Database = {
       }
     }
     Functions: {
+      check_rate_limit: {
+        Args: {
+          user_email: string
+        }
+        Returns: boolean
+      }
       is_admin: {
         Args: {
           user_email: string

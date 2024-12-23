@@ -16,7 +16,11 @@ interface NomineeCardProps {
   onSelect: (id: string) => void;
 }
 
-export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps) => {
+export const NomineeCard = React.memo(({ nominee, isSelected, onSelect }: NomineeCardProps) => {
+  const handleVote = React.useCallback(() => {
+    onSelect(nominee.id);
+  }, [nominee.id, onSelect]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -61,9 +65,11 @@ export const NomineeCard = ({ nominee, isSelected, onSelect }: NomineeCardProps)
 
         <VoteButton 
           isSelected={isSelected}
-          onSelect={() => onSelect(nominee.id)}
+          onSelect={handleVote}
         />
       </div>
     </motion.div>
   );
-};
+});
+
+NomineeCard.displayName = 'NomineeCard';
