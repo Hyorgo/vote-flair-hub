@@ -17,13 +17,19 @@ interface ContactRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
+  console.log("New request received:", req.method);
+  
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
+    console.log("Handling CORS preflight request");
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     console.log("Starting contact email function...");
+    console.log("Checking environment variables...");
+    console.log("MAILJET_API_KEY exists:", !!MAILJET_API_KEY);
+    console.log("MAILJET_SECRET_KEY exists:", !!MAILJET_SECRET_KEY);
     
     if (!MAILJET_API_KEY || !MAILJET_SECRET_KEY) {
       const error = "Mailjet API keys are not configured";
@@ -32,7 +38,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const { name, email, message }: ContactRequest = await req.json();
-    console.log("Received contact form submission:", { name, email });
+    console.log("Received contact form submission:", { name, email, messageLength: message.length });
 
     const auth = btoa(`${MAILJET_API_KEY}:${MAILJET_SECRET_KEY}`);
     console.log("Auth token generated successfully");
@@ -79,9 +85,10 @@ const handler = async (req: Request): Promise<Response> => {
       body: JSON.stringify(mailjetPayload),
     });
 
-    const responseData = await res.json();
     console.log("Mailjet API response status:", res.status);
     console.log("Mailjet API response headers:", Object.fromEntries(res.headers.entries()));
+    
+    const responseData = await res.json();
     console.log("Mailjet API response body:", JSON.stringify(responseData, null, 2));
 
     if (!res.ok) {
@@ -89,6 +96,7 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error(`Erreur Mailjet: ${JSON.stringify(responseData)}`);
     }
 
+    console.log("Email sent successfully!");
     return new Response(JSON.stringify(responseData), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
