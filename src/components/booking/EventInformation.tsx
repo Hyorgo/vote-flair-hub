@@ -37,6 +37,8 @@ export const EventInformation = () => {
   if (!eventInfo) return null;
 
   const formattedDate = format(new Date(eventInfo.event_date), "EEEE d MMMM yyyy", { locale: fr });
+  const isEventPassed = new Date(eventInfo.event_date) < new Date();
+  const remainingTickets = eventInfo.remaining_tickets;
 
   const handleAddToCalendar = () => {
     const calendarLink = generateCalendarLink({
@@ -75,6 +77,18 @@ export const EventInformation = () => {
               <br />
               {eventInfo.address}
             </p>
+            {!isEventPassed && (
+              <p className="mt-2 text-sm text-primary">
+                {remainingTickets > 0 
+                  ? `${remainingTickets} places encore disponibles`
+                  : "Plus aucune place disponible"}
+              </p>
+            )}
+            {isEventPassed && (
+              <p className="mt-2 text-sm text-red-500">
+                Cet événement est déjà passé
+              </p>
+            )}
           </div>
         </div>
         <Button

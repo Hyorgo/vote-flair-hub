@@ -41,6 +41,17 @@ export const useBookingForm = () => {
   const createStripeSession = async (values: BookingFormValues) => {
     console.log('Creating Stripe session with values:', values);
     
+    // Vérifier la disponibilité des billets avant de créer la session
+    const { data: availabilityCheck, error: availabilityError } = await supabase.rpc(
+      'check_tickets_availability',
+      { requested_tickets: parseInt(values.numberOfTickets) }
+    );
+
+    if (availabilityError || !availabilityCheck) {
+      console.error('Availability check failed:', availabilityError || 'No tickets available');
+      throw new Error('Les billets demandés ne sont plus disponibles ou l\'événement est passé');
+    }
+    
     const response = await supabase.functions.invoke('create-checkout-session', {
       body: {
         firstName: values.firstName,
@@ -86,7 +97,7 @@ export const useBookingForm = () => {
       console.error('Erreur lors de la réservation:', error);
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors de la création du paiement. Veuillez réessayer.",
+        description: error instanceof Error ? error.message : "Une erreur est survenue lors de la création du paiement. Veuillez réessayer.",
         variant: "destructive",
       });
     } finally {

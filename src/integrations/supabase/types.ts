@@ -117,6 +117,8 @@ export type Database = {
           event_date: string
           id: string
           location: string
+          remaining_tickets: number
+          total_tickets: number
           updated_at: string | null
         }
         Insert: {
@@ -125,6 +127,8 @@ export type Database = {
           event_date: string
           id?: string
           location: string
+          remaining_tickets?: number
+          total_tickets?: number
           updated_at?: string | null
         }
         Update: {
@@ -133,6 +137,8 @@ export type Database = {
           event_date?: string
           id?: string
           location?: string
+          remaining_tickets?: number
+          total_tickets?: number
           updated_at?: string | null
         }
         Relationships: []
@@ -376,6 +382,12 @@ export type Database = {
       check_rate_limit: {
         Args: {
           user_email: string
+        }
+        Returns: boolean
+      }
+      check_tickets_availability: {
+        Args: {
+          requested_tickets: number
         }
         Returns: boolean
       }
