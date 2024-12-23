@@ -50,10 +50,10 @@ export const BookingForm = () => {
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-md rounded-lg p-8 border border-white/20">
+    <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 sm:p-8 border border-white/20">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <FormField
               control={form.control}
               name="firstName"
@@ -61,7 +61,11 @@ export const BookingForm = () => {
                 <FormItem>
                   <FormLabel className="text-white">Prénom</FormLabel>
                   <FormControl>
-                    <Input placeholder="Jean" {...field} />
+                    <Input 
+                      placeholder="Jean" 
+                      {...field} 
+                      className="h-11"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -75,7 +79,11 @@ export const BookingForm = () => {
                 <FormItem>
                   <FormLabel className="text-white">Nom</FormLabel>
                   <FormControl>
-                    <Input placeholder="Dupont" {...field} />
+                    <Input 
+                      placeholder="Dupont" 
+                      {...field} 
+                      className="h-11"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -90,7 +98,12 @@ export const BookingForm = () => {
               <FormItem>
                 <FormLabel className="text-white">Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="jean.dupont@example.com" {...field} />
+                  <Input 
+                    type="email" 
+                    placeholder="jean.dupont@example.com" 
+                    {...field} 
+                    className="h-11"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -105,7 +118,7 @@ export const BookingForm = () => {
                 <FormLabel className="text-white">Nombre de places</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-11">
                       <SelectValue placeholder="Sélectionnez le nombre de places" />
                     </SelectTrigger>
                   </FormControl>
@@ -122,7 +135,7 @@ export const BookingForm = () => {
             )}
           />
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full h-11 text-base">
             Réserver
           </Button>
         </form>

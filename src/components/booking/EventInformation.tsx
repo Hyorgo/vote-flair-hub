@@ -6,6 +6,7 @@ import { fr } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { generateCalendarLink } from "@/utils/calendar";
 import { useToast } from "@/components/ui/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const fetchEventInformation = async () => {
   const { data, error } = await supabase
@@ -19,6 +20,7 @@ const fetchEventInformation = async () => {
 
 export const EventInformation = () => {
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const { data: eventInfo, isLoading } = useQuery({
     queryKey: ["eventInformation"],
     queryFn: fetchEventInformation,
@@ -58,25 +60,30 @@ export const EventInformation = () => {
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8 border border-white/20">
-      <div className="flex items-start justify-between gap-4 text-white">
+    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6 mb-8 border border-white/20">
+      <div className={`flex flex-col ${!isMobile ? 'sm:flex-row sm:items-start sm:justify-between' : ''} gap-4`}>
         <div className="flex items-start gap-4">
           <MapPin className="h-6 w-6 shrink-0 mt-1 text-primary" />
           <div>
-            <h2 className="text-2xl font-semibold mb-2 text-primary">Informations sur l'événement</h2>
-            <p className="text-white text-lg">
-              La soirée aura lieu le <span className="font-semibold">{formattedDate}</span> à {eventInfo.location}<br />
+            <h2 className="text-xl sm:text-2xl font-semibold mb-2 text-primary">
+              Informations sur l'événement
+            </h2>
+            <p className="text-white text-base sm:text-lg">
+              La soirée aura lieu le{" "}
+              <span className="font-semibold">{formattedDate}</span> à{" "}
+              {eventInfo.location}
+              <br />
               {eventInfo.address}
             </p>
           </div>
         </div>
         <Button
           variant="outline"
-          className="text-primary border-primary hover:bg-primary hover:text-white"
+          className="text-primary border-primary hover:bg-primary hover:text-white w-full sm:w-auto"
           onClick={handleAddToCalendar}
         >
-          <CalendarPlus className="mr-2" />
-          Ajouter au calendrier
+          <CalendarPlus className="mr-2 h-5 w-5" />
+          {isMobile ? "Ajouter à mon calendrier" : "Ajouter au calendrier"}
         </Button>
       </div>
     </div>
