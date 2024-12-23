@@ -3,9 +3,26 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { bookingFormSchema, type BookingFormValues } from "./BookingFormSchema";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+import { useQuery } from "@tanstack/react-query";
+
+const fetchEventInformation = async () => {
+  const { data, error } = await supabase
+    .from("event_information")
+    .select("*")
+    .single();
+
+  if (error) throw error;
+  return data;
+};
 
 export const useBookingForm = () => {
   const { toast } = useToast();
+  const { data: eventInfo } = useQuery({
+    queryKey: ["eventInformation"],
+    queryFn: fetchEventInformation,
+  });
   
   const form = useForm<BookingFormValues>({
     resolver: zodResolver(bookingFormSchema),
@@ -17,9 +34,40 @@ export const useBookingForm = () => {
     },
   });
 
+  const sendConfirmationEmail = async (values: BookingFormValues) => {
+    if (!eventInfo) return;
+
+    const formattedDate = format(new Date(eventInfo.event_date), "EEEE d MMMM yyyy", { locale: fr });
+
+    try {
+      const response = await fetch("/functions/v1/send-booking-confirmation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          numberOfTickets: parseInt(values.numberOfTickets),
+          eventDate: formattedDate,
+          eventLocation: eventInfo.location,
+          eventAddress: eventInfo.address,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send confirmation email");
+      }
+    } catch (error) {
+      console.error("Error sending confirmation email:", error);
+      throw error;
+    }
+  };
+
   const onSubmit = async (values: BookingFormValues) => {
     try {
-      const { error } = await supabase
+      const { error: bookingError } = await supabase
         .from('bookings')
         .insert({
           first_name: values.firstName,
@@ -28,7 +76,9 @@ export const useBookingForm = () => {
           number_of_tickets: parseInt(values.numberOfTickets),
         });
 
-      if (error) throw error;
+      if (bookingError) throw bookingError;
+
+      await sendConfirmationEmail(values);
 
       toast({
         title: "Réservation confirmée",
