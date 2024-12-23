@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { validateEmailFormat } from "@/utils/emailValidation";
+import { Database } from "@/integrations/supabase/types";
 
 interface VotingNotStartedMessageProps {
   startDate: Date;
@@ -40,7 +41,7 @@ export const VotingNotStartedMessage = ({ startDate }: VotingNotStartedMessagePr
     try {
       const { error } = await supabase
         .from('vote_opening_notifications')
-        .insert([{ email }]);
+        .insert([{ email }] as Database['public']['Tables']['vote_opening_notifications']['Insert'][]);
 
       if (error?.code === '23505') {
         toast({
@@ -76,7 +77,6 @@ export const VotingNotStartedMessage = ({ startDate }: VotingNotStartedMessagePr
       className="w-full max-w-md mx-auto px-4"
     >
       <div className="bg-white/30 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-white/20 w-full relative overflow-hidden">
-        {/* Halos décoratifs */}
         <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/20 rounded-full blur-3xl" />
         <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-accent/20 rounded-full blur-3xl" />
         
