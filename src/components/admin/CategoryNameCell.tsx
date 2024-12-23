@@ -32,10 +32,10 @@ export const CategoryNameCell = ({
   return (
     <Button 
       variant="ghost" 
-      className="p-0 hover:bg-transparent"
+      className="p-0 hover:bg-transparent w-full sm:w-auto text-left justify-start"
       onClick={() => setShowNominees(!showNominees)}
     >
-      {categoryName}
+      <span className="truncate">{categoryName}</span>
     </Button>
   );
 };

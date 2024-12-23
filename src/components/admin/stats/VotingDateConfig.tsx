@@ -1,5 +1,6 @@
 import { useVotingConfig } from '@/hooks/supabase/useVotingConfig';
 import { useToast } from '@/hooks/use-toast';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const VotingDateConfig = () => {
   const { toast } = useToast();
@@ -28,26 +29,31 @@ export const VotingDateConfig = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg p-4 shadow-sm space-y-4">
-      <div>
-        <h3 className="text-sm font-medium text-gray-500 mb-2">Date de début des votes</h3>
-        <input
-          type="datetime-local"
-          className="w-full rounded-md border-gray-300"
-          value={config?.start_date ? new Date(config.start_date).toISOString().slice(0, 16) : ''}
-          onChange={(e) => handleDateChange('start', e.target.value)}
-        />
-      </div>
-      
-      <div>
-        <h3 className="text-sm font-medium text-gray-500 mb-2">Date de fin des votes</h3>
-        <input
-          type="datetime-local"
-          className="w-full rounded-md border-gray-300"
-          value={config?.end_date ? new Date(config.end_date).toISOString().slice(0, 16) : ''}
-          onChange={(e) => handleDateChange('end', e.target.value)}
-        />
-      </div>
-    </div>
+    <Card className="bg-white/50 backdrop-blur-sm">
+      <CardHeader className="p-4">
+        <CardTitle className="text-base sm:text-lg">Configuration des dates</CardTitle>
+      </CardHeader>
+      <CardContent className="p-4 space-y-4">
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-500">Date de début des votes</label>
+          <input
+            type="datetime-local"
+            className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+            value={config?.start_date ? new Date(config.start_date).toISOString().slice(0, 16) : ''}
+            onChange={(e) => handleDateChange('start', e.target.value)}
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-500">Date de fin des votes</label>
+          <input
+            type="datetime-local"
+            className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+            value={config?.end_date ? new Date(config.end_date).toISOString().slice(0, 16) : ''}
+            onChange={(e) => handleDateChange('end', e.target.value)}
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 };

@@ -10,6 +10,7 @@ import {
 import { ParticipantRow } from "./ParticipantRow";
 import type { Participant } from "@/hooks/useParticipantsData";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card } from "@/components/ui/card";
 
 interface ParticipantsTableContentProps {
   participants: Participant[];
@@ -31,35 +32,43 @@ export const ParticipantsTableContent = ({
   setEditForm,
 }: ParticipantsTableContentProps) => {
   return (
-    <div className="bg-white rounded-lg overflow-hidden">
-      <ScrollArea className="w-full">
+    <Card className="mt-6 overflow-hidden bg-white/50 backdrop-blur-sm">
+      <ScrollArea className="w-full rounded-md border">
         <div className="min-w-[600px]">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="min-w-[150px]">Prénom</TableHead>
-                <TableHead className="min-w-[150px]">Nom</TableHead>
-                <TableHead className="min-w-[200px]">Email</TableHead>
-                <TableHead className="text-right w-[100px]">Actions</TableHead>
+                <TableHead className="w-[200px]">Prénom</TableHead>
+                <TableHead className="w-[200px]">Nom</TableHead>
+                <TableHead className="min-w-[250px]">Email</TableHead>
+                <TableHead className="w-[100px] text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {participants.map((participant) => (
-                <ParticipantRow
-                  key={participant.id}
-                  participant={participant}
-                  editingId={editingId}
-                  editForm={editForm}
-                  onEdit={onEdit}
-                  onSave={onSave}
-                  onCancel={onCancel}
-                  setEditForm={setEditForm}
-                />
-              ))}
+              {participants.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="h-24 text-center">
+                    Aucun participant trouvé
+                  </TableCell>
+                </TableRow>
+              ) : (
+                participants.map((participant) => (
+                  <ParticipantRow
+                    key={participant.id}
+                    participant={participant}
+                    editingId={editingId}
+                    editForm={editForm}
+                    onEdit={onEdit}
+                    onSave={onSave}
+                    onCancel={onCancel}
+                    setEditForm={setEditForm}
+                  />
+                ))
+              )}
             </TableBody>
           </Table>
         </div>
       </ScrollArea>
-    </div>
+    </Card>
   );
 };

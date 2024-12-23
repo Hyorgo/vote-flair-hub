@@ -49,26 +49,30 @@ export const CategoryNameEditor = ({ categoryId, initialName, onCancel }: Catego
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full">
       <Input
         value={newName}
         onChange={(e) => setNewName(e.target.value)}
-        className="max-w-[200px]"
+        className="w-full sm:max-w-[200px]"
       />
-      <Button 
-        variant="outline" 
-        size="sm"
-        onClick={handleSaveEdit}
-      >
-        Sauvegarder
-      </Button>
-      <Button 
-        variant="ghost" 
-        size="sm"
-        onClick={onCancel}
-      >
-        Annuler
-      </Button>
+      <div className="flex gap-2 w-full sm:w-auto">
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={handleSaveEdit}
+          className="flex-1 sm:flex-none"
+        >
+          Sauvegarder
+        </Button>
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={onCancel}
+          className="flex-1 sm:flex-none"
+        >
+          Annuler
+        </Button>
+      </div>
     </div>
   );
 };
