@@ -1,0 +1,59 @@
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { StatCard } from "../stats/StatCard";
+
+const TICKET_PRICE_HT = 160; // Prix HT en euros
+const TVA_RATE = 0.20; // Taux de TVA de 20%
+export const TICKET_PRICE_TTC = TICKET_PRICE_HT * (1 + TVA_RATE); // Prix TTC pour Stripe
+
+const fetchBookingsCount = async () => {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("number_of_tickets")
+    .throwOnError();
+
+  if (error) throw error;
+
+  const totalTickets = data.reduce((sum, booking) => sum + booking.number_of_tickets, 0);
+  return totalTickets;
+};
+
+export const RevenueStats = () => {
+  const { data: totalTickets = 0, isLoading } = useQuery({
+    queryKey: ["bookings-count"],
+    queryFn: fetchBookingsCount,
+  });
+
+  const revenueHT = totalTickets * TICKET_PRICE_HT;
+  const formattedRevenueHT = new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+  }).format(revenueHT);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-8">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <StatCard
+          title="Chiffre d'affaires HT"
+          value={formattedRevenueHT}
+        />
+        <StatCard
+          title="Nombre de billets vendus"
+          value={totalTickets.toString()}
+        />
+        <StatCard
+          title="Prix unitaire HT"
+          value={`${TICKET_PRICE_HT} €`}
+        />
+      </div>
+    </div>
+  );
+};

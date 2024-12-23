@@ -6,6 +6,7 @@ import { bookingFormSchema, type BookingFormValues } from "./BookingFormSchema";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { BookingDetails, EventInfo } from "./types";
+import { TICKET_PRICE_TTC } from "@/components/admin/revenue/RevenueStats";
 
 const fetchEventInformation = async () => {
   const { data, error } = await supabase
@@ -41,7 +42,6 @@ export const useBookingForm = () => {
   const createStripeSession = async (values: BookingFormValues) => {
     console.log('Creating Stripe session with values:', values);
     
-    // Vérifier la disponibilité des billets avant de créer la session
     const { data: availabilityCheck, error: availabilityError } = await supabase.rpc(
       'check_tickets_availability',
       { requested_tickets: parseInt(values.numberOfTickets) }
@@ -58,6 +58,7 @@ export const useBookingForm = () => {
         lastName: values.lastName,
         email: values.email,
         numberOfTickets: values.numberOfTickets,
+        unitPriceTTC: TICKET_PRICE_TTC,
       },
     });
 
