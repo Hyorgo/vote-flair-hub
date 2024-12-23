@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ParticipantRow } from "./ParticipantRow";
-import type { Participant } from "./useParticipants";
+import type { Participant } from "@/hooks/useParticipantsData";
 
 interface ParticipantsTableContentProps {
   participants: Participant[];

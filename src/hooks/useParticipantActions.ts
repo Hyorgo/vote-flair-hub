@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/toast/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { exportToCSV } from "@/utils/csvExport";
 import type { Participant } from "./useParticipantsData";
