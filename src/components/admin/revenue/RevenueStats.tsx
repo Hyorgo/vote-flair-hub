@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { StatCard } from "../stats/StatCard";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const fetchBookingsCount = async () => {
   const { data, error } = await supabase
@@ -54,21 +55,23 @@ export const RevenueStats = () => {
   }).format(revenueHT);
 
   return (
-    <div className="space-y-8">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <StatCard
-          title="Chiffre d'affaires HT"
-          value={formattedRevenueHT}
-        />
-        <StatCard
-          title="Nombre de billets vendus"
-          value={totalTickets.toString()}
-        />
-        <StatCard
-          title="Prix unitaire HT"
-          value={`${pricing.price_ht} €`}
-        />
-      </div>
+    <div className="space-y-8 p-4">
+      <ScrollArea className="w-full">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 min-w-[600px]">
+          <StatCard
+            title="Chiffre d'affaires HT"
+            value={formattedRevenueHT}
+          />
+          <StatCard
+            title="Nombre de billets vendus"
+            value={totalTickets.toString()}
+          />
+          <StatCard
+            title="Prix unitaire HT"
+            value={`${pricing.price_ht} €`}
+          />
+        </div>
+      </ScrollArea>
     </div>
   );
 };

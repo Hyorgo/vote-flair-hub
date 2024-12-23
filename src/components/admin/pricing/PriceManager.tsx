@@ -103,9 +103,9 @@ export const PriceManager = () => {
 
   if (isEditing) {
     return (
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto p-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Prix HT (€)</label>
+          <label className="block text-sm font-medium mb-2">Prix HT (€)</label>
           <Input
             type="number"
             step="0.01"
@@ -115,7 +115,7 @@ export const PriceManager = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Taux de TVA (%)</label>
+          <label className="block text-sm font-medium mb-2">Taux de TVA (%)</label>
           <Input
             type="number"
             step="0.01"
@@ -124,9 +124,10 @@ export const PriceManager = () => {
             className="w-full"
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Button
             type="submit"
+            className="w-full sm:w-auto"
             disabled={updateMutation.isPending}
           >
             {updateMutation.isPending ? (
@@ -143,6 +144,7 @@ export const PriceManager = () => {
             variant="outline"
             onClick={() => setIsEditing(false)}
             disabled={updateMutation.isPending}
+            className="w-full sm:w-auto"
           >
             Annuler
           </Button>
@@ -152,24 +154,26 @@ export const PriceManager = () => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6 p-4">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <div className="p-4 bg-white/50 backdrop-blur-sm rounded-lg">
-          <h3 className="font-semibold mb-2">Prix HT</h3>
-          <p className="text-2xl">{pricing.price_ht} €</p>
+        <div className="p-6 bg-white/50 backdrop-blur-sm rounded-lg">
+          <h3 className="font-semibold mb-2 text-lg">Prix HT</h3>
+          <p className="text-2xl sm:text-3xl">{pricing.price_ht} €</p>
         </div>
-        <div className="p-4 bg-white/50 backdrop-blur-sm rounded-lg">
-          <h3 className="font-semibold mb-2">Taux de TVA</h3>
-          <p className="text-2xl">{pricing.tva_rate} %</p>
+        <div className="p-6 bg-white/50 backdrop-blur-sm rounded-lg">
+          <h3 className="font-semibold mb-2 text-lg">Taux de TVA</h3>
+          <p className="text-2xl sm:text-3xl">{pricing.tva_rate} %</p>
         </div>
-        <div className="p-4 bg-white/50 backdrop-blur-sm rounded-lg">
-          <h3 className="font-semibold mb-2">Prix TTC</h3>
-          <p className="text-2xl">
+        <div className="p-6 bg-white/50 backdrop-blur-sm rounded-lg">
+          <h3 className="font-semibold mb-2 text-lg">Prix TTC</h3>
+          <p className="text-2xl sm:text-3xl">
             {(pricing.price_ht * (1 + pricing.tva_rate / 100)).toFixed(2)} €
           </p>
         </div>
       </div>
-      <Button onClick={handleEdit}>Modifier les prix</Button>
+      <Button onClick={handleEdit} className="w-full sm:w-auto">
+        Modifier les prix
+      </Button>
     </div>
   );
 };
