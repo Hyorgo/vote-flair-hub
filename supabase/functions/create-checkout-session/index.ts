@@ -24,7 +24,7 @@ serve(async (req) => {
 
     const stripe = new Stripe(stripeKey, {
       apiVersion: '2023-10-16',
-      httpClient: Stripe.createFetchHttpClient(), // Ajout explicite du client HTTP
+      httpClient: Stripe.createFetchHttpClient(),
     })
 
     // Créer la session de paiement avec des paramètres optimisés
@@ -66,7 +66,7 @@ serve(async (req) => {
       submit_type: 'pay',
       payment_method_options: {
         card: {
-          setup_future_usage: 'off',
+          setup_future_usage: 'off_session', // Correction de la valeur
         },
       },
       expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // Session expire après 30 minutes
