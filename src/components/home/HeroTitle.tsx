@@ -48,7 +48,7 @@ export const HeroTitle = () => {
       </motion.div>
 
       <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-white mx-auto leading-relaxed font-medium">
-        LE rendez-vous annuel des professionnels, établissements et partenaires de la nuit
+        Le rendez-vous annuel des professionnels, établissements et partenaires de la nuit
       </p>
     </motion.div>
   );
