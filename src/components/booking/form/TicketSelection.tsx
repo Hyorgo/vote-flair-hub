@@ -17,11 +17,11 @@ export const TicketSelection = ({ form }: TicketSelectionProps) => {
           <FormLabel className="text-white">Nombre de places</FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
-              <SelectTrigger className="h-11 bg-white/90 backdrop-blur-sm">
+              <SelectTrigger className="h-11 bg-white/90 backdrop-blur-sm border-white/20">
                 <SelectValue placeholder="Sélectionnez le nombre de places" />
               </SelectTrigger>
             </FormControl>
-            <SelectContent className="bg-white">
+            <SelectContent className="bg-white/90 backdrop-blur-sm border-white/20">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((number) => (
                 <SelectItem key={number} value={number.toString()}>
                   {number} {number === 1 ? "place" : "places"}
