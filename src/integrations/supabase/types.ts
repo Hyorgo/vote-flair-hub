@@ -86,6 +86,30 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_attempts: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          ip_address: string | null
+          success: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          ip_address?: string | null
+          success?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          ip_address?: string | null
+          success?: boolean | null
+        }
+        Relationships: []
+      }
       event_information: {
         Row: {
           address: string
@@ -336,6 +360,13 @@ export type Database = {
       }
     }
     Functions: {
+      check_contact_rate_limit: {
+        Args: {
+          user_email: string
+          user_ip: string
+        }
+        Returns: boolean
+      }
       check_rate_limit: {
         Args: {
           user_email: string

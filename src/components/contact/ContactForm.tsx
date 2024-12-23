@@ -32,6 +32,35 @@ export const ContactForm = () => {
   const onSubmit = async (values: ContactFormValues) => {
     try {
       setIsSubmitting(true);
+
+      // Vérifier d'abord la limite de taux avec l'IP
+      const { data: ipData } = await fetch('https://api.ipify.org?format=json')
+        .then(res => res.json());
+      
+      const { data: rateCheck, error: rateError } = await supabase
+        .rpc('check_contact_rate_limit', { 
+          user_email: values.email,
+          user_ip: ipData.ip
+        });
+
+      if (rateError) throw rateError;
+
+      if (!rateCheck) {
+        toast({
+          title: "Limite de messages atteinte",
+          description: "Veuillez patienter avant d'envoyer un nouveau message.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Enregistrer la tentative de contact
+      await supabase
+        .from('contact_attempts')
+        .insert({
+          email: values.email,
+          ip_address: ipData.ip,
+        });
       
       const { error } = await supabase.functions.invoke('send-contact-email', {
         body: {
@@ -42,6 +71,14 @@ export const ContactForm = () => {
       });
 
       if (error) throw error;
+
+      // Mettre à jour le statut de succès de la tentative
+      await supabase
+        .from('contact_attempts')
+        .update({ success: true })
+        .eq('email', values.email)
+        .order('created_at', { ascending: false })
+        .limit(1);
 
       toast({
         title: "Message envoyé",
