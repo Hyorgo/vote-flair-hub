@@ -48,6 +48,33 @@ export type Database = {
         }
         Relationships: []
       }
+      event_information: {
+        Row: {
+          address: string
+          created_at: string | null
+          event_date: string
+          id: string
+          location: string
+          updated_at: string | null
+        }
+        Insert: {
+          address: string
+          created_at?: string | null
+          event_date: string
+          id?: string
+          location: string
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string
+          created_at?: string | null
+          event_date?: string
+          id?: string
+          location?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       nominees: {
         Row: {
           category_id: string | null
