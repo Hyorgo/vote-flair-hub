@@ -7,7 +7,6 @@ const corsHeaders = {
 }
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
   }
@@ -16,7 +15,6 @@ serve(async (req) => {
     const { firstName, lastName, email, numberOfTickets } = await req.json()
     console.log('Creating checkout session for:', { firstName, lastName, email, numberOfTickets })
 
-    // Vérifier que la clé Stripe est présente
     const stripeKey = Deno.env.get('STRIPE_SECRET_KEY')
     if (!stripeKey) {
       throw new Error('Stripe secret key is not configured')
@@ -24,10 +22,9 @@ serve(async (req) => {
 
     const stripe = new Stripe(stripeKey, {
       apiVersion: '2023-10-16',
-      httpClient: Stripe.createFetchHttpClient(),
     })
 
-    // Créer la session de paiement avec des paramètres optimisés
+    // Configuration simplifiée de la session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -38,7 +35,7 @@ serve(async (req) => {
               name: 'Billet Lyon d\'Or',
               description: `Réservation pour ${numberOfTickets} ${numberOfTickets > 1 ? 'places' : 'place'}`,
             },
-            unit_amount: 1000, // 10€ en centimes
+            unit_amount: 1000,
           },
           quantity: parseInt(numberOfTickets),
         },
@@ -52,24 +49,7 @@ serve(async (req) => {
         lastName,
         numberOfTickets,
       },
-      payment_intent_data: {
-        metadata: {
-          firstName,
-          lastName,
-          email,
-          numberOfTickets,
-        },
-      },
       locale: 'fr',
-      allow_promotion_codes: true,
-      billing_address_collection: 'auto',
-      submit_type: 'pay',
-      payment_method_options: {
-        card: {
-          setup_future_usage: 'off_session', // Correction de la valeur
-        },
-      },
-      expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // Session expire après 30 minutes
     })
 
     console.log('Checkout session created:', session.id)
