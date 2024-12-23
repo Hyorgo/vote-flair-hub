@@ -47,8 +47,8 @@ const handler = async (req: Request): Promise<Response> => {
       Messages: [
         {
           From: {
-            Email: "noreply@ideai.fr",
-            Name: "Lyon d'Or - Formulaire de Contact"
+            Email: "contact@lyon-dor.fr",
+            Name: "Lyon d'Or - Contact"
           },
           To: [
             {
