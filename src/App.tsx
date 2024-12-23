@@ -5,6 +5,8 @@ import Admin from "@/pages/Admin";
 import AdminLogin from "@/pages/AdminLogin";
 import Categories from "@/pages/Categories";
 import Thanks from "@/pages/Thanks";
+import Booking from "@/pages/Booking";
+import Contact from "@/pages/Contact";
 import { Toaster } from "@/components/ui/toaster";
 
 // Configuration optimisée du QueryClient
@@ -31,6 +33,8 @@ function App() {
           <Route path="/thanks" element={<Thanks />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/booking" element={<Booking />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
         <Toaster />
       </BrowserRouter>

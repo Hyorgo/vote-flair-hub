@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Settings, Keyboard, LogOut } from "lucide-react";
+import { Settings, Keyboard, LogOut, Ticket, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -44,7 +44,31 @@ export const Header = ({ isAdmin }: HeaderProps) => {
             loading="eager"
           />
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
+          {!isAdmin && (
+            <>
+              <Link to="/booking">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="text-white hover:text-white/80"
+                >
+                  <Ticket className="w-4 h-4 mr-2" />
+                  Réserver des places
+                </Button>
+              </Link>
+              <Link to="/contact">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="text-white hover:text-white/80"
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  Contact
+                </Button>
+              </Link>
+            </>
+          )}
           <Button
             variant="ghost"
             size="icon"
