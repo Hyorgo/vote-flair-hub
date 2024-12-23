@@ -39,15 +39,15 @@ const Thanks = () => {
 
   return (
     <Layout>
-      <div className="container max-w-4xl mx-auto px-4 py-8">
+      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {success ? (
           <>
             <ConfettiEffect />
             <div className="text-center space-y-6">
-              <h1 className="text-4xl font-bold text-white">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
                 Merci pour votre réservation !
               </h1>
-              <p className="text-lg text-gray-200">
+              <p className="text-base sm:text-lg text-gray-200">
                 Votre paiement a été accepté et votre réservation est confirmée.
               </p>
               {bookingDetails && (
@@ -61,10 +61,10 @@ const Thanks = () => {
           </>
         ) : (
           <div className="text-center space-y-6">
-            <h1 className="text-4xl font-bold text-white">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
               Une erreur est survenue
             </h1>
-            <p className="text-lg text-red-400">
+            <p className="text-base sm:text-lg text-red-400">
               {error || "Une erreur inattendue s'est produite."}
             </p>
           </div>
@@ -73,7 +73,7 @@ const Thanks = () => {
         <div className="mt-8 text-center">
           <Button 
             onClick={() => navigate('/booking')}
-            className="bg-primary hover:bg-primary-dark transition-colors"
+            className="w-full sm:w-auto bg-primary hover:bg-primary-dark transition-colors"
           >
             Retour à la page de réservation
           </Button>

@@ -58,7 +58,7 @@ const Categories = () => {
     <Layout>
       <BackgroundEffects />
       
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <VotingTimer />
 
         {userProfile && (
@@ -81,14 +81,15 @@ const Categories = () => {
           isLastCategory={currentCategory === categories.length - 1}
         />
 
-        <CompleteVotingButton />
-        <SocialShare />
+        <div className="mt-8 space-y-6">
+          <CompleteVotingButton />
+          <SocialShare />
+        </div>
       </div>
     </Layout>
   );
 };
 
-// Composants auxiliaires pour améliorer la lisibilité
 const BackgroundEffects = () => (
   <>
     <div className="golden-halo" />
@@ -102,7 +103,7 @@ const BackgroundEffects = () => (
 );
 
 const WelcomeMessage = ({ name }: { name: string }) => (
-  <div className="mb-6 text-2xl font-bold text-white">
+  <div className="mb-6 text-xl sm:text-2xl font-bold text-white text-center sm:text-left">
     Bienvenue {name} ! 🎉
   </div>
 );

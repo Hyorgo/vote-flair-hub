@@ -12,7 +12,7 @@ const Index = () => {
       
       <div className="min-h-screen w-full flex flex-col items-center justify-center 
         space-y-6 sm:space-y-8 md:space-y-10 lg:space-y-12 xl:space-y-16
-        py-4 sm:py-6 md:py-8 lg:py-12"
+        px-4 sm:px-6 py-4 sm:py-6 md:py-8 lg:py-12"
       >
         <HeroTitle />
         <Features />
