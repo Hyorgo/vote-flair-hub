@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
-const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY");
+const MAILJET_API_KEY = Deno.env.get("MAILJET_API_KEY");
+const MAILJET_SECRET_KEY = Deno.env.get("MAILJET_SECRET_KEY");
 const TO_EMAIL = "contact@lyondor.com"; // L'email qui recevra les messages
 
 const corsHeaders = {
@@ -23,34 +24,42 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const { name, email, message }: ContactRequest = await req.json();
 
-    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    const auth = btoa(`${MAILJET_API_KEY}:${MAILJET_SECRET_KEY}`);
+
+    const res = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "api-key": BREVO_API_KEY!,
+        "Authorization": `Basic ${auth}`,
       },
       body: JSON.stringify({
-        sender: {
-          name: "Lyon d'Or Contact",
-          email: "no-reply@lyondor.com"
-        },
-        to: [{
-          email: TO_EMAIL,
-          name: "Lyon d'Or"
-        }],
-        replyTo: {
-          email: email,
-          name: name
-        },
-        subject: `Nouveau message de contact de ${name}`,
-        htmlContent: `
-          <h2>Nouveau message de contact</h2>
-          <p><strong>Nom:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Message:</strong></p>
-          <p>${message}</p>
-        `,
+        Messages: [
+          {
+            From: {
+              Email: "no-reply@lyondor.com",
+              Name: "Lyon d'Or Contact"
+            },
+            To: [
+              {
+                Email: TO_EMAIL,
+                Name: "Lyon d'Or"
+              }
+            ],
+            ReplyTo: {
+              Email: email,
+              Name: name
+            },
+            Subject: `Nouveau message de contact de ${name}`,
+            HTMLPart: `
+              <h2>Nouveau message de contact</h2>
+              <p><strong>Nom:</strong> ${name}</p>
+              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>Message:</strong></p>
+              <p>${message}</p>
+            `
+          }
+        ]
       }),
     });
 
