@@ -37,7 +37,9 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const { name, email, message }: ContactRequest = await req.json();
-    console.log("Received contact form submission:", { name, email, messageLength: message.length });
+    console.log("Received contact form submission from:", email);
+    console.log("Sender name:", name);
+    console.log("Message length:", message.length);
 
     const auth = btoa(`${MAILJET_API_KEY}:${MAILJET_SECRET_KEY}`);
     console.log("Auth token generated successfully");
@@ -104,6 +106,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Envoi des deux emails
     console.log("Sending admin notification email...");
+    console.log("Admin payload:", JSON.stringify(adminMailjetPayload, null, 2));
     const adminRes = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
@@ -115,6 +118,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     console.log("Sending user confirmation email...");
+    console.log("User confirmation payload:", JSON.stringify(userConfirmationPayload, null, 2));
     const userRes = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
