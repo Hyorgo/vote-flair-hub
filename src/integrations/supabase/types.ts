@@ -162,6 +162,24 @@ export type Database = {
         }
         Relationships: []
       }
+      vote_opening_notifications: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
       votes: {
         Row: {
           category_id: string | null
