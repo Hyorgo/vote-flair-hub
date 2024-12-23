@@ -19,7 +19,6 @@ interface ContactRequest {
 const handler = async (req: Request): Promise<Response> => {
   console.log("New request received:", req.method);
   
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     console.log("Handling CORS preflight request");
     return new Response(null, { headers: corsHeaders });
@@ -43,7 +42,8 @@ const handler = async (req: Request): Promise<Response> => {
     const auth = btoa(`${MAILJET_API_KEY}:${MAILJET_SECRET_KEY}`);
     console.log("Auth token generated successfully");
 
-    const mailjetPayload = {
+    // Envoi du message à l'administrateur
+    const adminMailjetPayload = {
       Messages: [
         {
           From: {
@@ -72,29 +72,73 @@ const handler = async (req: Request): Promise<Response> => {
       ]
     };
 
-    console.log("Sending email via Mailjet with payload:", JSON.stringify(mailjetPayload, null, 2));
-    
-    const res = await fetch("https://api.mailjet.com/v3.1/send", {
+    // Email de confirmation à l'expéditeur
+    const userConfirmationPayload = {
+      Messages: [
+        {
+          From: {
+            Email: "contact@lyon-dor.fr",
+            Name: "Lyon d'Or"
+          },
+          To: [
+            {
+              Email: email,
+              Name: name
+            }
+          ],
+          Subject: "Confirmation de votre message - Lyon d'Or",
+          HTMLPart: `
+            <h2>Merci pour votre message</h2>
+            <p>Cher(e) ${name},</p>
+            <p>Nous avons bien reçu votre message et nous vous en remercions. Notre équipe le traitera dans les plus brefs délais.</p>
+            <p>Pour rappel, voici votre message :</p>
+            <div style="background-color: #f5f5f5; padding: 15px; margin: 15px 0; border-radius: 5px;">
+              <p style="white-space: pre-wrap;">${message}</p>
+            </div>
+            <p>Cordialement,</p>
+            <p>L'équipe Lyon d'Or</p>
+          `
+        }
+      ]
+    };
+
+    // Envoi des deux emails
+    console.log("Sending admin notification email...");
+    const adminRes = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
         "Authorization": `Basic ${auth}`,
       },
-      body: JSON.stringify(mailjetPayload),
+      body: JSON.stringify(adminMailjetPayload),
     });
 
-    console.log("Mailjet API response status:", res.status);
-    const responseData = await res.json();
-    console.log("Mailjet API response:", JSON.stringify(responseData, null, 2));
+    console.log("Sending user confirmation email...");
+    const userRes = await fetch("https://api.mailjet.com/v3.1/send", {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": `Basic ${auth}`,
+      },
+      body: JSON.stringify(userConfirmationPayload),
+    });
 
-    if (!res.ok) {
-      console.error("Mailjet API error:", responseData);
-      throw new Error(`Erreur Mailjet: ${JSON.stringify(responseData)}`);
+    const adminResponseData = await adminRes.json();
+    const userResponseData = await userRes.json();
+
+    console.log("Admin email response:", JSON.stringify(adminResponseData, null, 2));
+    console.log("User confirmation email response:", JSON.stringify(userResponseData, null, 2));
+
+    if (!adminRes.ok || !userRes.ok) {
+      console.error("Mailjet API error - Admin:", adminResponseData);
+      console.error("Mailjet API error - User:", userResponseData);
+      throw new Error(`Erreur Mailjet: ${JSON.stringify({ admin: adminResponseData, user: userResponseData })}`);
     }
 
-    console.log("Email sent successfully!");
-    return new Response(JSON.stringify(responseData), {
+    console.log("Emails sent successfully!");
+    return new Response(JSON.stringify({ admin: adminResponseData, user: userResponseData }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
