@@ -3,18 +3,24 @@ import { Database } from './database'
 type PublicSchema = Database['public']
 
 export type Tables<
-  T extends keyof PublicSchema['Tables'] | { schema: keyof Database },
-  S extends T extends { schema: keyof Database }
-    ? keyof Database[T['schema']]['Tables']
-    : never = never
-> = T extends { schema: keyof Database }
-  ? Database[T['schema']]['Tables'][S] extends {
+  PublicTableNameOrOptions extends
+    | keyof (PublicSchema['Tables'] & PublicSchema['Views'])
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+        Database[PublicTableNameOrOptions['schema']]['Views'])
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+      Database[PublicTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : T extends keyof PublicSchema['Tables']
-  ? PublicSchema['Tables'][T] extends {
+  : PublicTableNameOrOptions extends keyof (PublicSchema['Tables'] &
+      PublicSchema['Views'])
+  ? (PublicSchema['Tables'] &
+      PublicSchema['Views'])[PublicTableNameOrOptions] extends {
       Row: infer R
     }
     ? R
@@ -22,18 +28,20 @@ export type Tables<
   : never
 
 export type TablesInsert<
-  T extends keyof PublicSchema['Tables'] | { schema: keyof Database },
-  S extends T extends { schema: keyof Database }
-    ? keyof Database[T['schema']]['Tables']
-    : never = never
-> = T extends { schema: keyof Database }
-  ? Database[T['schema']]['Tables'][S] extends {
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema['Tables']
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : T extends keyof PublicSchema['Tables']
-  ? PublicSchema['Tables'][T] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
+  ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
       Insert: infer I
     }
     ? I
@@ -41,18 +49,20 @@ export type TablesInsert<
   : never
 
 export type TablesUpdate<
-  T extends keyof PublicSchema['Tables'] | { schema: keyof Database },
-  S extends T extends { schema: keyof Database }
-    ? keyof Database[T['schema']]['Tables']
-    : never = never
-> = T extends { schema: keyof Database }
-  ? Database[T['schema']]['Tables'][S] extends {
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema['Tables']
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : T extends keyof PublicSchema['Tables']
-  ? PublicSchema['Tables'][T] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
+  ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
       Update: infer U
     }
     ? U

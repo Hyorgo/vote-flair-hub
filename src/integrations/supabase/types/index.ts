@@ -1,2 +1,2 @@
-export * from './database'
-export * from './helpers'
+export type { Database } from './database'
+export type { Tables, TablesInsert, TablesUpdate } from './helpers'
