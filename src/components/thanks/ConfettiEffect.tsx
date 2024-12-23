@@ -1,76 +1,45 @@
 import { useEffect, useCallback } from "react";
 import confetti from "canvas-confetti";
 
-interface ConfettiDefaults {
-  startVelocity: number;
-  spread: number;
-  ticks: number;
-  zIndex: number;
-  particleCount: number;
-  origin: { y: number };
-  gravity: number;
-  scalar: number;
-  disableForReducedMotion: boolean;
-  colors: string[];
-}
-
 export const ConfettiEffect = () => {
   const createConfetti = useCallback(() => {
-    const duration = 600;
+    const duration = 3000;
     const animationEnd = Date.now() + duration;
-    
-    const defaults: ConfettiDefaults = { 
-      startVelocity: 30,
-      spread: 360,
-      ticks: 50,
-      zIndex: 0,
-      particleCount: 50,
-      origin: { y: 0 },
-      gravity: 1,
-      scalar: 0.7,
-      disableForReducedMotion: true,
-      colors: ['#FFD700', '#FEC6A1', '#F97316', '#B8860B', '#FF69B4', '#4B0082']
-    };
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-    const randomInRange = (min: number, max: number): number => {
+    const randomInRange = (min: number, max: number) => {
       return Math.random() * (max - min) + min;
     };
 
-    const launchConfettiFromPosition = (x: number) => {
-      confetti({
-        ...defaults,
-        origin: { x, y: 0 }
-      });
-    };
-
-    let frame: number;
-    const animate = () => {
+    const interval: any = setInterval(() => {
       const timeLeft = animationEnd - Date.now();
 
-      if (timeLeft <= 0) return;
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
 
-      // Launch confetti from three positions across the top
-      launchConfettiFromPosition(randomInRange(0.1, 0.3));
-      launchConfettiFromPosition(randomInRange(0.4, 0.6));
-      launchConfettiFromPosition(randomInRange(0.7, 0.9));
+      const particleCount = 50 * (timeLeft / duration);
 
-      frame = requestAnimationFrame(animate);
-    };
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+        colors: ['#FFD700', '#FEC6A1', '#F97316', '#B8860B', '#FF69B4', '#4B0082']
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+        colors: ['#FFD700', '#FEC6A1', '#F97316', '#B8860B', '#FF69B4', '#4B0082']
+      });
+    }, 250);
 
-    animate();
-
-    return () => {
-      cancelAnimationFrame(frame);
-    };
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    
-    if (!prefersReducedMotion) {
-      const cleanup = createConfetti();
-      return cleanup;
-    }
+    const cleanup = createConfetti();
+    return cleanup;
   }, [createConfetti]);
 
   return null;

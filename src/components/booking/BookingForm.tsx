@@ -6,7 +6,7 @@ import { TicketSelection } from "./form/TicketSelection";
 import { useBookingForm } from "./form/useBookingForm";
 import { BookingQRCode } from "./form/BookingQRCode";
 import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
@@ -14,25 +14,30 @@ export const BookingForm = () => {
   const { form, onSubmit, showQRCode, setShowQRCode, currentBooking, isLoading } = useBookingForm();
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const success = searchParams.get("success");
     const canceled = searchParams.get("canceled");
+    const bookingData = searchParams.get("bookingData");
 
-    if (success === "true") {
-      toast({
-        title: "Réservation confirmée !",
-        description: "Vous recevrez bientôt un email de confirmation avec les détails de votre réservation.",
-        variant: "default",
+    if (success === "true" && bookingData) {
+      const decodedData = JSON.parse(decodeURIComponent(bookingData));
+      navigate("/thanks", { 
+        state: { 
+          success: true,
+          bookingDetails: decodedData
+        }
       });
     } else if (canceled === "true") {
-      toast({
-        title: "Réservation annulée",
-        description: "Le paiement a été annulé. Vous pouvez réessayer quand vous le souhaitez.",
-        variant: "destructive",
+      navigate("/thanks", { 
+        state: { 
+          success: false,
+          error: "Le paiement a été annulé. Vous pouvez réessayer quand vous le souhaitez."
+        }
       });
     }
-  }, [searchParams, toast]);
+  }, [searchParams, toast, navigate]);
 
   return (
     <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 sm:p-8 border border-white/20">
