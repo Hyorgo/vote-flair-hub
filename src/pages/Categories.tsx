@@ -103,8 +103,13 @@ const BackgroundEffects = () => (
 );
 
 const WelcomeMessage = ({ name }: { name: string }) => (
-  <div className="mb-6 text-xl sm:text-2xl font-bold text-white text-center sm:text-left">
-    Bienvenue {name} ! 🎉
+  <div className="space-y-2 mb-6">
+    <h2 className="text-xl sm:text-2xl font-bold text-white text-center sm:text-left">
+      Bienvenue {name} ! 🎉
+    </h2>
+    <p className="text-white/90 text-base sm:text-lg text-center sm:text-left animate-fade-in">
+      C'est le moment de faire entendre votre voix ! Parcourez les catégories et votez pour vos nominés préférés. Chaque vote compte pour célébrer l'excellence ! ✨
+    </p>
   </div>
 );
 
