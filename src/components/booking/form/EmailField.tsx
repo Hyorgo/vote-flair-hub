@@ -21,9 +21,10 @@ export const EmailField = ({ form }: EmailFieldProps) => {
               placeholder="jean.dupont@example.com" 
               {...field} 
               className="h-11"
+              autoComplete="email"
             />
           </FormControl>
-          <FormMessage />
+          <FormMessage className="text-red-400" />
         </FormItem>
       )}
     />

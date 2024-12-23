@@ -360,6 +360,12 @@ export type Database = {
       }
     }
     Functions: {
+      check_booking_rate_limit: {
+        Args: {
+          user_email: string
+        }
+        Returns: boolean
+      }
       check_contact_rate_limit: {
         Args: {
           user_email: string
