@@ -43,7 +43,7 @@ export const useParticipants = () => {
       const { error } = await supabase
         .from("user_profiles")
         .delete()
-        .neq("id", "dummy");
+        .not("id", "is", null); // Delete all records where id is not null
 
       if (error) throw error;
 
