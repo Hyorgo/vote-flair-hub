@@ -27,6 +27,44 @@ export type Database = {
         }
         Relationships: []
       }
+      bookings: {
+        Row: {
+          created_at: string | null
+          email: string
+          event_id: string | null
+          first_name: string
+          id: string
+          last_name: string
+          number_of_tickets: number
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          event_id?: string | null
+          first_name: string
+          id?: string
+          last_name: string
+          number_of_tickets: number
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          event_id?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          number_of_tickets?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "event_information"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categories: {
         Row: {
           created_at: string | null

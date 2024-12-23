@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const formSchema = z.object({
   firstName: z.string().min(2, "Le prénom doit contenir au moins 2 caractères"),
@@ -42,11 +43,32 @@ export const BookingForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    toast({
-      title: "Réservation en cours de traitement",
-      description: "Nous vous enverrons un email de confirmation.",
-    });
-    console.log(values);
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .insert({
+          first_name: values.firstName,
+          last_name: values.lastName,
+          email: values.email,
+          number_of_tickets: parseInt(values.numberOfTickets),
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Réservation confirmée",
+        description: "Nous vous avons envoyé un email de confirmation.",
+      });
+
+      form.reset();
+    } catch (error) {
+      console.error('Erreur lors de la réservation:', error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la réservation. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
