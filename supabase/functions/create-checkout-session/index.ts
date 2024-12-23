@@ -22,14 +22,7 @@ serve(async (req) => {
       payment_method_types: ['card'],
       line_items: [
         {
-          price_data: {
-            currency: 'eur',
-            product_data: {
-              name: 'Réservation',
-              description: `Réservation pour ${firstName} ${lastName}`,
-            },
-            unit_amount: 1000, // 10€ par billet
-          },
+          price: 'price_1QZGf3AU4Uv1i5TAitQnqyXl',
           quantity: parseInt(numberOfTickets),
         },
       ],
@@ -37,6 +30,11 @@ serve(async (req) => {
       success_url: `${req.headers.get('origin')}/booking?success=true`,
       cancel_url: `${req.headers.get('origin')}/booking?canceled=true`,
       customer_email: email,
+      metadata: {
+        firstName,
+        lastName,
+        numberOfTickets,
+      },
     })
 
     return new Response(
