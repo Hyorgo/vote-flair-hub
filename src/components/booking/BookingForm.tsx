@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -19,23 +18,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
-
-const EVENT_DATE = new Date(2025, 2, 10);
 
 const formSchema = z.object({
   firstName: z.string().min(2, "Le prénom doit contenir au moins 2 caractères"),
   lastName: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
   email: z.string().email("Email invalide"),
-  date: z.date({
-    required_error: "Veuillez sélectionner une date",
-  }).refine((date) => {
-    if (!date) return false;
-    return date.getTime() === EVENT_DATE.getTime();
-  }, "La soirée a lieu uniquement le 10 mars 2025"),
   numberOfTickets: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0 && Number(val) <= 10, {
     message: "Veuillez sélectionner entre 1 et 10 places",
   }),
@@ -49,7 +37,6 @@ export const BookingForm = () => {
       firstName: "",
       lastName: "",
       email: "",
-      date: EVENT_DATE,
       numberOfTickets: "1",
     },
   });
@@ -105,39 +92,6 @@ export const BookingForm = () => {
                 <FormControl>
                   <Input type="email" placeholder="jean.dupont@example.com" {...field} />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="date"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel className="text-white">Date</FormLabel>
-                <FormControl>
-                  <Button
-                    variant="outline"
-                    className={`w-full pl-3 text-left font-normal ${!field.value && "text-muted-foreground"}`}
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    {field.value ? (
-                      format(field.value, "EEEE d MMMM yyyy", { locale: fr })
-                    ) : (
-                      <span>Choisir une date</span>
-                    )}
-                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                  </Button>
-                </FormControl>
-                <Calendar
-                  mode="single"
-                  selected={field.value}
-                  onSelect={field.onChange}
-                  disabled={(date) => date.getTime() !== EVENT_DATE.getTime()}
-                  initialFocus
-                  className="rounded-md border bg-white"
-                />
                 <FormMessage />
               </FormItem>
             )}
