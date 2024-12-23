@@ -1,18 +1,72 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Timer } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { validateEmailFormat } from "@/utils/emailValidation";
 
 interface VotingNotStartedMessageProps {
   startDate: Date;
 }
 
 export const VotingNotStartedMessage = ({ startDate }: VotingNotStartedMessageProps) => {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+  
   const timeUntilStart = formatDistanceToNow(startDate, {
     locale: fr,
     addSuffix: true,
   });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateEmailFormat(email)) {
+      toast({
+        title: "Format d'email invalide",
+        description: "Veuillez entrer une adresse email valide.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from('vote_opening_notifications')
+        .insert([{ email }]);
+
+      if (error?.code === '23505') {
+        toast({
+          title: "Email déjà enregistré",
+          description: "Vous recevrez une notification à l'ouverture des votes.",
+        });
+      } else if (error) {
+        throw error;
+      } else {
+        toast({
+          title: "Inscription réussie !",
+          description: "Vous serez notifié par email à l'ouverture des votes.",
+        });
+        setEmail("");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'inscription.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <motion.div
@@ -42,9 +96,29 @@ export const VotingNotStartedMessage = ({ startDate }: VotingNotStartedMessagePr
           <p className="text-lg text-navy/80 leading-relaxed max-w-sm">
             Les votes seront ouverts {timeUntilStart}.
             <span className="block mt-2 font-medium text-primary-dark">
-              Revenez à ce moment-là pour participer !
+              Inscrivez-vous pour être notifié de l'ouverture des votes !
             </span>
           </p>
+
+          <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
+            <div className="space-y-2">
+              <Input
+                type="email"
+                placeholder="Votre adresse email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-white/50"
+                disabled={isSubmitting}
+              />
+            </div>
+            <Button
+              type="submit"
+              className="w-full bg-primary hover:bg-primary/90"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Inscription..." : "M'avertir de l'ouverture"}
+            </Button>
+          </form>
         </div>
       </div>
     </motion.div>
