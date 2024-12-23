@@ -7,12 +7,16 @@ import Categories from "@/pages/Categories";
 import Thanks from "@/pages/Thanks";
 import { Toaster } from "@/components/ui/toaster";
 
-// Création d'une instance de QueryClient
+// Configuration optimisée du QueryClient
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 30, // 30 minutes
       retry: 1,
+      networkMode: 'online',
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
     },
   },
 });

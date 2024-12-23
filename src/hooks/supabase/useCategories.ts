@@ -6,6 +6,7 @@ export const useCategories = () => {
   return useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
+      console.log("Fetching categories from Supabase...");
       const { data: categories, error } = await supabase
         .from("categories")
         .select(`
@@ -27,16 +28,16 @@ export const useCategories = () => {
         throw error;
       }
 
-      return (data || []).map((category): Category => ({
+      return (categories || []).map((category): Category => ({
         id: category.id,
         name: category.name,
         display_order: category.display_order,
         nominees: Array.isArray(category.nominees) ? category.nominees : []
       }));
     },
-    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
-    cacheTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
-    refetchOnWindowFocus: false, // Don't refetch when window regains focus
-    refetchOnReconnect: false, // Don't refetch on reconnection
+    staleTime: 5 * 60 * 1000, // Considérer les données comme fraîches pendant 5 minutes
+    gcTime: 30 * 60 * 1000, // Garder en cache pendant 30 minutes
+    refetchOnWindowFocus: false, // Ne pas recharger quand la fenêtre reprend le focus
+    refetchOnReconnect: false, // Ne pas recharger lors de la reconnexion
   });
 };
