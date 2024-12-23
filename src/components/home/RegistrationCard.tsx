@@ -3,17 +3,27 @@ import { motion } from "framer-motion";
 import { RegistrationForm } from "@/components/RegistrationForm";
 import { useVotingConfig } from "@/hooks/supabase/useVotingConfig";
 import { VotingEndedMessage } from "./VotingEndedMessage";
+import { VotingNotStartedMessage } from "./VotingNotStartedMessage";
 
 export const RegistrationCard = () => {
   const { config } = useVotingConfig();
 
-  // Vérifier si la date de fin est passée
-  const isVotingEnded = config?.end_date 
-    ? new Date(config.end_date) < new Date() 
-    : false;
+  if (!config) {
+    return null;
+  }
 
-  if (isVotingEnded) {
+  const now = new Date();
+  const startDate = new Date(config.start_date);
+  const endDate = new Date(config.end_date);
+
+  // Vérifier si la date de fin est passée
+  if (now > endDate) {
     return <VotingEndedMessage />;
+  }
+
+  // Vérifier si la date de début n'est pas encore atteinte
+  if (now < startDate) {
+    return <VotingNotStartedMessage startDate={startDate} />;
   }
 
   return (
