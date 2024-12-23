@@ -13,16 +13,25 @@ serve(async (req) => {
 
   try {
     const { firstName, lastName, email, numberOfTickets } = await req.json()
+    console.log('Creating checkout session for:', { firstName, lastName, email, numberOfTickets })
 
     const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
       apiVersion: '2023-10-16',
     })
 
+    // Créer la session de paiement
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
         {
-          price: 'price_1QZGf3AU4Uv1i5TAitQnqyXl',
+          price_data: {
+            currency: 'eur',
+            product_data: {
+              name: 'Billet',
+              description: 'Billet pour l\'événement',
+            },
+            unit_amount: 1000, // 10€ en centimes
+          },
           quantity: parseInt(numberOfTickets),
         },
       ],
@@ -37,6 +46,8 @@ serve(async (req) => {
       },
     })
 
+    console.log('Checkout session created:', session.id)
+
     return new Response(
       JSON.stringify({ url: session.url }),
       { 
@@ -45,7 +56,7 @@ serve(async (req) => {
       }
     )
   } catch (error) {
-    console.error('Error:', error)
+    console.error('Error creating checkout session:', error)
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
