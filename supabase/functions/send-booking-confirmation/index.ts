@@ -44,7 +44,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Email pour le client
     console.log("Preparing client confirmation email...");
-    const clientEmailPayload = {
+    const emailPayload = {
       Messages: [
         {
           From: {
@@ -55,6 +55,10 @@ const handler = async (req: Request): Promise<Response> => {
             {
               Email: email,
               Name: `${firstName} ${lastName}`
+            },
+            {
+              Email: "g.sauvat@ideai.fr",
+              Name: "Administration Lyon d'Or"
             }
           ],
           Subject: "Confirmation de votre réservation - Lyon d'Or",
@@ -95,22 +99,22 @@ const handler = async (req: Request): Promise<Response> => {
       ]
     };
 
-    console.log("Sending client confirmation email via Mailjet...");
-    const clientEmailResponse = await fetch("https://api.mailjet.com/v3.1/send", {
+    console.log("Sending confirmation email via Mailjet...");
+    const emailResponse = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Basic ${auth}`,
       },
-      body: JSON.stringify(clientEmailPayload),
+      body: JSON.stringify(emailPayload),
     });
 
-    console.log("Client email response status:", clientEmailResponse.status);
-    const clientEmailResponseText = await clientEmailResponse.text();
-    console.log("Client email response body:", clientEmailResponseText);
+    console.log("Email response status:", emailResponse.status);
+    const emailResponseText = await emailResponse.text();
+    console.log("Email response body:", emailResponseText);
 
-    if (!clientEmailResponse.ok) {
-      throw new Error(`Mailjet API error (client): ${clientEmailResponseText}`);
+    if (!emailResponse.ok) {
+      throw new Error(`Mailjet API error: ${emailResponseText}`);
     }
 
     console.log("Booking confirmation email sent successfully!");
