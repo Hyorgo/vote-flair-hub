@@ -48,7 +48,7 @@ export const Header = ({ isAdmin }: HeaderProps) => {
           <img 
             src="/lovable-uploads/bf3e6529-ee5b-45c3-86ec-6fc4ac0a615f.png" 
             alt="Sortir Lyon x Sixtynine Event" 
-            className="h-12 object-contain"
+            className="h-16 object-contain" // Augmenté de h-12 à h-16
             loading="eager"
           />
         </div>
