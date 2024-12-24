@@ -55,7 +55,17 @@ serve(async (req) => {
         throw bookingError;
       }
 
-      // Envoyer l'email de confirmation via la fonction existante
+      // Formater la date de l'événement
+      const eventDate = new Date(eventInfo.event_date).toLocaleDateString('fr-FR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      // Envoyer l'email de confirmation via la nouvelle fonction
       const response = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-booking-confirmation`, {
         method: 'POST',
         headers: {
@@ -67,7 +77,7 @@ serve(async (req) => {
           lastName,
           email: customerEmail,
           numberOfTickets: parseInt(numberOfTickets),
-          eventDate: eventInfo.event_date,
+          eventDate,
           eventLocation: eventInfo.location,
           eventAddress: eventInfo.address,
         }),

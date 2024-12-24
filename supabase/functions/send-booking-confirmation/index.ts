@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const MAILJET_API_KEY = Deno.env.get("MAILJET_API_KEY");
+const MAILJET_SECRET_KEY = Deno.env.get("MAILJET_SECRET_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -19,57 +20,115 @@ interface BookingEmailData {
 }
 
 const handler = async (req: Request): Promise<Response> => {
+  console.log("New booking confirmation request received:", req.method);
+  
   if (req.method === "OPTIONS") {
+    console.log("Handling CORS preflight request");
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    console.log("Starting booking confirmation email function...");
+    
+    if (!MAILJET_API_KEY || !MAILJET_SECRET_KEY) {
+      const error = "Mailjet API keys are not configured";
+      console.error(error);
+      throw new Error(error);
+    }
+
     const { firstName, lastName, email, numberOfTickets, eventDate, eventLocation, eventAddress }: BookingEmailData = await req.json();
+    console.log("Received booking confirmation for:", email);
 
-    const emailHtml = `
-      <h1>Confirmation de réservation - Soirée des Trophées</h1>
-      <p>Bonjour ${firstName} ${lastName},</p>
-      <p>Nous vous confirmons votre réservation pour la Soirée des Trophées.</p>
-      <h2>Détails de votre réservation :</h2>
-      <ul>
-        <li>Nombre de places : ${numberOfTickets}</li>
-        <li>Date : ${eventDate}</li>
-        <li>Lieu : ${eventLocation}</li>
-        <li>Adresse : ${eventAddress}</li>
-      </ul>
-      <p>Nous avons hâte de vous accueillir !</p>
-      <p>Cordialement,<br>L'équipe de la Soirée des Trophées</p>
-    `;
+    const auth = btoa(`${MAILJET_API_KEY}:${MAILJET_SECRET_KEY}`);
+    console.log("Auth token generated");
 
-    const res = await fetch("https://api.resend.com/emails", {
+    // Email pour le client
+    console.log("Preparing client confirmation email...");
+    const clientEmailPayload = {
+      Messages: [
+        {
+          From: {
+            Email: "contact@lyon-dor.fr",
+            Name: "Lyon d'Or"
+          },
+          To: [
+            {
+              Email: email,
+              Name: `${firstName} ${lastName}`
+            }
+          ],
+          Subject: "Confirmation de votre réservation - Lyon d'Or",
+          TextPart: `
+            Cher(e) ${firstName} ${lastName},
+            
+            Nous vous confirmons votre réservation pour la Soirée des Trophées Lyon d'Or.
+            
+            Détails de votre réservation :
+            - Nombre de places : ${numberOfTickets}
+            - Date : ${eventDate}
+            - Lieu : ${eventLocation}
+            - Adresse : ${eventAddress}
+            
+            Conservez précieusement cet email, il vous sera demandé lors de votre arrivée à l'événement.
+            
+            Nous avons hâte de vous accueillir !
+            
+            Cordialement,
+            L'équipe Lyon d'Or
+          `,
+          HTMLPart: `
+            <h2>Confirmation de réservation</h2>
+            <p>Cher(e) ${firstName} ${lastName},</p>
+            <p>Nous vous confirmons votre réservation pour la Soirée des Trophées Lyon d'Or.</p>
+            <h3>Détails de votre réservation :</h3>
+            <ul>
+              <li>Nombre de places : ${numberOfTickets}</li>
+              <li>Date : ${eventDate}</li>
+              <li>Lieu : ${eventLocation}</li>
+              <li>Adresse : ${eventAddress}</li>
+            </ul>
+            <p><strong>Conservez précieusement cet email, il vous sera demandé lors de votre arrivée à l'événement.</strong></p>
+            <p>Nous avons hâte de vous accueillir !</p>
+            <p>Cordialement,<br>L'équipe Lyon d'Or</p>
+          `
+        }
+      ]
+    };
+
+    console.log("Sending client confirmation email via Mailjet...");
+    const clientEmailResponse = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
+        Authorization: `Basic ${auth}`,
       },
-      body: JSON.stringify({
-        from: "Soirée des Trophées <onboarding@resend.dev>",
-        to: [email],
-        subject: "Confirmation de votre réservation - Soirée des Trophées",
-        html: emailHtml,
-      }),
+      body: JSON.stringify(clientEmailPayload),
     });
 
-    if (!res.ok) {
-      throw new Error(`Failed to send email: ${await res.text()}`);
+    console.log("Client email response status:", clientEmailResponse.status);
+    const clientEmailResponseText = await clientEmailResponse.text();
+    console.log("Client email response body:", clientEmailResponseText);
+
+    if (!clientEmailResponse.ok) {
+      throw new Error(`Mailjet API error (client): ${clientEmailResponseText}`);
     }
+
+    console.log("Booking confirmation email sent successfully!");
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("Error in send-booking-confirmation function:", error);
     return new Response(
-      JSON.stringify({ error: "Failed to send confirmation email" }),
+      JSON.stringify({ 
+        error: "Erreur lors de l'envoi de l'email de confirmation",
+        details: error.message 
+      }),
       {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
   }
