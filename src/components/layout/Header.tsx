@@ -33,6 +33,12 @@ export const Header = ({ isAdmin }: HeaderProps) => {
     <header className="sticky top-0 z-50 bg-white/30 backdrop-blur-md border-b border-white/10 shadow-lg supports-[backdrop-filter]:bg-white/30">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-6">
+          <img 
+            src="/lovable-uploads/bf3e6529-ee5b-45c3-86ec-6fc4ac0a615f.png" 
+            alt="Sortir Lyon x Sixtynine Event" 
+            className="h-16 object-contain"
+            loading="eager"
+          />
           <Link 
             to="/" 
             className="flex items-center"
@@ -45,12 +51,6 @@ export const Header = ({ isAdmin }: HeaderProps) => {
               loading="eager"
             />
           </Link>
-          <img 
-            src="/lovable-uploads/bf3e6529-ee5b-45c3-86ec-6fc4ac0a615f.png" 
-            alt="Sortir Lyon x Sixtynine Event" 
-            className="h-16 object-contain" // Augmenté de h-12 à h-16
-            loading="eager"
-          />
         </div>
         <div className="flex items-center gap-4">
           {!isAdmin && (
