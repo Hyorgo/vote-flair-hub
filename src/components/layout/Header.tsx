@@ -47,7 +47,7 @@ export const Header = ({ isAdmin }: HeaderProps) => {
             <img 
               src="/lovable-uploads/f615e6d4-11eb-4499-a3a3-d69273ded6e7.png" 
               alt="Lyon d'Or Logo" 
-              className="h-20 object-contain"
+              className="h-16 object-contain" // Réduit de h-20 à h-16
               loading="eager"
             />
           </Link>
