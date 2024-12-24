@@ -33,7 +33,8 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error(error);
     }
 
-    console.log("Mailjet API keys are configured");
+    console.log("Mailjet API Key:", MAILJET_API_KEY.substring(0, 5) + "...");
+    console.log("Mailjet Secret Key configured:", !!MAILJET_SECRET_KEY);
 
     const { name, email, message }: ContactRequest = await req.json();
     console.log("Received contact form submission from:", email);
@@ -44,7 +45,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Auth token generated");
 
     // Email pour l'administrateur
-    console.log("Sending admin email...");
+    console.log("Preparing admin email...");
     const adminEmailPayload = {
       Messages: [
         {
@@ -63,6 +64,12 @@ const handler = async (req: Request): Promise<Response> => {
             Name: name
           },
           Subject: `[Lyon d'Or] Nouveau message de contact de ${name}`,
+          TextPart: `
+            Nouveau message de contact
+            Nom: ${name}
+            Email: ${email}
+            Message: ${message}
+          `,
           HTMLPart: `
             <h2>Nouveau message de contact</h2>
             <p><strong>Nom:</strong> ${name}</p>
@@ -75,6 +82,7 @@ const handler = async (req: Request): Promise<Response> => {
     };
     console.log("Admin email payload:", JSON.stringify(adminEmailPayload, null, 2));
 
+    console.log("Sending admin email to Mailjet API...");
     const adminEmailResponse = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
@@ -93,7 +101,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Email de confirmation pour l'expéditeur
-    console.log("Sending user confirmation email...");
+    console.log("Preparing user confirmation email...");
     const userEmailPayload = {
       Messages: [
         {
@@ -108,6 +116,17 @@ const handler = async (req: Request): Promise<Response> => {
             }
           ],
           Subject: "Confirmation de votre message - Lyon d'Or",
+          TextPart: `
+            Cher(e) ${name},
+            
+            Nous avons bien reçu votre message et nous vous en remercions. Notre équipe le traitera dans les plus brefs délais.
+            
+            Pour rappel, voici votre message :
+            ${message}
+            
+            Cordialement,
+            L'équipe Lyon d'Or
+          `,
           HTMLPart: `
             <h2>Merci pour votre message</h2>
             <p>Cher(e) ${name},</p>
@@ -124,6 +143,7 @@ const handler = async (req: Request): Promise<Response> => {
     };
     console.log("User email payload:", JSON.stringify(userEmailPayload, null, 2));
 
+    console.log("Sending user confirmation email to Mailjet API...");
     const userEmailResponse = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
