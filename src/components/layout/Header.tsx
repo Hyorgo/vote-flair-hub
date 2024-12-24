@@ -41,13 +41,13 @@ export const Header = ({ isAdmin }: HeaderProps) => {
           />
           <Link 
             to="/" 
-            className="flex items-center"
+            className="flex items-center -mt-2" // Ajout de -mt-2 pour remonter légèrement le logo
             aria-label="Retour à l'accueil"
           >
             <img 
               src="/lovable-uploads/f615e6d4-11eb-4499-a3a3-d69273ded6e7.png" 
               alt="Lyon d'Or Logo" 
-              className="h-16 object-contain" // Réduit de h-20 à h-16
+              className="h-16 object-contain"
               loading="eager"
             />
           </Link>
