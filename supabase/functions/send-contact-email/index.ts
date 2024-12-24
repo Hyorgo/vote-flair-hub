@@ -33,104 +33,122 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error(error);
     }
 
+    console.log("Mailjet API keys are configured");
+
     const { name, email, message }: ContactRequest = await req.json();
     console.log("Received contact form submission from:", email);
     console.log("Sender name:", name);
     console.log("Message length:", message.length);
 
     const auth = btoa(`${MAILJET_API_KEY}:${MAILJET_SECRET_KEY}`);
+    console.log("Auth token generated");
 
     // Email pour l'administrateur
+    console.log("Sending admin email...");
+    const adminEmailPayload = {
+      Messages: [
+        {
+          From: {
+            Email: "contact@lyon-dor.fr",
+            Name: "Lyon d'Or"
+          },
+          To: [
+            {
+              Email: TO_EMAIL,
+              Name: "Admin"
+            }
+          ],
+          ReplyTo: {
+            Email: email,
+            Name: name
+          },
+          Subject: `[Lyon d'Or] Nouveau message de contact de ${name}`,
+          HTMLPart: `
+            <h2>Nouveau message de contact</h2>
+            <p><strong>Nom:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Message:</strong></p>
+            <p style="white-space: pre-wrap;">${message}</p>
+          `
+        }
+      ]
+    };
+    console.log("Admin email payload:", JSON.stringify(adminEmailPayload, null, 2));
+
     const adminEmailResponse = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Basic ${auth}`,
       },
-      body: JSON.stringify({
-        Messages: [
-          {
-            From: {
-              Email: "contact@lyon-dor.fr",
-              Name: "Lyon d'Or"
-            },
-            To: [
-              {
-                Email: TO_EMAIL,
-                Name: "Admin"
-              }
-            ],
-            ReplyTo: {
-              Email: email,
-              Name: name
-            },
-            Subject: `[Lyon d'Or] Nouveau message de contact de ${name}`,
-            HTMLPart: `
-              <h2>Nouveau message de contact</h2>
-              <p><strong>Nom:</strong> ${name}</p>
-              <p><strong>Email:</strong> ${email}</p>
-              <p><strong>Message:</strong></p>
-              <p style="white-space: pre-wrap;">${message}</p>
-            `
-          }
-        ]
-      }),
+      body: JSON.stringify(adminEmailPayload),
     });
 
+    console.log("Admin email response status:", adminEmailResponse.status);
+    const adminEmailResponseText = await adminEmailResponse.text();
+    console.log("Admin email response body:", adminEmailResponseText);
+
+    if (!adminEmailResponse.ok) {
+      throw new Error(`Mailjet API error (admin): ${adminEmailResponseText}`);
+    }
+
     // Email de confirmation pour l'expéditeur
+    console.log("Sending user confirmation email...");
+    const userEmailPayload = {
+      Messages: [
+        {
+          From: {
+            Email: "contact@lyon-dor.fr",
+            Name: "Lyon d'Or"
+          },
+          To: [
+            {
+              Email: email,
+              Name: name
+            }
+          ],
+          Subject: "Confirmation de votre message - Lyon d'Or",
+          HTMLPart: `
+            <h2>Merci pour votre message</h2>
+            <p>Cher(e) ${name},</p>
+            <p>Nous avons bien reçu votre message et nous vous en remercions. Notre équipe le traitera dans les plus brefs délais.</p>
+            <p>Pour rappel, voici votre message :</p>
+            <div style="background-color: #f5f5f5; padding: 15px; margin: 15px 0; border-radius: 5px;">
+              <p style="white-space: pre-wrap;">${message}</p>
+            </div>
+            <p>Cordialement,</p>
+            <p>L'équipe Lyon d'Or</p>
+          `
+        }
+      ]
+    };
+    console.log("User email payload:", JSON.stringify(userEmailPayload, null, 2));
+
     const userEmailResponse = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Basic ${auth}`,
       },
-      body: JSON.stringify({
-        Messages: [
-          {
-            From: {
-              Email: "contact@lyon-dor.fr",
-              Name: "Lyon d'Or"
-            },
-            To: [
-              {
-                Email: email,
-                Name: name
-              }
-            ],
-            Subject: "Confirmation de votre message - Lyon d'Or",
-            HTMLPart: `
-              <h2>Merci pour votre message</h2>
-              <p>Cher(e) ${name},</p>
-              <p>Nous avons bien reçu votre message et nous vous en remercions. Notre équipe le traitera dans les plus brefs délais.</p>
-              <p>Pour rappel, voici votre message :</p>
-              <div style="background-color: #f5f5f5; padding: 15px; margin: 15px 0; border-radius: 5px;">
-                <p style="white-space: pre-wrap;">${message}</p>
-              </div>
-              <p>Cordialement,</p>
-              <p>L'équipe Lyon d'Or</p>
-            `
-          }
-        ]
-      }),
+      body: JSON.stringify(userEmailPayload),
     });
 
-    if (!adminEmailResponse.ok || !userEmailResponse.ok) {
-      const adminError = await adminEmailResponse.text();
-      const userError = await userEmailResponse.text();
-      console.error("Mailjet API error - Admin:", adminError);
-      console.error("Mailjet API error - User:", userError);
-      throw new Error(`Erreur Mailjet: ${JSON.stringify({ admin: adminError, user: userError })}`);
+    console.log("User email response status:", userEmailResponse.status);
+    const userEmailResponseText = await userEmailResponse.text();
+    console.log("User email response body:", userEmailResponseText);
+
+    if (!userEmailResponse.ok) {
+      throw new Error(`Mailjet API error (user): ${userEmailResponseText}`);
     }
 
-    const adminResult = await adminEmailResponse.json();
-    const userResult = await userEmailResponse.json();
-
-    console.log("Emails sent successfully!");
-    console.log("Admin email result:", adminResult);
-    console.log("User email result:", userResult);
+    console.log("Both emails sent successfully!");
 
     return new Response(
-      JSON.stringify({ success: true, admin: adminResult, user: userResult }), 
+      JSON.stringify({ 
+        success: true,
+        adminResponse: adminEmailResponseText,
+        userResponse: userEmailResponseText
+      }), 
       {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
