@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const MAILJET_API_KEY = Deno.env.get("MAILJET_API_KEY");
+const MAILJET_SECRET_KEY = Deno.env.get("MAILJET_SECRET_KEY");
 const TO_EMAIL = "g.sauvat@ideai.fr";
 
 const corsHeaders = {
@@ -26,8 +27,8 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     console.log("Starting contact email function...");
     
-    if (!RESEND_API_KEY) {
-      const error = "Resend API key is not configured";
+    if (!MAILJET_API_KEY || !MAILJET_SECRET_KEY) {
+      const error = "Mailjet API keys are not configured";
       console.error(error);
       throw new Error(error);
     }
@@ -37,59 +38,88 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Sender name:", name);
     console.log("Message length:", message.length);
 
+    const auth = btoa(`${MAILJET_API_KEY}:${MAILJET_SECRET_KEY}`);
+
     // Email pour l'administrateur
-    const adminEmailResponse = await fetch("https://api.resend.com/emails", {
+    const adminEmailResponse = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
+        Authorization: `Basic ${auth}`,
       },
       body: JSON.stringify({
-        from: "Lyon d'Or <contact@lyon-dor.fr>",
-        to: TO_EMAIL,
-        reply_to: email,
-        subject: `[Lyon d'Or] Nouveau message de contact de ${name}`,
-        html: `
-          <h2>Nouveau message de contact</h2>
-          <p><strong>Nom:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Message:</strong></p>
-          <p style="white-space: pre-wrap;">${message}</p>
-        `,
+        Messages: [
+          {
+            From: {
+              Email: "contact@lyon-dor.fr",
+              Name: "Lyon d'Or"
+            },
+            To: [
+              {
+                Email: TO_EMAIL,
+                Name: "Admin"
+              }
+            ],
+            ReplyTo: {
+              Email: email,
+              Name: name
+            },
+            Subject: `[Lyon d'Or] Nouveau message de contact de ${name}`,
+            HTMLPart: `
+              <h2>Nouveau message de contact</h2>
+              <p><strong>Nom:</strong> ${name}</p>
+              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>Message:</strong></p>
+              <p style="white-space: pre-wrap;">${message}</p>
+            `
+          }
+        ]
       }),
     });
 
     // Email de confirmation pour l'expéditeur
-    const userEmailResponse = await fetch("https://api.resend.com/emails", {
+    const userEmailResponse = await fetch("https://api.mailjet.com/v3.1/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
+        Authorization: `Basic ${auth}`,
       },
       body: JSON.stringify({
-        from: "Lyon d'Or <contact@lyon-dor.fr>",
-        to: email,
-        subject: "Confirmation de votre message - Lyon d'Or",
-        html: `
-          <h2>Merci pour votre message</h2>
-          <p>Cher(e) ${name},</p>
-          <p>Nous avons bien reçu votre message et nous vous en remercions. Notre équipe le traitera dans les plus brefs délais.</p>
-          <p>Pour rappel, voici votre message :</p>
-          <div style="background-color: #f5f5f5; padding: 15px; margin: 15px 0; border-radius: 5px;">
-            <p style="white-space: pre-wrap;">${message}</p>
-          </div>
-          <p>Cordialement,</p>
-          <p>L'équipe Lyon d'Or</p>
-        `,
+        Messages: [
+          {
+            From: {
+              Email: "contact@lyon-dor.fr",
+              Name: "Lyon d'Or"
+            },
+            To: [
+              {
+                Email: email,
+                Name: name
+              }
+            ],
+            Subject: "Confirmation de votre message - Lyon d'Or",
+            HTMLPart: `
+              <h2>Merci pour votre message</h2>
+              <p>Cher(e) ${name},</p>
+              <p>Nous avons bien reçu votre message et nous vous en remercions. Notre équipe le traitera dans les plus brefs délais.</p>
+              <p>Pour rappel, voici votre message :</p>
+              <div style="background-color: #f5f5f5; padding: 15px; margin: 15px 0; border-radius: 5px;">
+                <p style="white-space: pre-wrap;">${message}</p>
+              </div>
+              <p>Cordialement,</p>
+              <p>L'équipe Lyon d'Or</p>
+            `
+          }
+        ]
       }),
     });
 
     if (!adminEmailResponse.ok || !userEmailResponse.ok) {
       const adminError = await adminEmailResponse.text();
       const userError = await userEmailResponse.text();
-      console.error("Resend API error - Admin:", adminError);
-      console.error("Resend API error - User:", userError);
-      throw new Error(`Erreur Resend: ${JSON.stringify({ admin: adminError, user: userError })}`);
+      console.error("Mailjet API error - Admin:", adminError);
+      console.error("Mailjet API error - User:", userError);
+      throw new Error(`Erreur Mailjet: ${JSON.stringify({ admin: adminError, user: userError })}`);
     }
 
     const adminResult = await adminEmailResponse.json();
