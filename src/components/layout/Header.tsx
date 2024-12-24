@@ -32,18 +32,26 @@ export const Header = ({ isAdmin }: HeaderProps) => {
   return (
     <header className="sticky top-0 z-50 bg-white/30 backdrop-blur-md border-b border-white/10 shadow-lg supports-[backdrop-filter]:bg-white/30">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link 
-          to="/" 
-          className="flex items-center gap-2"
-          aria-label="Retour à l'accueil"
-        >
+        <div className="flex items-center gap-6">
+          <Link 
+            to="/" 
+            className="flex items-center"
+            aria-label="Retour à l'accueil"
+          >
+            <img 
+              src="/lovable-uploads/f615e6d4-11eb-4499-a3a3-d69273ded6e7.png" 
+              alt="Lyon d'Or Logo" 
+              className="h-20 object-contain"
+              loading="eager"
+            />
+          </Link>
           <img 
-            src="/lovable-uploads/f615e6d4-11eb-4499-a3a3-d69273ded6e7.png" 
-            alt="Lyon d'Or Logo" 
-            className="h-20 object-contain"
+            src="/lovable-uploads/bf3e6529-ee5b-45c3-86ec-6fc4ac0a615f.png" 
+            alt="Sortir Lyon x Sixtynine Event" 
+            className="h-12 object-contain"
             loading="eager"
           />
-        </Link>
+        </div>
         <div className="flex items-center gap-4">
           {!isAdmin && (
             <>
