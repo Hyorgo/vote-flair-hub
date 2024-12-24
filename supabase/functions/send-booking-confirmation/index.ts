@@ -42,8 +42,8 @@ const handler = async (req: Request): Promise<Response> => {
     const auth = btoa(`${MAILJET_API_KEY}:${MAILJET_SECRET_KEY}`);
     console.log("Auth token generated");
 
-    // Email pour le client
-    console.log("Preparing client confirmation email...");
+    // Email pour le client et l'administrateur
+    console.log("Preparing confirmation emails...");
     const emailPayload = {
       Messages: [
         {
@@ -55,7 +55,9 @@ const handler = async (req: Request): Promise<Response> => {
             {
               Email: email,
               Name: `${firstName} ${lastName}`
-            },
+            }
+          ],
+          Cc: [
             {
               Email: "g.sauvat@ideai.fr",
               Name: "Administration Lyon d'Or"
